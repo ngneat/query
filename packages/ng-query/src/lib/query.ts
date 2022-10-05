@@ -24,24 +24,17 @@ class Query {
     const defaultedOptions = this.instance.defaultQueryOptions(options);
     defaultedOptions._optimisticResults = 'optimistic';
 
-    // Include callbacks in batch renders
-    if (defaultedOptions.onError) {
-      defaultedOptions.onError = notifyManager.batchCalls(
-        defaultedOptions.onError
-      );
-    }
+    defaultedOptions.onError &&= notifyManager.batchCalls(
+      defaultedOptions.onError
+    );
 
-    if (defaultedOptions.onSuccess) {
-      defaultedOptions.onSuccess = notifyManager.batchCalls(
-        defaultedOptions.onSuccess
-      );
-    }
+    defaultedOptions.onSuccess &&= notifyManager.batchCalls(
+      defaultedOptions.onSuccess
+    );
 
-    if (defaultedOptions.onSettled) {
-      defaultedOptions.onSettled = notifyManager.batchCalls(
-        defaultedOptions.onSettled
-      );
-    }
+    defaultedOptions.onSettled &&= notifyManager.batchCalls(
+      defaultedOptions.onSettled
+    );
 
     const sourceSubscription = new Subscription();
 
@@ -84,23 +77,11 @@ class Query {
       const queryObserverDispose = queryObserver.subscribe(
         notifyManager.batchCalls((result) => {
           (result as NgQueryObserverResult<T>).queryKey = queryKey;
-
-          if (result.isError) {
-            // We (probably) want to act like the rest of the adapters
-            // and emits the state also when there is an error
-            observer.next(
-              !defaultedOptions.notifyOnChangeProps
-                ? queryObserver.trackResult(result)
-                : result
-            );
-            observer.error(result.error);
-          } else {
-            observer.next(
-              !defaultedOptions.notifyOnChangeProps
-                ? queryObserver.trackResult(result)
-                : result
-            );
-          }
+          observer.next(
+            !defaultedOptions.notifyOnChangeProps
+              ? queryObserver.trackResult(result)
+              : result
+          );
         })
       );
 
