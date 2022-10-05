@@ -41,6 +41,26 @@ import { RouterModule } from '@angular/router';
                 >Mutations</a
               >
             </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
+                routerLink="infinite"
+                >Infinite Query</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
+                routerLink="pagination"
+                >Pagination</a
+              >
+            </li>
           </ul>
         </div>
       </div>
