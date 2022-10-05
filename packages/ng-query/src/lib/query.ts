@@ -2,6 +2,7 @@ import { inject, Injectable, InjectionToken } from '@angular/core';
 import {
   notifyManager,
   QueryFunctionContext,
+  QueryKey,
   QueryObserver,
   QueryObserverOptions,
 } from '@tanstack/query-core';
@@ -14,12 +15,15 @@ import { NgQueryObserverResult } from './types';
 class Query {
   private instance = inject(QUERY_CLIENT);
 
-  query<T>(
-    queryKey: unknown[],
-    source: (context: QueryFunctionContext) => Observable<T>,
-    options?: Omit<QueryObserverOptions<T>, 'queryKey' | 'queryFn'>
-  ): Observable<NgQueryObserverResult<T>> & {
-    instance: QueryObserver<T>;
+  query<TQueryFnData, TError, TData>(
+    queryKey: QueryKey,
+    queryFn: (context: QueryFunctionContext<QueryKey>) => Observable<TData>,
+    options?: Omit<
+      QueryObserverOptions<TQueryFnData, TError, TData, QueryKey>,
+      'queryKey' | 'queryFn'
+    >
+  ): Observable<NgQueryObserverResult<TData, TError>> & {
+    instance: QueryObserver<TQueryFnData, TError, TData, QueryKey>;
   } {
     const defaultedOptions = this.instance.defaultQueryOptions(options);
     defaultedOptions._optimisticResults = 'optimistic';
@@ -38,12 +42,17 @@ class Query {
 
     const sourceSubscription = new Subscription();
 
-    const queryObserver = new QueryObserver<T>(this.instance, {
+    const queryObserver = new QueryObserver<
+      TQueryFnData,
+      TError,
+      TData,
+      QueryKey
+    >(this.instance, {
       ...defaultedOptions,
       queryKey,
-      queryFn: (...args) => {
-        return new Promise((res, rej) => {
-          const subscription = source(...args)
+      queryFn: (...queryFnArgs) => {
+        return new Promise<TData>((res, rej) => {
+          const subscription = queryFn(...queryFnArgs)
             .pipe(
               take(1),
               tap({
@@ -59,7 +68,7 @@ class Query {
             });
 
           sourceSubscription.add(subscription);
-        });
+        }) as any;
       },
     });
 
@@ -76,7 +85,6 @@ class Query {
 
       const queryObserverDispose = queryObserver.subscribe(
         notifyManager.batchCalls((result) => {
-          (result as NgQueryObserverResult<T>).queryKey = queryKey;
           observer.next(
             !defaultedOptions.notifyOnChangeProps
               ? queryObserver.trackResult(result)
