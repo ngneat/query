@@ -10,7 +10,6 @@ export class ProjectsService {
 }
 
 function getProjects(c: string) {
-  debugger;
   return new Observable<{
     data: { id: number; name: string }[];
     nextId: number | null;
