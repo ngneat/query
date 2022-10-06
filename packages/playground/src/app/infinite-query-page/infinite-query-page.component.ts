@@ -1,16 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { SubscribeModule } from '@ngneat/subscribe';
+import { ProjectsService } from './projects.service';
 
 @Component({
   selector: 'ng-query-infinite-query-page',
   standalone: true,
-  imports: [CommonModule],
-  template: ` <p>infinite-query-page works!</p> `,
-  styles: [],
+  imports: [CommonModule, SubscribeModule],
+  template: ` TBD `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InfiniteQueryPageComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
+export class InfiniteQueryPageComponent {
+  projects = inject(ProjectsService);
 }

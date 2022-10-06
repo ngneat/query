@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
-import { BehaviorSubject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { TodosService } from '../todos.service';
 
@@ -53,14 +53,7 @@ import { TodosService } from '../todos.service';
 export class BasicPageComponent {
   private todosService = inject(TodosService);
   todo = new BehaviorSubject<number>(100);
-  todos$ = this.todosService.getTodos().pipe(
-    tap({
-      error(error) {
-        console.log('error', error);
-      },
-    })
-  );
-
+  todos$ = this.todosService.getTodos();
   todo$ = this.todo
     .asObservable()
     .pipe(switchMap((id) => this.todosService.getTodo(id)));
