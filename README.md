@@ -1,5 +1,13 @@
 # WIP
 
+### You're welcome to contribute!
+
+Learning resources:
+
+- https://github.com/TanStack/query/tree/d018dfa46083ce059e0aadc06b48f729faade825/packages/react-query/src
+- https://tanstack.com/query/v4/docs/overview
+- https://github.com/TanStack/query/tree/d018dfa46083ce059e0aadc06b48f729faade825/packages/query-core/src/tests
+
 ```ts
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
