@@ -4,7 +4,6 @@ import { SubscribeModule } from '@ngneat/subscribe';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { TodosService } from '../todos.service';
-import {filterSuccess} from "../../../../operators/filter-success.operator";
 
 @Component({
   selector: 'ng-query-basic-page',
@@ -13,7 +12,7 @@ import {filterSuccess} from "../../../../operators/filter-success.operator";
   template: `
     <h2 class="mb-3">Todos</h2>
 
-    <ng-container *ngIf="todos$ | async as todos">
+    <ng-container *subscribe="todos$ as todos">
       <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
 
       <ul class="list-group" *ngIf="todos.isSuccess">
@@ -41,7 +40,7 @@ import {filterSuccess} from "../../../../operators/filter-success.operator";
       </button>
     </section>
 
-    <ng-container *ngIf="todo$ | async as todo">
+    <ng-container *subscribe="todo$ as todo">
       <ng-query-spinner class="mt-3" *ngIf="todo.isLoading"></ng-query-spinner>
 
       <div class="card mt-3" *ngIf="todo.isSuccess">
@@ -54,7 +53,7 @@ import {filterSuccess} from "../../../../operators/filter-success.operator";
 export class BasicPageComponent {
   private todosService = inject(TodosService);
   todo = new BehaviorSubject<number>(100);
-  todos$ = this.todosService.getTodos().pipe(filterSuccess());
+  todos$ = this.todosService.getTodos();
   todo$ = this.todo
     .asObservable()
     .pipe(switchMap((id) => this.todosService.getTodo(id)));
