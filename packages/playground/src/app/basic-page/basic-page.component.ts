@@ -1,9 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+} from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { TodosService } from '../todos.service';
+import { renderDevtool } from '../query-devtool/devtool';
+import { QUERY_CLIENT } from '@ngneat/ng-query';
 
 @Component({
   selector: 'ng-query-basic-page',
@@ -11,7 +18,7 @@ import { TodosService } from '../todos.service';
   imports: [CommonModule, SpinnerComponent, SubscribeModule],
   template: `
     <h2 class="mb-3">Todos</h2>
-
+    <div id="ngQuery-devtool"></div>
     <ng-container *subscribe="todos$ as todos">
       <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
 
@@ -50,11 +57,19 @@ import { TodosService } from '../todos.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BasicPageComponent {
+export class BasicPageComponent implements AfterViewInit {
   private todosService = inject(TodosService);
+  private queryClient = inject(QUERY_CLIENT);
+
   todo = new BehaviorSubject<number>(100);
   todos$ = this.todosService.getTodos();
   todo$ = this.todo
     .asObservable()
     .pipe(switchMap((id) => this.todosService.getTodo(id)));
+
+  ngAfterViewInit() {
+    // Type 'import("/Users/ducnguyen/code/ng-query/node_modules/@tanstack/query-core/build/lib/queryClient").QueryClient' is not assignable to type 'import("/Users/ducnguyen/code/ng-query/node_modules/@tanstack/react-query/node_modules/@tanstack/query-core/build/lib/queryClient").QueryClient'.
+    // @ts-ignore
+    renderDevtool({ queryClient: this.queryClient });
+  }
 }

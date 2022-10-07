@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "src/app/query-devtool/devtool.tss"],
   "compilerOptions": {
     "types": ["jest", "node"]
   }

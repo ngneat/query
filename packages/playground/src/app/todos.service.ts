@@ -14,7 +14,7 @@ interface Todo {
 })
 export class TodosService {
   private http = inject(HttpClient);
-  private useQuery = inject(QueryProvider);
+  public useQuery = inject(QueryProvider);
 
   getTodos() {
     return this.useQuery(['todos'], () => {
