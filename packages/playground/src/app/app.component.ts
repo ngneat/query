@@ -28,6 +28,16 @@ import { RouterModule } from '@angular/router';
                 routerLinkActive="active"
                 aria-current="page"
                 routerLink=""
+                >Simple</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
+                routerLink="basic"
                 >Basic</a
               >
             </li>
