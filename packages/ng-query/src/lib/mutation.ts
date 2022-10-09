@@ -21,10 +21,8 @@ class Mutation {
     > = {}
   ): {
     mutate: MutationObserver<TData, TError, TVariables>['mutate'];
-    mutationObserver: MutationObserver<TData, TError, TVariables>;
-  } & Observable<MutationObserverResult<TData, TError, TVariables>> & {
-      instance: MutationObserver<TData, TError, TVariables>;
-    } {
+    instance: MutationObserver<TData, TError, TVariables>;
+  } & Observable<MutationObserverResult<TData, TError, TVariables>> {
     const sourceSubscription = new Subscription();
 
     const mutationObserver = new MutationObserver<TData, TError, TVariables>(
