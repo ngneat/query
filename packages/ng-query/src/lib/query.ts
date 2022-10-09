@@ -8,14 +8,14 @@ import {
 } from '@tanstack/query-core';
 import { Observable, Subscription, take, tap } from 'rxjs';
 
-import { QUERY_CLIENT } from './query-client';
+import { QueryClient } from './query-client';
 import { NgQueryObserverResult } from './types';
 
 @Injectable({ providedIn: 'root' })
 class Query {
-  private instance = inject(QUERY_CLIENT);
+  private instance = inject(QueryClient);
 
-  query<TQueryFnData, TError, TData>(
+  use<TQueryFnData, TError, TData>(
     queryKey: QueryKey,
     queryFn: (context: QueryFunctionContext<QueryKey>) => Observable<TData>,
     options?: Omit<
@@ -106,13 +106,10 @@ class Query {
   }
 }
 
-export const QueryProvider = new InjectionToken<Query['query']>(
-  'QueryProvider',
-  {
-    providedIn: 'root',
-    factory() {
-      const query = new Query();
-      return query.query.bind(query);
-    },
-  }
-);
+export const QueryProvider = new InjectionToken<Query['use']>('QueryProvider', {
+  providedIn: 'root',
+  factory() {
+    const query = new Query();
+    return query.use.bind(query);
+  },
+});

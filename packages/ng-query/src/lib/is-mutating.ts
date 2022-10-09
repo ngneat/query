@@ -7,11 +7,11 @@ import {
 } from '@tanstack/query-core';
 import { distinctUntilChanged, Observable } from 'rxjs';
 
-import { QUERY_CLIENT } from './query-client';
+import { QueryClient } from './query-client';
 
 @Injectable({ providedIn: 'root' })
 class IsMutating {
-  private instance = inject(QUERY_CLIENT);
+  private instance = inject(QueryClient);
 
   query(filters?: MutationFilters): Observable<number>;
   query(

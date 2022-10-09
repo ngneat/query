@@ -1,13 +1,13 @@
 import { inject, InjectionToken } from '@angular/core';
-import { QueryClient } from '@tanstack/query-core';
+import { QueryClient as QueryCore } from '@tanstack/query-core';
 import { QUERY_CLIENT_CONFIG } from './providers';
 
-export const QUERY_CLIENT = new InjectionToken<QueryClient>('QUERY_CLIENT', {
+export const QueryClient = new InjectionToken<QueryCore>('QueryClient', {
   providedIn: 'root',
   factory() {
     const config = inject(QUERY_CLIENT_CONFIG);
 
-    return new QueryClient({
+    return new QueryCore({
       defaultOptions: {
         queries: {
           staleTime: Infinity,

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve playground",
+    "start": "nx run-many --parallel --target=serve --projects=playground,backend ",
     "postinstall": "ngcc --properties es2020 browser module main"
   },
   "private": true,
@@ -19,9 +19,12 @@
     "@nrwl/cli": "14.8.2",
     "@nrwl/cypress": "14.8.2",
     "@nrwl/eslint-plugin-nx": "14.8.2",
+    "@nrwl/express": "^14.8.3",
     "@nrwl/jest": "14.8.2",
     "@nrwl/linter": "14.8.2",
+    "@nrwl/node": "14.8.3",
     "@nrwl/workspace": "14.8.2",
+    "@types/express": "4.17.13",
     "@types/jest": "28.1.1",
     "@types/node": "16.11.7",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
@@ -59,6 +62,8 @@
     "@angular/platform-browser-dynamic": "~14.2.0",
     "@angular/router": "~14.2.0",
     "@ngneat/subscribe": "^3.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
     "rxjs": "~7.5.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

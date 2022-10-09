@@ -16,10 +16,7 @@ import { TodosService } from '../todos.service';
       <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
 
       <ul class="list-group" *ngIf="todos.isSuccess">
-        <li
-          class="list-group-item"
-          *ngFor="let todo of todos.data | slice: 0:5"
-        >
+        <li class="list-group-item" *ngFor="let todo of todos.data">
           {{ todo.title }}
         </li>
       </ul>
@@ -47,6 +44,17 @@ import { TodosService } from '../todos.service';
         <div class="card-body">{{ todo.data.id }} - {{ todo.data.title }}</div>
       </div>
     </ng-container>
+
+    <hr />
+    <h2 class="mt-3">Mutation</h2>
+
+    <button
+      (click)="addTodo()"
+      class="btn btn-info mt-2"
+      *subscribe="addTodoMutation$ as addTodoMutation"
+    >
+      Add todo {{ addTodoMutation.isLoading ? 'Loading' : '' }}
+    </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -57,4 +65,12 @@ export class BasicPageComponent {
   todo$ = this.todo
     .asObservable()
     .pipe(switchMap((id) => this.todosService.getTodo(id)));
+
+  addTodoMutation$ = this.todosService.addTodo();
+
+  addTodo() {
+    this.addTodoMutation$.mutate({ title: 'foo' }).then((res) => {
+      console.log(res.success);
+    });
+  }
 }

@@ -1,10 +1,10 @@
 import { inject, Injectable, InjectionToken } from '@angular/core';
 
-import { QUERY_CLIENT } from './query-client';
+import { QueryClient } from './query-client';
 
 @Injectable({ providedIn: 'root' })
 class InfiniteQuery {
-  private instance = inject(QUERY_CLIENT);
+  private instance = inject(QueryClient);
   query() {}
 }
 
