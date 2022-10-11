@@ -36,6 +36,16 @@ export class TodosService {
     });
   }
 
+  addTodo2({ title }: { title: string }) {
+    return this.http
+      .post<{ success: boolean }>(`http://localhost:3333/todos`, { title })
+      .pipe(
+        tap(() => {
+          this.queryClient.invalidateQueries(['todos']);
+        })
+      );
+  }
+
   getTodo(id: number) {
     return this.useQuery(['todo', id], () => {
       return this.http.get<Todo>(
