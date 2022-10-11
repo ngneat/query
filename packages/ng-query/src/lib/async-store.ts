@@ -34,7 +34,6 @@ export function createAsyncStore<Response, Error = unknown>() {
 
   return {
     value$: store.asObservable(),
-    getValue: store.getValue(),
     track<T extends Response>(): MonoTypeOperatorFunction<T> {
       return pipe(
         tap({
