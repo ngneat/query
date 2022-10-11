@@ -70,8 +70,7 @@ class InfiniteQuery {
           sourceSubscription.add(subscription);
         }) as any;
       },
-      getNextPageParam: defaultedOptions.getNextPageParam,
-      getPreviousPageParam: defaultedOptions.getPreviousPageParam,
+      ...defaultedOptions,
     });
 
     const $ = new Observable((observer) => {
