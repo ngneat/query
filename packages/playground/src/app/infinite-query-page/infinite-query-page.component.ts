@@ -1,43 +1,85 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+} from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { SpinnerComponent } from '../spinner/spinner.component';
-import { PostsService } from './posts.service';
+import { ProjectsService } from './projects.service';
+import { ScrollDirective } from './scroll.directive';
 
 @Component({
   selector: 'ng-query-infinite-query-page',
   standalone: true,
-  imports: [CommonModule, SpinnerComponent, SubscribeModule],
+  imports: [CommonModule, SpinnerComponent, SubscribeModule, ScrollDirective],
+  styles: [
+    `
+      :host {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+      }
+    `,
+  ],
   template: `
-    <h2 class="mb-3">Todos</h2>
+    <h2 class="mb-3">Projects</h2>
 
-    <ng-container *subscribe="posts$ as posts">
-      <ng-query-spinner
-        *ngIf="posts.isLoading || posts.isFetchingNextPage"
-      ></ng-query-spinner>
-
-      <ul class="list-group" *ngIf="posts.isSuccess">
-        <ng-container *ngFor="let page of posts.data.pages">
-          <li class="list-group-item" *ngFor="let post of page">
-            {{ post.title }}
-          </li>
-        </ng-container>
-      </ul>
+    <div
+      class="w-100 flex flex-col overflow-auto h-100 "
+      *subscribe="projects$ as projects"
+      (scrollEnd)="projects.hasNextPage && projects.fetchNextPage()"
+      ng-scroll
+    >
       <section class="flex mt-4 gap-3 justify-center items-center">
         <button
           type="button"
-          (click)="posts.fetchNextPage()"
+          (click)="projects.fetchPreviousPage()"
+          *ngIf="!projects.isLoading"
           class="btn btn-info"
+          [disabled]="!projects.hasPreviousPage"
         >
-          Load more posts
+          Load previous projects
         </button>
       </section>
-    </ng-container>
+
+      <ng-query-spinner
+        class="mx-auto"
+        *ngIf="projects.isFetchingPreviousPage"
+      ></ng-query-spinner>
+
+      <ul class="list-group" *ngIf="projects.isSuccess">
+        <ng-container *ngFor="let page of projects.data.pages">
+          <li
+            class="list-group-item h-56 flex items-center rounded my-10"
+            [style.background]="'hsla(' + project.id * 30 + ', 60%, 80%, 1)'"
+            *ngFor="let project of page.data"
+          >
+            {{ project.name }}
+          </li>
+        </ng-container>
+      </ul>
+
+      <ng-query-spinner
+        class="mx-auto min-h-[50px] flex items-center"
+        *ngIf="projects.isFetchingNextPage || projects.isLoading"
+      ></ng-query-spinner>
+
+      <div
+        class="alert alert-danger flex justify-center"
+        role="alert"
+        *ngIf="!projects.hasNextPage && !projects.isLoading"
+      >
+        Nothing more to load
+      </div>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfiniteQueryPageComponent {
-  postsService = inject(PostsService);
-
-  posts$ = this.postsService.getPosts();
+  projectsService = inject(ProjectsService);
+  projects$ = this.projectsService.getProjects();
 }
