@@ -1,12 +1,12 @@
 import { inject, Injectable, InjectionToken } from '@angular/core';
 import {
-  notifyManager,
   QueryFunctionContext,
   QueryKey,
   QueryObserver,
   QueryObserverOptions,
 } from '@tanstack/query-core';
 import { Observable, Subscription, take, tap } from 'rxjs';
+import { notify, baseResults } from './base-query';
 
 import { QueryClient } from './query-client';
 import { NgQueryObserverResult } from './types';
@@ -28,17 +28,7 @@ class Query {
     const defaultedOptions = this.instance.defaultQueryOptions(options);
     defaultedOptions._optimisticResults = 'optimistic';
 
-    defaultedOptions.onError &&= notifyManager.batchCalls(
-      defaultedOptions.onError
-    );
-
-    defaultedOptions.onSuccess &&= notifyManager.batchCalls(
-      defaultedOptions.onSuccess
-    );
-
-    defaultedOptions.onSettled &&= notifyManager.batchCalls(
-      defaultedOptions.onSettled
-    );
+    notify(defaultedOptions);
 
     const sourceSubscription = new Subscription();
 
@@ -72,32 +62,8 @@ class Query {
       },
     });
 
-    const $ = new Observable((observer) => {
-      const initialResult = {
-        ...queryObserver.getOptimisticResult({
-          queryKey,
-          ...defaultedOptions,
-        }),
-        queryKey,
-      };
-
-      observer.next(initialResult);
-
-      const queryObserverDispose = queryObserver.subscribe(
-        notifyManager.batchCalls((result) => {
-          observer.next(
-            !defaultedOptions.notifyOnChangeProps
-              ? queryObserver.trackResult(result)
-              : result
-          );
-        })
-      );
-
-      return () => {
-        console.log('queryObserver unsubscribed ', queryKey);
-        sourceSubscription.unsubscribe();
-        queryObserverDispose();
-      };
+    const $ = baseResults(queryObserver, queryKey, defaultedOptions, () => {
+      sourceSubscription.unsubscribe();
     }) as any;
 
     $['instance'] = queryObserver;

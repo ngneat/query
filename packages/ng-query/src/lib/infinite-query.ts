@@ -4,10 +4,10 @@ import {
   QueryFunctionContext,
   InfiniteQueryObserverOptions,
   QueryObserver,
-  notifyManager,
   InfiniteQueryObserver,
 } from '@tanstack/query-core';
 import { Observable, Subscription, take, tap } from 'rxjs';
+import { baseResults, notify } from './base-query';
 
 import { QueryClient } from './query-client';
 import { NgInfiniteQueryObserverResult } from './types';
@@ -29,17 +29,7 @@ class InfiniteQuery {
 
     defaultedOptions._optimisticResults = 'optimistic';
 
-    defaultedOptions.onError &&= notifyManager.batchCalls(
-      defaultedOptions.onError
-    );
-
-    defaultedOptions.onSuccess &&= notifyManager.batchCalls(
-      defaultedOptions.onSuccess
-    );
-
-    defaultedOptions.onSettled &&= notifyManager.batchCalls(
-      defaultedOptions.onSettled
-    );
+    notify(defaultedOptions);
 
     const sourceSubscription = new Subscription();
 
@@ -73,32 +63,8 @@ class InfiniteQuery {
       ...defaultedOptions,
     });
 
-    const $ = new Observable((observer) => {
-      const initialResult = {
-        ...queryObserver.getOptimisticResult({
-          queryKey,
-          ...defaultedOptions,
-        }),
-        queryKey,
-      };
-
-      observer.next(initialResult);
-
-      const queryObserverDispose = queryObserver.subscribe(
-        notifyManager.batchCalls((result: any) => {
-          observer.next(
-            !defaultedOptions.notifyOnChangeProps
-              ? queryObserver.trackResult(result)
-              : result
-          );
-        })
-      );
-
-      return () => {
-        console.log('infinite queryObserver unsubscribed ', queryKey);
-        sourceSubscription.unsubscribe();
-        queryObserverDispose();
-      };
+    const $ = baseResults(queryObserver, queryKey, defaultedOptions, () => {
+      sourceSubscription.unsubscribe();
     }) as any;
 
     $['instance'] = queryObserver;
