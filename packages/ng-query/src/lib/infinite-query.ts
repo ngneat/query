@@ -15,16 +15,25 @@ import { NgInfiniteQueryObserverResult } from './types';
 @Injectable({ providedIn: 'root' })
 class InfiniteQuery {
   private instance = inject(QueryClient);
-  use<TQueryFnData, TError = unknown, TData = TQueryFnData>(
+  use<
+    TQueryFnData,
+    TError = unknown,
+    TData = TQueryFnData,
+    TQueryData = TQueryFnData
+  >(
     queryKey: QueryKey,
     queryFn: (
       context: QueryFunctionContext<QueryKey>
     ) => Observable<TQueryFnData>,
-    options?: InfiniteQueryObserverOptions<
-      TQueryFnData,
-      TError,
-      TData,
-      QueryKey
+    options?: Omit<
+      InfiniteQueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryData,
+        QueryKey
+      >,
+      'queryKey' | 'queryFn'
     >
   ): Observable<NgInfiniteQueryObserverResult<TData, TError>> & {
     instance: QueryObserver<TQueryFnData, TError, TData, QueryKey>;
