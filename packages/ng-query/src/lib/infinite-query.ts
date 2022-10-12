@@ -4,11 +4,11 @@ import {
   QueryFunctionContext,
   InfiniteQueryObserverOptions,
   QueryObserver,
+  InfiniteQueryObserverResult,
   InfiniteQueryObserver,
 } from '@tanstack/query-core';
-import { Observable, Subscription, take, tap } from 'rxjs';
-import { baseResults, notify } from './base-query';
-
+import { Observable } from 'rxjs';
+import { baseQuery } from './base-query';
 import { QueryClient } from './query-client';
 import { NgInfiniteQueryObserverResult } from './types';
 
@@ -17,59 +17,25 @@ class InfiniteQuery {
   private instance = inject(QueryClient);
   use<TQueryFnData, TError = unknown, TData = TQueryFnData>(
     queryKey: QueryKey,
-    queryFn: (context: QueryFunctionContext<QueryKey>) => Observable<TData>,
-    options?: Omit<
-      InfiniteQueryObserverOptions<TQueryFnData, TError, TData, QueryKey>,
-      'queryKey' | 'queryFn'
-    >
-  ): Observable<NgInfiniteQueryObserverResult<TData, TError>> & {
-    instance: QueryObserver<TQueryFnData, TError, TData, QueryKey>;
-  } {
-    const defaultedOptions = this.instance.defaultQueryOptions(options);
-
-    defaultedOptions._optimisticResults = 'optimistic';
-
-    notify(defaultedOptions);
-
-    const sourceSubscription = new Subscription();
-
-    const queryObserver = new InfiniteQueryObserver<
+    queryFn: (
+      context: QueryFunctionContext<QueryKey>
+    ) => Observable<TQueryFnData>,
+    options?: InfiniteQueryObserverOptions<
       TQueryFnData,
       TError,
       TData,
       QueryKey
-    >(this.instance, {
+    >
+  ): Observable<NgInfiniteQueryObserverResult<TData, TError>> & {
+    instance: QueryObserver<TQueryFnData, TError, TData, QueryKey>;
+  } {
+    return baseQuery(
+      this.instance,
       queryKey,
-      queryFn: (...queryFnArgs) => {
-        return new Promise<TData>((res, rej) => {
-          const subscription = queryFn(...queryFnArgs)
-            .pipe(
-              take(1),
-              tap({
-                unsubscribe: () => {
-                  console.log('unsubscribe on destroy from ', queryKey);
-                  this.instance.cancelQueries(queryKey);
-                },
-              })
-            )
-            .subscribe({
-              next: res,
-              error: rej,
-            });
-
-          sourceSubscription.add(subscription);
-        }) as any;
-      },
-      ...defaultedOptions,
-    });
-
-    const $ = baseResults(queryObserver, queryKey, defaultedOptions, () => {
-      sourceSubscription.unsubscribe();
-    }) as any;
-
-    $['instance'] = queryObserver;
-
-    return $;
+      queryFn,
+      InfiniteQueryObserver as typeof QueryObserver,
+      options
+    );
   }
 }
 
