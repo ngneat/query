@@ -15,7 +15,12 @@ import { NgQueryObserverResult } from './types';
 class Query {
   private instance = inject(QueryClient);
 
-  use<TQueryFnData, TError, TData, TQueryData>(
+  use<
+    TQueryFnData,
+    TError = unknown,
+    TData = TQueryFnData,
+    TQueryData = TQueryFnData
+  >(
     queryKey: QueryKey,
     queryFn: (
       context: QueryFunctionContext<QueryKey>
