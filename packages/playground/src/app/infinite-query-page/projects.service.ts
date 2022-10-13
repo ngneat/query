@@ -1,20 +1,40 @@
 import { inject, Injectable } from '@angular/core';
 import { InfiniteQueryProvider } from '@ngneat/ng-query';
 import { Observable } from 'rxjs';
+interface Project {
+  id: number;
+  name: string;
+}
+
+export interface Projects {
+  data: Project[];
+  nextId: number | null;
+  previousId: number | null;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ProjectsService {
   private useInfiniteQuery = inject(InfiniteQueryProvider);
-
-  getProjects() {}
+  getProjects() {
+    return this.useInfiniteQuery<Projects>(
+      ['projects'],
+      ({ pageParam = 0 }) => {
+        return getProjects(pageParam);
+      },
+      {
+        getNextPageParam: (lastPage) => {
+          return lastPage.nextId;
+        },
+        getPreviousPageParam: (lastPage) => {
+          return lastPage.previousId;
+        },
+      }
+    );
+  }
 }
 
 function getProjects(c: string) {
-  return new Observable<{
-    data: { id: number; name: string }[];
-    nextId: number | null;
-    previousId: number | null;
-  }>((observer) => {
+  return new Observable<Projects>((observer) => {
     const cursor = parseInt(c) || 0;
     const pageSize = 5;
 

@@ -76,9 +76,16 @@ import { RouterModule } from '@angular/router';
       </div>
     </nav>
 
-    <main class="container py-3">
+    <main class="container py-3 main">
       <router-outlet></router-outlet>
     </main>
   `,
+  styles: [
+    `
+      .main {
+        height: calc(100vh - 56px);
+      }
+    `,
+  ],
 })
 export class AppComponent {}
