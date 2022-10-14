@@ -12,7 +12,6 @@ import { QUERY_CLIENT } from '@ngneat/ng-query';
   imports: [CommonModule, SpinnerComponent, SubscribeModule],
   template: `
     <h2 class="mb-3">Todos</h2>
-    <div id="ngQuery-devtool"></div>
     <ng-container *subscribe="todos$ as todos">
       <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
 
