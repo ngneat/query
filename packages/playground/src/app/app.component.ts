@@ -80,12 +80,5 @@ import { RouterModule } from '@angular/router';
       <router-outlet></router-outlet>
     </main>
   `,
-  styles: [
-    `
-      .main {
-        height: calc(100vh - 56px);
-      }
-    `,
-  ],
 })
 export class AppComponent {}

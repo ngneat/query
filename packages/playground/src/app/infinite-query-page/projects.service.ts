@@ -16,17 +16,17 @@ export interface Projects {
 export class ProjectsService {
   private useInfiniteQuery = inject(InfiniteQueryProvider);
   getProjects() {
-    return this.useInfiniteQuery<Projects>(
+    return this.useInfiniteQuery(
       ['projects'],
       ({ pageParam = 0 }) => {
         return getProjects(pageParam);
       },
       {
-        getNextPageParam: (lastPage) => {
-          return lastPage.nextId;
+        getNextPageParam: (projects) => {
+          return projects.nextId;
         },
-        getPreviousPageParam: (lastPage) => {
-          return lastPage.previousId;
+        getPreviousPageParam: (projects) => {
+          return projects.previousId;
         },
       }
     );

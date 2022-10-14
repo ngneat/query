@@ -1,13 +1,12 @@
 import {
   notifyManager,
   QueryClient,
-  QueryFunctionContext,
   QueryKey,
   QueryObserver,
   QueryObserverOptions,
   QueryObserverResult,
 } from '@tanstack/query-core';
-import { Subscription, take, tap, Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 export function baseQuery<
   TQueryFnData = unknown,
@@ -16,15 +15,11 @@ export function baseQuery<
   TQueryData = TQueryFnData
 >(
   client: QueryClient,
-  queryKey: QueryKey,
-  queryFn: (
-    context: QueryFunctionContext<QueryKey>
-  ) => Observable<TQueryFnData>,
+  sourceSubscription: Subscription,
   Observer: typeof QueryObserver,
-  options?: QueryObserverOptions<TQueryFnData, TError, TData, TQueryData>
+  options: QueryObserverOptions<TQueryFnData, TError, TData, TQueryData>
 ) {
   const defaultedOptions = client.defaultQueryOptions(options);
-
   defaultedOptions._optimisticResults = 'optimistic';
 
   defaultedOptions.onError &&= notifyManager.batchCalls(
@@ -39,51 +34,19 @@ export function baseQuery<
     defaultedOptions.onSettled
   );
 
-  const sourceSubscription = new Subscription();
-
   const queryObserver = new Observer<
     TQueryFnData,
     TError,
     TData,
     TQueryData,
     QueryKey
-  >(client, {
-    queryKey,
-    queryFn: (...queryFnArgs) => {
-      return new Promise<TQueryFnData>((res, rej) => {
-        const subscription = queryFn(...queryFnArgs)
-          .pipe(
-            take(1),
-            tap({
-              unsubscribe: () => {
-                console.log('unsubscribe on destroy from ', queryKey);
-                client.cancelQueries(queryKey);
-              },
-            })
-          )
-          .subscribe({
-            next: res,
-            error: rej,
-          });
-
-        sourceSubscription.add(subscription);
-      });
-    },
-    ...defaultedOptions,
-  });
+  >(client, defaultedOptions);
 
   const $ = new Observable<QueryObserverResult<TData, TError>>((observer) => {
-    const initialResult = {
-      ...queryObserver.getOptimisticResult({
-        queryKey,
-        ...defaultedOptions,
-      }),
-    };
-
-    observer.next(initialResult);
+    observer.next(queryObserver.getOptimisticResult(defaultedOptions));
 
     const queryObserverDispose = queryObserver.subscribe(
-      notifyManager.batchCalls((result: any) => {
+      notifyManager.batchCalls((result) => {
         observer.next(
           !defaultedOptions.notifyOnChangeProps
             ? queryObserver.trackResult(result)
@@ -93,7 +56,10 @@ export function baseQuery<
     );
 
     return () => {
-      console.log('infinite queryObserver unsubscribed ', queryKey);
+      console.log(
+        'infinite queryObserver unsubscribed ',
+        defaultedOptions.queryKey
+      );
       sourceSubscription.unsubscribe();
       queryObserverDispose();
     };

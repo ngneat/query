@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  HostListener,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { ProjectsService } from './projects.service';
@@ -29,7 +23,8 @@ import { ScrollDirective } from './scroll.directive';
     <h2 class="mb-3">Projects</h2>
 
     <div
-      class="w-100 flex flex-col overflow-auto h-100 "
+      class="w-100 flex flex-col overflow-auto"
+      style="    height: calc(100vh - 56px)"
       *subscribe="projects$ as projects"
       (scrollEnd)="projects.hasNextPage && projects.fetchNextPage()"
       ng-scroll
@@ -64,7 +59,7 @@ import { ScrollDirective } from './scroll.directive';
       </ul>
 
       <ng-query-spinner
-        class="mx-auto min-h-[50px] flex items-center"
+        class="mx-auto min-h-[150px] flex items-center"
         *ngIf="projects.isFetchingNextPage || projects.isLoading"
       ></ng-query-spinner>
 
