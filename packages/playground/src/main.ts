@@ -3,7 +3,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BasicPageComponent } from './app/basic-page/basic-page.component';
 import { MutationsPageComponent } from './app/mutations-page/mutations-page.component';
 import { InfiniteQueryPageComponent } from './app/infinite-query-page/infinite-query-page.component';

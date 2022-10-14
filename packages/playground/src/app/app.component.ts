@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ngQueryDevtools } from '@ng-query/ng-query-devtools';
+import { QUERY_CLIENT } from '@ngneat/ng-query';
 
 @Component({
   standalone: true,
@@ -71,4 +73,12 @@ import { RouterModule } from '@angular/router';
     </main>
   `,
 })
-export class AppComponent {}
+export class AppComponent implements AfterViewInit {
+  private queryClient = inject(QUERY_CLIENT);
+  ngAfterViewInit() {
+    console.log('ngAfterViewInit');
+    // Type 'import("/Users/ducnguyen/code/ng-query/node_modules/@tanstack/query-core/build/lib/queryClient").QueryClient' is not assignable to type 'import("/Users/ducnguyen/code/ng-query/node_modules/@tanstack/react-query/node_modules/@tanstack/query-core/build/lib/queryClient").QueryClient'.
+    // @ts-ignore
+    ngQueryDevtools({ queryClient: this.queryClient });
+  }
+}
