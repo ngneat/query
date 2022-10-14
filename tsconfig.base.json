@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@ng-query/ng-query-devtools": [
+        "packages/ng-query-devtools/src/index.ts"
+      ],
       "@ngneat/ng-query": ["packages/ng-query/src/index.ts"]
     }
   },

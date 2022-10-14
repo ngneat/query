@@ -7,9 +7,7 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/playground",
         "index": "packages/playground/src/index.html",
@@ -21,9 +19,7 @@
           "packages/playground/src/favicon.ico",
           "packages/playground/src/assets"
         ],
-        "styles": [
-          "packages/playground/src/styles.scss"
-        ],
+        "styles": ["packages/playground/src/styles.scss"],
         "scripts": []
       },
       "configurations": {
@@ -91,9 +87,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/packages/playground"
-      ],
+      "outputs": ["coverage/packages/playground"],
       "options": {
         "jestConfig": "packages/playground/jest.config.ts",
         "passWithNoTests": true

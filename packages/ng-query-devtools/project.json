@@ -1,0 +1,34 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "ng-query-devtools",
+  "sourceRoot": "packages/ng-query-devtools/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/ng-query-devtools",
+        "main": "packages/ng-query-devtools/src/index.ts",
+        "tsConfig": "packages/ng-query-devtools/tsconfig.lib.json",
+        "assets": ["packages/ng-query-devtools/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/ng-query-devtools/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/ng-query-devtools"],
+      "options": {
+        "jestConfig": "packages/ng-query-devtools/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
