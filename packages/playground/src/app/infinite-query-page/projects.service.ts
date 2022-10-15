@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { InfiniteQueryProvider } from '@ngneat/ng-query';
+import { InfiniteQueryProvider, QueryProvider } from '@ngneat/ng-query';
 import { Observable } from 'rxjs';
 interface Project {
   id: number;
@@ -8,18 +8,20 @@ interface Project {
 
 export interface Projects {
   data: Project[];
-  nextId: number | null;
-  previousId: number | null;
+  nextId?: number | null;
+  previousId?: number | null;
+  hasMore?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
 export class ProjectsService {
   private useInfiniteQuery = inject(InfiniteQueryProvider);
-  getProjects() {
+  private useQuery = inject(QueryProvider);
+  getInfiniteProjects() {
     return this.useInfiniteQuery(
       ['projects'],
       ({ pageParam = 0 }) => {
-        return getProjects(pageParam);
+        return getInfiniteProjects(pageParam);
       },
       {
         getNextPageParam: (projects) => {
@@ -31,9 +33,16 @@ export class ProjectsService {
       }
     );
   }
+
+  getProjects(page: number = 0) {
+    return this.useQuery(['projects', page], () => getProjects(page), {
+      keepPreviousData: true,
+      staleTime: 5000,
+    });
+  }
 }
 
-function getProjects(c: string) {
+function getInfiniteProjects(c: string) {
   return new Observable<Projects>((observer) => {
     const cursor = parseInt(c) || 0;
     const pageSize = 5;
@@ -52,6 +61,27 @@ function getProjects(c: string) {
 
     setTimeout(() => {
       observer.next({ data, nextId, previousId });
+      observer.complete();
+    }, 1000);
+  });
+}
+
+function getProjects(page: number) {
+  return new Observable<Projects>((observer) => {
+    const pageSize = 10;
+
+    const data = Array(pageSize)
+      .fill(0)
+      .map((_, i) => {
+        const id = page * pageSize + (i + 1);
+        return {
+          name: 'Project ' + id,
+          id,
+        };
+      });
+
+    setTimeout(() => {
+      observer.next({ data, hasMore: page < 4 });
       observer.complete();
     }, 1000);
   });
