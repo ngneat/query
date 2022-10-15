@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { GithubApiService } from '../github.service';
 
@@ -24,7 +24,6 @@ import { GithubApiService } from '../github.service';
   `,
 })
 export class SimplePageComponent {
-  constructor(private githubApiService: GithubApiService) {}
-
+  githubApiService = inject(GithubApiService)
   repo$ = this.githubApiService.getRepository('ngneat/ng-query');
 }
