@@ -8,7 +8,7 @@ import {
   QueryObserverResult,
   QueryOptions,
 } from '@tanstack/query-core';
-import { Observable } from 'rxjs';
+import { Observable, Unsubscribable } from 'rxjs';
 
 import { QueryClient } from './query-client';
 import { ObservableQueryFn } from './types';
@@ -26,15 +26,18 @@ type NgQueryObserverOptions<
   queryFn: ObservableQueryFn<TQueryFnData, TQueryKey>;
 };
 
-type NgQueryObserverReturnType<
+export type NgQueryObserverReturnType<
   TQueryFnData = unknown,
   TError = unknown,
   TData = TQueryFnData,
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
-> = Observable<QueryObserverResult<TData, TError>> & {
-  instance: QueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>;
-};
+> = Unsubscribable & {
+  result$: Observable<QueryObserverResult<TData, TError>>;
+} & Omit<
+    QueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
+    'subscribe'
+  >;
 
 type NgQueryObserverDefinedReturnType<
   TQueryFnData = unknown,
@@ -42,12 +45,15 @@ type NgQueryObserverDefinedReturnType<
   TData = TQueryFnData,
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
-> = Observable<DefinedQueryObserverResult<TData, TError>> & {
-  instance: QueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>;
-};
+> = {
+  result$: Observable<DefinedQueryObserverResult<TData, TError>>;
+} & Omit<
+  QueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
+  'subscribe'
+>;
 
 @Injectable({ providedIn: 'root' })
-class Query {
+export class Query {
   private instance = inject(QueryClient);
 
   use<
@@ -163,14 +169,25 @@ class Query {
       | ObservableQueryFn<TQueryFnData, TQueryKey>
       | NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
     arg3?: NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>
-  ): NgQueryObserverReturnType<TQueryFnData, TError, TData, TQueryKey> {
+  ):
+    | NgQueryObserverReturnType<TQueryFnData, TError, TData, TQueryKey>
+    | NgQueryObserverDefinedReturnType<TQueryFnData, TError, TData, TQueryKey> {
     const parsedOptions = parseQueryArgs(
       arg1,
       arg2 as any,
       arg3
     ) as QueryOptions;
 
-    return buildQuery(this.instance, QueryObserver, parsedOptions);
+    return buildQuery(
+      this.instance,
+      QueryObserver,
+      parsedOptions
+    ) as unknown as NgQueryObserverReturnType<
+      TQueryFnData,
+      TError,
+      TData,
+      TQueryKey
+    >;
   }
 }
 

@@ -6,7 +6,14 @@ import {
   QueryObserverOptions,
   QueryObserverResult,
 } from '@tanstack/query-core';
-import { Observable, Subscription } from 'rxjs';
+import {
+  Observable,
+  shareReplay,
+  Subject,
+  Subscription,
+  takeUntil,
+  Unsubscribable,
+} from 'rxjs';
 
 export function baseQuery<
   TQueryFnData = unknown,
@@ -42,30 +49,47 @@ export function baseQuery<
     QueryKey
   >(client, defaultedOptions);
 
-  const $ = new Observable<QueryObserverResult<TData, TError>>((observer) => {
-    observer.next(queryObserver.getOptimisticResult(defaultedOptions));
+  console.log('NEW OBSERVER INSTANCE');
 
-    const queryObserverDispose = queryObserver.subscribe(
-      notifyManager.batchCalls((result) => {
+  const destroy = new Subject();
+
+  (queryObserver as unknown as Unsubscribable).unsubscribe = () => {
+    destroy.next(true);
+    destroy.complete();
+  };
+
+  (queryObserver as unknown as { result$: Observable<unknown> }).result$ =
+    new Observable<QueryObserverResult<TData, TError>>((observer) => {
+      console.log(
+        'NEW OBSERVER SUBSCRIPTION',
+        queryObserver.getCurrentQuery().queryKey
+      );
+
+      observer.next(queryObserver.getOptimisticResult(defaultedOptions));
+
+      const queryObserverDispose = queryObserver.subscribe((result) => {
         observer.next(
           !defaultedOptions.notifyOnChangeProps
             ? queryObserver.trackResult(result)
             : result
         );
+      });
+
+      return () => {
+        console.log(
+          'OBSERVER UNSUBSCRIBED ',
+          queryObserver.getCurrentQuery().queryKey
+        );
+        sourceSubscription.unsubscribe();
+        queryObserverDispose();
+      };
+    }).pipe(
+      takeUntil(destroy.asObservable()),
+      shareReplay({
+        bufferSize: 1,
+        refCount: !defaultedOptions.keepPreviousData,
       })
     );
 
-    return () => {
-      console.log(
-        'infinite queryObserver unsubscribed ',
-        defaultedOptions.queryKey
-      );
-      sourceSubscription.unsubscribe();
-      queryObserverDispose();
-    };
-  }) as any;
-
-  $['instance'] = queryObserver;
-
-  return $;
+  return queryObserver;
 }

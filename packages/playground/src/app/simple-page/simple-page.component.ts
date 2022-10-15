@@ -18,7 +18,7 @@ import { GithubApiService } from '../github.service';
         <strong>✨ {{ repo.data.stargazers_count }}</strong>
         <strong>🍴 {{ repo.data.forks_count }}</strong>
       </div>
-      
+
       <div *ngIf="repo.isFetching">Updating...</div>
     </ng-container>
   `,
@@ -26,5 +26,5 @@ import { GithubApiService } from '../github.service';
 export class SimplePageComponent {
   constructor(private githubApiService: GithubApiService) {}
 
-  repo$ = this.githubApiService.getRepository('ngneat/ng-query');
+  repo$ = this.githubApiService.getRepository('ngneat/ng-query').result$;
 }

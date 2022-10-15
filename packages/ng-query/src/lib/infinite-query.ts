@@ -8,7 +8,7 @@ import {
   QueryObserver,
   QueryOptions,
 } from '@tanstack/query-core';
-import { Observable } from 'rxjs';
+import { Observable, Unsubscribable } from 'rxjs';
 import { QueryClient } from './query-client';
 import { ObservableQueryFn } from './types';
 import { buildQuery } from './utils';
@@ -32,22 +32,18 @@ type NgQueryObserverOptions<
   queryFn: ObservableQueryFn<TQueryFnData, TQueryKey>;
 };
 
-type NgQueryObserverReturnType<
+export type NgInfiniteQueryObserverReturnType<
   TQueryFnData = unknown,
   TError = unknown,
   TData = TQueryFnData,
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
-> = Observable<InfiniteQueryObserverResult<TData, TError>> & {
-  instance: InfiniteQueryObserver<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryData,
-    TQueryKey
+> = Unsubscribable & {
+  result$: Observable<InfiniteQueryObserverResult<TData, TError>>;
+} & Omit<
+    InfiniteQueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
+    'subscribe'
   >;
-};
-
 @Injectable({ providedIn: 'root' })
 class InfiniteQuery {
   private instance = inject(QueryClient);
@@ -65,7 +61,7 @@ class InfiniteQuery {
       TQueryFnData,
       TQueryKey
     >
-  ): NgQueryObserverReturnType<TData, TError>;
+  ): NgInfiniteQueryObserverReturnType<TData, TError>;
 
   use<
     TQueryFnData = unknown,
@@ -84,7 +80,7 @@ class InfiniteQuery {
       >,
       'queryKey'
     >
-  ): NgQueryObserverReturnType<TData, TError>;
+  ): NgInfiniteQueryObserverReturnType<TData, TError>;
 
   use<
     TQueryFnData = unknown,
@@ -104,7 +100,7 @@ class InfiniteQuery {
       >,
       'queryKey' | 'queryFn'
     >
-  ): NgQueryObserverReturnType<TData, TError>;
+  ): NgInfiniteQueryObserverReturnType<TData, TError>;
 
   use<
     TQueryFnData,
@@ -137,7 +133,7 @@ class InfiniteQuery {
       TQueryFnData,
       TQueryKey
     >
-  ): NgQueryObserverReturnType<TData, TError> {
+  ): NgInfiniteQueryObserverReturnType<TData, TError> {
     const parsedOptions = parseQueryArgs(
       arg1,
       arg2 as any,
@@ -148,7 +144,7 @@ class InfiniteQuery {
       this.instance,
       InfiniteQueryObserver as typeof QueryObserver,
       parsedOptions
-    );
+    ) as unknown as NgInfiniteQueryObserverReturnType<TData, TError>;
   }
 }
 

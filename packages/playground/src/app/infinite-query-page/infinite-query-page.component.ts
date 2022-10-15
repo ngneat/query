@@ -76,5 +76,5 @@ import { ScrollDirective } from './scroll.directive';
 })
 export class InfiniteQueryPageComponent {
   projectsService = inject(ProjectsService);
-  projects$ = this.projectsService.getProjects();
+  projects$ = this.projectsService.getProjects().result$;
 }

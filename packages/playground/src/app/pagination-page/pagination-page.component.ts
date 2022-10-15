@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnDestroy,
+} from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
-import { BehaviorSubject, mergeMap, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, switchMap, tap } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { PaginationService } from './pagination.service';
 
@@ -47,14 +52,18 @@ import { PaginationService } from './pagination.service';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaginationPageComponent {
+export class PaginationPageComponent implements OnDestroy {
   private page = new BehaviorSubject(0);
   page$ = this.page.asObservable();
   projectsService = inject(PaginationService);
 
   projects$ = this.page$.pipe(
     switchMap((page) => {
-      return this.projectsService.getProjects(page);
+      return this.projectsService.getProjects(page).result$.pipe(
+        tap((result) => {
+          result.data?.hasMore && this.projectsService.prefetch(page + 1);
+        })
+      );
     })
   );
 
@@ -64,6 +73,10 @@ export class PaginationPageComponent {
 
   prevPage() {
     this.page.next(this.page.getValue() - 1);
+  }
+
+  ngOnDestroy() {
+    this.projectsService.destroy();
   }
 
   trackBy(_: number, project: { id: number }) {

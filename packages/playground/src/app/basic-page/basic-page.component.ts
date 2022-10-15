@@ -70,10 +70,10 @@ import { TodosService } from '../todos.service';
 export class BasicPageComponent {
   private todosService = inject(TodosService);
   todo = new BehaviorSubject<number>(100);
-  todos$ = this.todosService.getTodos();
+  todos$ = this.todosService.getTodos().result$;
   todo$ = this.todo
     .asObservable()
-    .pipe(switchMap((id) => this.todosService.getTodo(id)));
+    .pipe(switchMap((id) => this.todosService.getTodo(id).result$));
 
   addTodoMutation$ = this.todosService.addTodo();
   addTodoMutation = createAsyncStore();
