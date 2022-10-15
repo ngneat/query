@@ -47,6 +47,16 @@ import { RouterModule } from '@angular/router';
                 class="nav-link"
                 routerLinkActive="active"
                 aria-current="page"
+                routerLink="dynamic"
+                >Dynamic</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
                 routerLink="mutations"
                 >Mutations</a
               >

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { MutationProvider, QueryClient, QueryProvider } from '@ngneat/ng-query';
-import { tap } from 'rxjs';
+import { delay, tap } from 'rxjs';
 
 interface Todo {
   id: number;
@@ -50,7 +50,10 @@ export class TodosService {
     return this.useQuery(['todo', id], () => {
       return this.http.get<Todo>(
         `https://jsonplaceholder.typicode.com/todos/${id}`
-      );
+      )
+        .pipe(
+          delay(1000),
+        );
     });
   }
 }
