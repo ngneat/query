@@ -1,10 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { InfiniteQueryProvider } from '@ngneat/ng-query';
 import { Observable } from 'rxjs';
-interface Project {
-  id: number;
-  name: string;
-}
+import { Project } from '../types/project';
 
 export interface Projects {
   data: Project[];
