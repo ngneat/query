@@ -12,9 +12,11 @@ class MutationAsyncState<Response = unknown, Error = unknown> {
   }
 }
 
-export function createAsyncStore<Response, Error = unknown>() {
+export function createAsyncStore<Response, Error = unknown>(
+  options: Partial<MutationAsyncState> = {}
+) {
   const store = new BehaviorSubject<MutationAsyncState<Response, Error>>(
-    new MutationAsyncState()
+    new MutationAsyncState(options)
   );
 
   function update(data: Response | ((res: Response) => Response)) {

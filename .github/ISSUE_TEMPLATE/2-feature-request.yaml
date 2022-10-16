@@ -1,0 +1,43 @@
+name: 'Feature Request'
+description: Suggest a feature for ngneat/query Library
+
+body:
+  - type: dropdown
+    id: affected-packages
+    attributes:
+      label: Which @ngneat/query-* package(s) are relevant/releated to the feature request?
+      options:
+        - query
+        - devtools
+      multiple: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives-considered
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: true
+
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: Do you want to create a pull request?
+      options:
+        - 'Yes'
+        - 'No'
+    validations:
+      required: true

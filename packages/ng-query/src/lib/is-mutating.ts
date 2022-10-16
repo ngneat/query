@@ -13,12 +13,12 @@ import { QueryClient } from './query-client';
 class IsMutating {
   private instance = inject(QueryClient);
 
-  query(filters?: MutationFilters): Observable<number>;
-  query(
+  use(filters?: MutationFilters): Observable<number>;
+  use(
     mutationKey?: MutationKey,
     filters?: Omit<MutationFilters, 'mutationKey'>
   ): Observable<number>;
-  query(
+  use(
     arg1?: MutationKey | MutationFilters,
     arg2?: Omit<MutationFilters, 'mutationKey'>
   ): Observable<number> {
@@ -34,13 +34,13 @@ class IsMutating {
   }
 }
 
-export const IsIsMutatingProvider = new InjectionToken<IsMutating['query']>(
+export const IsMutatingProvider = new InjectionToken<IsMutating['use']>(
   'IsIsMutating',
   {
     providedIn: 'root',
     factory() {
       const query = new IsMutating();
-      return query.query.bind(query);
+      return query.use.bind(query);
     },
   }
 );

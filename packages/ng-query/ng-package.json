@@ -3,5 +3,6 @@
   "dest": "../../dist/packages/ng-query",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": ["@tanstack/query-core"]
 }

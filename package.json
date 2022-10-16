@@ -3,11 +3,20 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx run-many --parallel --target=serve --projects=playground,backend ",
+    "cz": "cz",
+    "build:all": "nx run-many --target=build --all --exclude=backend",
+    "test:all": "nx run-many --target=test --exclude=backend,playground --all",
+    "start": "nx run-many --parallel --target=serve --projects=playground,backend",
+    "format": "nx format:write",
+    "update": "nx migrate latest",
+    "migration": "nx migrate --run-migrations",
     "postinstall": "ngcc --properties es2020 browser module main"
   },
-  "private": true,
   "devDependencies": {
+    "commitizen": "4.2.4",
+    "git-cz": "4.8.0",
+    "lint-staged": "11.1.2",
+    "cz-conventional-changelog": "3.3.0",
     "@angular-devkit/build-angular": "~14.2.0",
     "@angular-eslint/eslint-plugin": "~14.0.4",
     "@angular-eslint/eslint-plugin-template": "~14.0.4",
@@ -73,5 +82,18 @@
     "rxjs": "~7.5.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "git-cz"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*.{ts,json,html,tsx}": "prettier --write"
   }
 }

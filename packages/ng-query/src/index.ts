@@ -1,11 +1,13 @@
-export * from './lib/query';
-export * from './lib/mutation';
+export { QueryProvider } from './lib/query';
+export { MutationProvider } from './lib/mutation';
 
-export * from './lib/infinite-query';
-export * from './lib/providers';
-export * from './lib/query-client';
-export * from './lib/async-store';
+export { InfiniteQueryProvider } from './lib/infinite-query';
+export { QUERY_CLIENT_CONFIG } from './lib/providers';
+export { QueryClient } from './lib/query-client';
+export { createAsyncStore } from './lib/async-store';
 
-export * from './lib/operators/filter-error.operator';
-export * from './lib/operators/filter-success.operator';
-export * from './lib/operators/select-result.operator';
+export { filterError } from './lib/operators/filter-error.operator';
+export { filterSuccess } from './lib/operators/filter-success.operator';
+export { selectResult } from './lib/operators/select-result.operator';
+export { IsFetchingProvider } from './lib/is-fetching';
+export { IsMutatingProvider } from './lib/is-mutating';

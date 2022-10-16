@@ -13,12 +13,9 @@ import { QueryClient } from './query-client';
 class IsFetching {
   private instance = inject(QueryClient);
 
-  query(filters?: QueryFilters): Observable<number>;
-  query(queryKey?: QueryKey, filters?: QueryFilters): Observable<number>;
-  query(
-    arg1?: QueryKey | QueryFilters,
-    arg2?: QueryFilters
-  ): Observable<number> {
+  use(filters?: QueryFilters): Observable<number>;
+  use(queryKey?: QueryKey, filters?: QueryFilters): Observable<number>;
+  use(arg1?: QueryKey | QueryFilters, arg2?: QueryFilters): Observable<number> {
     const [filters] = parseFilterArgs(arg1, arg2);
 
     return new Observable<number>((obs) =>
@@ -31,13 +28,13 @@ class IsFetching {
   }
 }
 
-export const IsFetchingProvider = new InjectionToken<IsFetching['query']>(
+export const IsFetchingProvider = new InjectionToken<IsFetching['use']>(
   'IsFetching',
   {
     providedIn: 'root',
     factory() {
       const query = new IsFetching();
-      return query.query.bind(query);
+      return query.use.bind(query);
     },
   }
 );
