@@ -7,7 +7,7 @@
     "build:all": "nx run-many --target=build --all --exclude=backend",
     "test:all": "nx run-many --target=test --exclude=backend,playground --all",
     "start": "nx run-many --parallel --target=serve --projects=playground,backend",
-    "format": "nx format:write",
+    "format": "nx format:write --all",
     "update": "nx migrate latest",
     "migration": "nx migrate --run-migrations",
     "postinstall": "ngcc --properties es2020 browser module main"
@@ -97,4 +97,3 @@
     "*.{ts,json,html,tsx}": "prettier --write"
   }
 }
-
