@@ -7,7 +7,7 @@
   "targets": {
     "build": {
       "executor": "@nrwl/angular:package",
-      "outputs": ["dist/packages/ng-query"],
+      "outputs": ["{workspaceRoot}/dist/packages/ng-query"],
       "options": {
         "project": "packages/ng-query/ng-package.json"
       },
@@ -23,7 +23,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/ng-query"],
+      "outputs": ["{workspaceRoot}/coverage/packages/ng-query"],
       "options": {
         "jestConfig": "packages/ng-query/jest.config.ts",
         "passWithNoTests": true

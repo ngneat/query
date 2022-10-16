@@ -88,7 +88,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/playground"],
+      "outputs": ["{workspaceRoot}/coverage/packages/playground"],
       "options": {
         "jestConfig": "packages/playground/jest.config.ts",
         "passWithNoTests": true

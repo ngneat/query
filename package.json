@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "cz": "cz",
+    "c": "cz",
     "build:all": "nx run-many --target=build --all --exclude=backend",
     "test:all": "nx run-many --target=test --exclude=backend,playground --all",
     "start": "nx run-many --parallel --target=serve --projects=playground,backend",
@@ -24,15 +24,15 @@
     "@angular/cli": "~14.2.0",
     "@angular/compiler-cli": "~14.2.0",
     "@angular/language-service": "~14.2.0",
-    "@nrwl/angular": "^14.8.2",
-    "@nrwl/cli": "14.8.2",
-    "@nrwl/cypress": "14.8.2",
-    "@nrwl/eslint-plugin-nx": "14.8.2",
-    "@nrwl/express": "^14.8.3",
-    "@nrwl/jest": "14.8.2",
-    "@nrwl/linter": "14.8.2",
-    "@nrwl/node": "14.8.3",
-    "@nrwl/workspace": "14.8.2",
+    "@nrwl/angular": "15.0.0",
+    "@nrwl/cli": "15.0.0",
+    "@nrwl/cypress": "15.0.0",
+    "@nrwl/eslint-plugin-nx": "15.0.0",
+    "@nrwl/express": "15.0.0",
+    "@nrwl/jest": "15.0.0",
+    "@nrwl/linter": "15.0.0",
+    "@nrwl/node": "15.0.0",
+    "@nrwl/workspace": "15.0.0",
     "@types/express": "4.17.13",
     "@types/jest": "28.1.1",
     "@types/node": "16.11.7",
@@ -49,7 +49,7 @@
     "jest-environment-jsdom": "28.1.1",
     "jest-preset-angular": "~12.2.2",
     "ng-packagr": "~14.2.0",
-    "nx": "14.8.2",
+    "nx": "15.0.0",
     "postcss": "^8.4.5",
     "postcss-import": "~14.1.0",
     "postcss-preset-env": "~7.5.0",
@@ -97,3 +97,4 @@
     "*.{ts,json,html,tsx}": "prettier --write"
   }
 }
+
