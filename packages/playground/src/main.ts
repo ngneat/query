@@ -9,6 +9,7 @@ import { MutationsPageComponent } from './app/mutations-page/mutations-page.comp
 import { InfiniteQueryPageComponent } from './app/infinite-query-page/infinite-query-page.component';
 import { PaginationPageComponent } from './app/pagination-page/pagination-page.component';
 import { SimplePageComponent } from './app/simple-page/simple-page.component';
+import { DynamicQueriesPageComponent } from './app/dynamic-queries-page/dynamic-queries-page.component';
 
 if (environment.production) {
   enableProdMode();
@@ -27,6 +28,10 @@ bootstrapApplication(AppComponent, {
           {
             path: 'basic',
             component: BasicPageComponent,
+          },
+          {
+            path: 'dynamic',
+            component: DynamicQueriesPageComponent,
           },
           {
             path: 'mutations',
