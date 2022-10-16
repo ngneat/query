@@ -1,5 +1,5 @@
 {
-  "name": "@ngneat/ng-query",
+  "name": "@ngneat/query",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^14.2.0",

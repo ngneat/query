@@ -3,7 +3,7 @@ import {
   NgQueryObserverReturnType,
   QueryClient,
   QueryProvider,
-} from '@ngneat/ng-query';
+} from '@ngneat/query';
 import { delay, firstValueFrom, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

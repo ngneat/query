@@ -15,7 +15,7 @@ import { InfiniteQueryPageComponent } from './app/infinite-query-page/infinite-q
 import { PaginationPageComponent } from './app/pagination-page/pagination-page.component';
 import { SimplePageComponent } from './app/simple-page/simple-page.component';
 import { DynamicQueriesPageComponent } from './app/dynamic-queries-page/dynamic-queries-page.component';
-import { QueryClient } from '@ngneat/ng-query';
+import { QueryClient } from '@ngneat/query';
 
 if (environment.production) {
   enableProdMode();

@@ -11,7 +11,7 @@ Learning resources:
 ```ts
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { MutationProvider, QueryClient, QueryProvider } from '@ngneat/ng-query';
+import { MutationProvider, QueryClient, QueryProvider } from '@ngneat/query';
 import { tap } from 'rxjs';
 
 interface Todo {

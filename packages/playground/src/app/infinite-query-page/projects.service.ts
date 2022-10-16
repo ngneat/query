@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { InfiniteQueryProvider } from '@ngneat/ng-query';
+import { InfiniteQueryProvider } from '@ngneat/query';
 import { Observable } from 'rxjs';
 interface Project {
   id: number;

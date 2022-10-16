@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { QueryProvider } from '@ngneat/ng-query';
+import { QueryProvider } from '@ngneat/query';
 
 interface Repository {
   name: string;
