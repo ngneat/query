@@ -27,16 +27,12 @@ export class PaginationService {
     );
   }
 
-  destroy() {
-    this.projectsObserver?.unsubscribe();
-    this.projectsObserver = null;
-  }
-
   private fetchProjects(page = 0) {
     return this.useQuery(
       ['projects', page] as const,
       ({ queryKey }) => fetchProjects(queryKey[1]),
       {
+        staleTime: 5000,
         keepPreviousData: true,
       }
     );

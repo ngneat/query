@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { BehaviorSubject, switchMap, tap } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -44,7 +39,12 @@ import { PaginationService } from './pagination.service';
           Previous Page
         </button>
 
-        <button (click)="nextPage()">Next Page</button>
+        <button
+          (click)="nextPage()"
+          [disabled]="projects.isPreviousData || !projects.data?.hasMore"
+        >
+          Next Page
+        </button>
         {{ projects.isFetching ? 'Loading...' : '' }}
       </div>
     </ng-container>
@@ -52,7 +52,7 @@ import { PaginationService } from './pagination.service';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaginationPageComponent implements OnDestroy {
+export class PaginationPageComponent {
   private page = new BehaviorSubject(0);
   page$ = this.page.asObservable();
   projectsService = inject(PaginationService);
@@ -73,10 +73,6 @@ export class PaginationPageComponent implements OnDestroy {
 
   prevPage() {
     this.page.next(this.page.getValue() - 1);
-  }
-
-  ngOnDestroy() {
-    this.projectsService.destroy();
   }
 
   trackBy(_: number, project: { id: number }) {

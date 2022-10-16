@@ -6,14 +6,7 @@ import {
   QueryObserverOptions,
   QueryObserverResult,
 } from '@tanstack/query-core';
-import {
-  Observable,
-  shareReplay,
-  Subject,
-  Subscription,
-  takeUntil,
-  Unsubscribable,
-} from 'rxjs';
+import { Observable, shareReplay, Subscription } from 'rxjs';
 
 export function baseQuery<
   TQueryFnData = unknown,
@@ -51,13 +44,6 @@ export function baseQuery<
 
   console.log('NEW OBSERVER INSTANCE');
 
-  const destroy = new Subject();
-
-  (queryObserver as unknown as Unsubscribable).unsubscribe = () => {
-    destroy.next(true);
-    destroy.complete();
-  };
-
   (
     queryObserver as unknown as {
       updateQueryKey: (queryKey: QueryKey) => void;
@@ -75,12 +61,18 @@ export function baseQuery<
 
   (queryObserver as unknown as { result$: Observable<unknown> }).result$ =
     new Observable<QueryObserverResult<TData, TError>>((observer) => {
+      const mergedOptions = client.defaultQueryOptions({
+        ...options,
+        // The query key can be changed, so we need to rebuild it each time
+        ...queryObserver.options,
+      });
+
       console.log(
         'NEW OBSERVER SUBSCRIPTION',
         queryObserver.getCurrentQuery().queryKey
       );
 
-      observer.next(queryObserver.getOptimisticResult(defaultedOptions));
+      observer.next(queryObserver.getOptimisticResult(mergedOptions));
 
       const queryObserverDispose = queryObserver.subscribe((result) => {
         observer.next(
@@ -99,10 +91,9 @@ export function baseQuery<
         queryObserverDispose();
       };
     }).pipe(
-      takeUntil(destroy.asObservable()),
       shareReplay({
         bufferSize: 1,
-        refCount: !defaultedOptions.keepPreviousData,
+        refCount: true,
       })
     );
 
