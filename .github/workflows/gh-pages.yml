@@ -1,0 +1,42 @@
+name: Deploy Playground to GitHub Pages
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        # this action has a built-in functionality for caching and restoring dependencies
+        # https://github.com/actions/setup-node#caching-global-packages-data
+        with:
+          node-version: 16
+          cache: 'npm'
+      - name: Install and Build
+        run: |
+          npm ci
+          npx nx build playground -- --base-href /query/
+      - name: Duplicated index.html
+        # https://angular.io/guide/deployment#deploy-to-github-pages
+        # To prevent 404 errors for application routes when refreshing the page
+        run: |
+          cp dist/packages/playground/index.html dist/packages/playground/404.html
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: './dist/packages/playground'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
