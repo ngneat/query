@@ -58,6 +58,21 @@ export function baseQuery<
     destroy.complete();
   };
 
+  (
+    queryObserver as unknown as {
+      updateQueryKey: (queryKey: QueryKey) => void;
+    }
+  ).updateQueryKey = (queryKey: QueryKey) => {
+    const newKey = client.defaultQueryOptions({
+      queryKey,
+    });
+
+    queryObserver.setOptions({
+      ...queryObserver.options,
+      ...newKey,
+    } as any);
+  };
+
   (queryObserver as unknown as { result$: Observable<unknown> }).result$ =
     new Observable<QueryObserverResult<TData, TError>>((observer) => {
       console.log(

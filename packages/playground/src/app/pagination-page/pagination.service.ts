@@ -1,46 +1,23 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  NgQueryObserverReturnType,
-  QueryClient,
-  QueryProvider,
-} from '@ngneat/query';
+import { QueryClient, QueryProvider } from '@ngneat/query';
 import { delay, firstValueFrom, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PaginationService {
   private queryClient = inject(QueryClient);
   private useQuery = inject(QueryProvider);
-  private observer: NgQueryObserverReturnType<
-    Projects,
-    unknown,
-    Projects,
-    readonly ['projects', number]
+  private projectsObserver: ReturnType<
+    PaginationService['fetchProjects']
   > | null = null;
 
   getProjects(page = 0) {
-    if (!this.observer) {
-      this.observer = this.useQuery(
-        ['projects', page] as const,
-        ({ queryKey }) => fetchProjects(queryKey[1]),
-        {
-          keepPreviousData: true,
-        }
-      );
-
-      return this.observer;
+    if (!this.projectsObserver) {
+      this.projectsObserver = this.fetchProjects(page);
+    } else {
+      this.projectsObserver.updateQueryKey(['projects', page]);
     }
 
-    // TODO: FIND A WAY TO WRAP EVERTHING
-    const defaultedOptions = this.queryClient.defaultQueryOptions({
-      queryKey: ['projects', page],
-    });
-
-    this.observer.setOptions({
-      ...this.observer.options,
-      ...defaultedOptions,
-    } as any);
-
-    return this.observer;
+    return this.projectsObserver;
   }
 
   prefetch(page: number) {
@@ -51,14 +28,19 @@ export class PaginationService {
   }
 
   destroy() {
-    this.observer?.unsubscribe();
-    this.observer = null;
+    this.projectsObserver?.unsubscribe();
+    this.projectsObserver = null;
   }
-}
 
-interface Projects {
-  projects: Array<{ name: string; id: number }>;
-  hasMore: boolean;
+  private fetchProjects(page = 0) {
+    return this.useQuery(
+      ['projects', page] as const,
+      ({ queryKey }) => fetchProjects(queryKey[1]),
+      {
+        keepPreviousData: true,
+      }
+    );
+  }
 }
 
 function fetchProjects(nextPage: number) {
