@@ -20,6 +20,12 @@
       "options": {
         "lintFilePatterns": ["packages/devtools/**/*.ts"]
       }
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "preset": "angular"
+      }
     }
   },
   "tags": []

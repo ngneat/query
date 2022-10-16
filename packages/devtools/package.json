@@ -15,5 +15,8 @@
     "react-dom": "^18.2.0",
     "@tanstack/react-query": "^4.12.0",
     "@tanstack/react-query-devtools": "^4.12.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
