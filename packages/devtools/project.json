@@ -1,0 +1,26 @@
+{
+  "name": "devtools",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/devtools/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/devtools",
+        "main": "packages/devtools/src/index.ts",
+        "tsConfig": "packages/devtools/tsconfig.lib.json",
+        "assets": ["packages/devtools/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/devtools/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

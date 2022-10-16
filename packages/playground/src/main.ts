@@ -1,4 +1,9 @@
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import {
+  enableProdMode,
+  ENVIRONMENT_INITIALIZER,
+  importProvidersFrom,
+  inject,
+} from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app/app.component';
@@ -10,6 +15,7 @@ import { InfiniteQueryPageComponent } from './app/infinite-query-page/infinite-q
 import { PaginationPageComponent } from './app/pagination-page/pagination-page.component';
 import { SimplePageComponent } from './app/simple-page/simple-page.component';
 import { DynamicQueriesPageComponent } from './app/dynamic-queries-page/dynamic-queries-page.component';
+import { QueryClient } from '@ngneat/ng-query';
 
 if (environment.production) {
   enableProdMode();
@@ -17,6 +23,18 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    environment.production
+      ? []
+      : {
+          provide: ENVIRONMENT_INITIALIZER,
+          multi: true,
+          useValue() {
+            const queryClient = inject(QueryClient);
+            import('@ngneat/query-devtools').then((m) => {
+              m.ngQueryDevtools({ queryClient });
+            });
+          },
+        },
     importProvidersFrom(
       HttpClientModule,
       RouterModule.forRoot(
