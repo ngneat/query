@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { MutationProvider, QueryClient, QueryProvider } from '@ngneat/query';
 import { delay, tap } from 'rxjs';
+import { environment } from '../environments/environment';
 
 interface Todo {
   id: number;
@@ -17,17 +18,18 @@ export class TodosService {
   private queryClient = inject(QueryClient);
   private useQuery = inject(QueryProvider);
   private useMutation = inject(MutationProvider);
+  baseURL = environment.apiURL;
 
   getTodos() {
     return this.useQuery(['todos'], () => {
-      return this.http.get<Todo[]>('http://localhost:3333/todos');
+      return this.http.get<Todo[]>(`${this.baseURL}/todos`);
     });
   }
 
   addTodo() {
     return this.useMutation(({ title }: { title: string }) => {
       return this.http
-        .post<{ success: boolean }>(`http://localhost:3333/todos`, { title })
+        .post<{ success: boolean }>(`${this.baseURL}/todos`, { title })
         .pipe(
           tap(() => {
             this.queryClient.invalidateQueries(['todos']);
@@ -38,7 +40,7 @@ export class TodosService {
 
   addTodo2({ title }: { title: string }) {
     return this.http
-      .post<{ success: boolean }>(`http://localhost:3333/todos`, { title })
+      .post<{ success: boolean }>(`${this.baseURL}/todos`, { title })
       .pipe(
         tap(() => {
           this.queryClient.invalidateQueries(['todos']);
