@@ -59,11 +59,13 @@ export class PaginationPageComponent {
 
   projects$ = this.page$.pipe(
     switchMap((page) => {
-      return this.projectsService.getProjects(page).result$.pipe(
-        tap((result) => {
-          result.data?.hasMore && this.projectsService.prefetch(page + 1);
-        })
-      );
+      return this.projectsService
+        .getProjects(['projects', page], { foo: Math.random() })
+        .result$.pipe(
+          tap((result) => {
+            result.data?.hasMore && this.projectsService.prefetch(page + 1);
+          })
+        );
     })
   );
 
