@@ -1,40 +1,28 @@
 import { inject, Injectable } from '@angular/core';
-import { QueryClient, QueryProvider } from '@ngneat/query';
+import { PersistedQuery, QueryClient, queryOptions } from '@ngneat/query';
 import { delay, firstValueFrom, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PaginationService {
   private queryClient = inject(QueryClient);
-  private useQuery = inject(QueryProvider);
-  private projectsObserver: ReturnType<
-    PaginationService['fetchProjects']
-  > | null = null;
 
-  getProjects(page = 0) {
-    if (!this.projectsObserver) {
-      this.projectsObserver = this.fetchProjects(page);
-    } else {
-      this.projectsObserver.updateQueryKey(['projects', page]);
+  getProjects = inject(PersistedQuery).use(
+    (queryKey: ['projects', number], params) => {
+      return queryOptions({
+        queryKey,
+        queryFn: ({ queryKey }) => {
+          console.log(params);
+          return fetchProjects(queryKey[1]);
+        },
+      });
     }
-
-    return this.projectsObserver;
-  }
+  );
 
   prefetch(page: number) {
     console.log('PREFETCHING', page);
+
     return this.queryClient.prefetchQuery(['projects', page], () =>
       firstValueFrom(fetchProjects(page))
-    );
-  }
-
-  private fetchProjects(page = 0) {
-    return this.useQuery(
-      ['projects', page] as const,
-      ({ queryKey }) => fetchProjects(queryKey[1]),
-      {
-        staleTime: 5000,
-        keepPreviousData: true,
-      }
     );
   }
 }

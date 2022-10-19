@@ -13,7 +13,8 @@ import { Observable, Unsubscribable } from 'rxjs';
 import { QueryClient } from './query-client';
 import { ObservableQueryFn } from './types';
 import { buildQuery } from './utils';
-type NgQueryObserverOptions<
+
+export type NgQueryObserverOptions<
   TQueryFnData = unknown,
   TError = unknown,
   TData = TQueryFnData,
@@ -26,7 +27,7 @@ type NgQueryObserverOptions<
   queryFn: ObservableQueryFn<TQueryFnData, TQueryKey>;
 };
 
-type NgQueryObserverReturnType<
+export type NgQueryObserverReturnType<
   TQueryFnData = unknown,
   TError = unknown,
   TData = TQueryFnData,
@@ -63,8 +64,29 @@ export class Query {
     TData = TQueryFnData,
     TQueryKey extends QueryKey = QueryKey
   >(
+    options: NgQueryObserverOptions<
+      TQueryFnData,
+      TError,
+      TData,
+      TQueryFnData,
+      TQueryKey
+    >
+  ): NgQueryObserverReturnType<TQueryFnData, TError, TData, TQueryKey>;
+
+  use<
+    TQueryFnData = unknown,
+    TError = unknown,
+    TData = TQueryFnData,
+    TQueryKey extends QueryKey = QueryKey
+  >(
     options: Omit<
-      NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
+      NgQueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryFnData,
+        TQueryKey
+      >,
       'initialData'
     > & { initialData?: () => undefined }
   ): NgQueryObserverReturnType<TQueryFnData, TError, TData, TQueryKey>;
@@ -76,7 +98,13 @@ export class Query {
     TQueryKey extends QueryKey = QueryKey
   >(
     options: Omit<
-      NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
+      NgQueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryFnData,
+        TQueryKey
+      >,
       'initialData'
     > & { initialData: TQueryFnData | (() => TQueryFnData) }
   ): NgQueryObserverDefinedReturnType<TQueryFnData, TError, TData, TQueryKey>;
@@ -87,18 +115,15 @@ export class Query {
     TData = TQueryFnData,
     TQueryKey extends QueryKey = QueryKey
   >(
-    options: NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>
-  ): NgQueryObserverReturnType<TQueryFnData, TError, TData, TQueryKey>;
-
-  use<
-    TQueryFnData = unknown,
-    TError = unknown,
-    TData = TQueryFnData,
-    TQueryKey extends QueryKey = QueryKey
-  >(
     queryKey: TQueryKey,
     options?: Omit<
-      NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
+      NgQueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryFnData,
+        TQueryKey
+      >,
       'queryKey' | 'initialData'
     > & { initialData?: () => undefined }
   ): NgQueryObserverReturnType<TQueryFnData, TError, TData, TQueryKey>;
@@ -111,7 +136,13 @@ export class Query {
   >(
     queryKey: TQueryKey,
     options?: Omit<
-      NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
+      NgQueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryFnData,
+        TQueryKey
+      >,
       'queryKey' | 'initialData'
     > & { initialData: TQueryFnData | (() => TQueryFnData) }
   ): NgQueryObserverDefinedReturnType<TQueryFnData, TError, TData, TQueryKey>;
@@ -124,7 +155,13 @@ export class Query {
   >(
     queryKey: TQueryKey,
     options?: Omit<
-      NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
+      NgQueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryFnData,
+        TQueryKey
+      >,
       'queryKey'
     >
   ): NgQueryObserverReturnType<TQueryFnData, TError, TData, TQueryKey>;
@@ -138,7 +175,13 @@ export class Query {
     queryKey: TQueryKey,
     queryFn: ObservableQueryFn<TQueryFnData, TQueryKey>,
     options?: Omit<
-      NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
+      NgQueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryFnData,
+        TQueryKey
+      >,
       'queryKey' | 'queryFn' | 'initialData'
     > & { initialData?: () => undefined }
   ): NgQueryObserverReturnType<TQueryFnData, TError, TData, TQueryKey>;
@@ -152,7 +195,13 @@ export class Query {
     queryKey: TQueryKey,
     queryFn: ObservableQueryFn<TQueryFnData, TQueryKey>,
     options?: Omit<
-      NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
+      NgQueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryFnData,
+        TQueryKey
+      >,
       'queryKey' | 'queryFn'
     >
   ): NgQueryObserverReturnType<TQueryFnData, TError, TData, TQueryKey>;
@@ -165,11 +214,29 @@ export class Query {
   >(
     arg1:
       | TQueryKey
-      | NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
+      | NgQueryObserverOptions<
+          TQueryFnData,
+          TError,
+          TData,
+          TQueryFnData,
+          TQueryKey
+        >,
     arg2?:
       | ObservableQueryFn<TQueryFnData, TQueryKey>
-      | NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
-    arg3?: NgQueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>
+      | NgQueryObserverOptions<
+          TQueryFnData,
+          TError,
+          TData,
+          TQueryFnData,
+          TQueryKey
+        >,
+    arg3?: NgQueryObserverOptions<
+      TQueryFnData,
+      TError,
+      TData,
+      TQueryFnData,
+      TQueryKey
+    >
   ):
     | NgQueryObserverReturnType<TQueryFnData, TError, TData, TQueryKey>
     | NgQueryObserverDefinedReturnType<TQueryFnData, TError, TData, TQueryKey> {

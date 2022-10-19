@@ -6,7 +6,8 @@ import {
   QueryObserverOptions,
   QueryObserverResult,
 } from '@tanstack/query-core';
-import { Observable, shareReplay, Subscription } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
+import { SUBSCRIPTION } from './utils';
 
 export function baseQuery<
   TQueryFnData = unknown,
@@ -15,7 +16,6 @@ export function baseQuery<
   TQueryData = TQueryFnData
 >(
   client: QueryClient,
-  sourceSubscription: Subscription,
   Observer: typeof QueryObserver,
   options: QueryObserverOptions<TQueryFnData, TError, TData, TQueryData>
 ) {
@@ -87,7 +87,8 @@ export function baseQuery<
           'OBSERVER UNSUBSCRIBED ',
           queryObserver.getCurrentQuery().queryKey
         );
-        sourceSubscription.unsubscribe();
+
+        (mergedOptions as any)['queryFn']?.[SUBSCRIPTION]?.unsubscribe();
         queryObserverDispose();
       };
     }).pipe(
