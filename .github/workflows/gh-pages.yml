@@ -21,6 +21,7 @@ jobs:
         # https://github.com/actions/setup-node#caching-global-packages-data
         with:
           node-version: 16
+          cache: 'npm'
       - name: Install and Build
         run: |
           npm ci
