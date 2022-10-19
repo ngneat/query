@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import { QueryKey, QueryOptions } from '@tanstack/query-core';
 import {
   NgQueryObserverOptions,
@@ -28,7 +28,7 @@ export function queryOptions<
 }
 
 @Injectable({ providedIn: 'root' })
-export class PersistedQuery {
+class PersistedQuery {
   private useQuery = inject(QueryProvider);
   private client = inject(QueryClient);
 
@@ -84,3 +84,14 @@ export class PersistedQuery {
     };
   }
 }
+
+export const PersistedQueryProvider = new InjectionToken<PersistedQuery['use']>(
+  'PersistedQueryProvider',
+  {
+    providedIn: 'root',
+    factory() {
+      const query = new PersistedQuery();
+      return query.use.bind(query);
+    },
+  }
+);

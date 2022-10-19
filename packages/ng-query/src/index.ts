@@ -11,5 +11,5 @@ export { filterSuccess } from './lib/operators/filter-success.operator';
 export { selectResult } from './lib/operators/select-result.operator';
 export { IsFetchingProvider } from './lib/is-fetching';
 export { IsMutatingProvider } from './lib/is-mutating';
-export { PersistedQuery, queryOptions } from './lib/persisted-query';
+export { PersistedQueryProvider, queryOptions } from './lib/persisted-query';
 export { fromQueryFn } from './lib/utils';
