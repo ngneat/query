@@ -52,7 +52,6 @@ class Mutation {
       );
 
       return () => {
-        console.log('mutationObserver unsubscribed');
         sourceSubscription.unsubscribe();
         mutationObserverDispose();
       };
