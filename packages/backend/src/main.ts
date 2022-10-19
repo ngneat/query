@@ -1,30 +1,47 @@
-import * as express from 'express';
-import * as cors from 'cors';
+const express = require('express');
+const cors = require('cors');
 
 const app = express();
 app.use(cors());
 
-let id = 0;
-
-function createTodo() {
-  const newId = id++;
+function createTodo(id) {
   return {
-    id: newId,
-    title: `Todo-${newId}`,
+    id,
+    title: `Todo-${id}`,
   };
 }
 
-const todos = [createTodo()];
+const todos = {};
 
 app.get('/todos', (req, res) => {
+  const { id } = req.query;
+  if (!id) {
+    res.status(400).json({error: 'id is required'});
+    return;
+  }
+  
   setTimeout(() => {
-    res.json(todos);
+    const todosArr = todos[id] || [];
+    if (todosArr.length === 0) {
+      todos[id] = [createTodo(1)];
+    }
+    res.json(todos[id]);
   }, 1000);
 });
 
 app.post('/todos', (req, res) => {
+  const { id } = req.query;
+  if(!id) {
+    res.status(400).json({error: 'id is required'});
+    return;
+  }
+  
   setTimeout(() => {
-    todos.push(createTodo());
+    const todosArr = todos[id] || [];
+    if (todosArr.length === 0) {
+      todos[id] = [createTodo(1)];
+    }
+    todos[id].push(createTodo(todos[id].length + 1));
     res.json({ success: true });
   }, 1000);
 });

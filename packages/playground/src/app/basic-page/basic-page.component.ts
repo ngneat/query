@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { createAsyncStore } from '@ngneat/query';
 import { SubscribeModule } from '@ngneat/subscribe';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, exhaustMap, Subject, switchMap } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { TodosService } from '../todos.service';
 
@@ -69,7 +69,7 @@ import { TodosService } from '../todos.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BasicPageComponent {
+export class BasicPageComponent implements OnDestroy {
   private todosService = inject(TodosService);
   todo = new BehaviorSubject<number>(100);
   todos$ = this.todosService.getTodos().result$;
@@ -77,19 +77,38 @@ export class BasicPageComponent {
     .asObservable()
     .pipe(switchMap((id) => this.todosService.getTodo(id).result$));
 
+  clickAddTodo$ = new Subject();
+  clickAddTodo2$ = new Subject();
+
   addTodoMutation$ = this.todosService.addTodo();
   addTodoMutation = createAsyncStore();
 
+  constructor() {
+    this.clickAddTodo$
+      .pipe(exhaustMap(() => this.addTodoMutation$.mutate({ title: 'foo' })))
+      .subscribe(console.log);
+
+    this.clickAddTodo2$
+      .pipe(
+        exhaustMap(() =>
+          this.todosService
+            .addTodo2({ title: 'foo' })
+            .pipe(this.addTodoMutation.track())
+        )
+      )
+      .subscribe(console.log);
+  }
+
   addTodo() {
-    this.addTodoMutation$.mutate({ title: 'foo' }).then((res) => {
-      console.log(res.success);
-    });
+    this.clickAddTodo$.next(true);
   }
 
   addTodo2() {
-    this.todosService
-      .addTodo2({ title: 'foo' })
-      .pipe(this.addTodoMutation.track())
-      .subscribe(console.log);
+    this.clickAddTodo2$.next(true);
+  }
+
+  ngOnDestroy(): void {
+      this.clickAddTodo$.unsubscribe();
+      this.clickAddTodo2$.unsubscribe();
   }
 }

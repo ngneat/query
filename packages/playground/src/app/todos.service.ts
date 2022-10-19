@@ -14,6 +14,7 @@ interface Todo {
   providedIn: 'root',
 })
 export class TodosService {
+  private id = window.crypto.randomUUID();
   private http = inject(HttpClient);
   private queryClient = inject(QueryClient);
   private useQuery = inject(QueryProvider);
@@ -22,14 +23,24 @@ export class TodosService {
 
   getTodos() {
     return this.useQuery(['todos'], () => {
-      return this.http.get<Todo[]>(`${this.baseURL}/todos`);
+      return this.http.get<Todo[]>(`${this.baseURL}/todos`, {
+        params: { id: this.id },
+      });
     });
   }
 
   addTodo() {
     return this.useMutation(({ title }: { title: string }) => {
       return this.http
-        .post<{ success: boolean }>(`${this.baseURL}/todos`, { title })
+        .post<{ success: boolean }>(
+          `${this.baseURL}/todos`,
+          { title },
+          {
+            params: {
+              id: this.id,
+            },
+          }
+        )
         .pipe(
           tap(() => {
             this.queryClient.invalidateQueries(['todos']);
@@ -40,7 +51,15 @@ export class TodosService {
 
   addTodo2({ title }: { title: string }) {
     return this.http
-      .post<{ success: boolean }>(`${this.baseURL}/todos`, { title })
+      .post<{ success: boolean }>(
+        `${this.baseURL}/todos`,
+        { title },
+        {
+          params: {
+            id: this.id,
+          },
+        }
+      )
       .pipe(
         tap(() => {
           this.queryClient.invalidateQueries(['todos']);
