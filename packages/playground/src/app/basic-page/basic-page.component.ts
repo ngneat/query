@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { createAsyncStore } from '@ngneat/query';
+import { createMutationResult } from '@ngneat/query';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -78,7 +78,7 @@ export class BasicPageComponent {
     .pipe(switchMap((id) => this.todosService.getTodo(id).result$));
 
   addTodoMutation$ = this.todosService.addTodo();
-  addTodoMutation = createAsyncStore();
+  addTodoMutation = createMutationResult();
 
   addTodo() {
     this.addTodoMutation$.mutate({ title: 'foo' }).then((res) => {

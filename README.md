@@ -59,6 +59,61 @@ yarn add @ngneat/query
 
 ### Query
 
+Inject the `QueryProvider` in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/queries) hook, except the query function should return an `observable`.
+
+```ts
+import { QueryProvider } from '@ngneat/query';
+
+@Injectable({ providedIn: 'root' })
+export class TodosService {
+  private http = inject(HttpClient);
+  private useQuery = inject(QueryProvider);
+
+  getTodos() {
+    return this.useQuery(['todos'], () => {
+      return this.http.get<Todo[]>(
+        'https://jsonplaceholder.typicode.com/todos'
+      );
+    });
+  }
+
+  getTodo(id: number) {
+    return this.useQuery(['todo', id], () => {
+      return this.http.get<Todo>(
+        `https://jsonplaceholder.typicode.com/todos/${id}`
+      );
+    });
+  }
+}
+```
+
+Use it in your components:
+
+```ts
+import { SubscribeModule } from '@ngneat/subscribe';
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, SpinnerComponent, SubscribeModule],
+  template: `
+    <ng-container *subscribe="todos$ as todos">
+      <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
+
+      <p *ngIf="todos.isError">Error...</p>
+
+      <ul *ngIf="todos.isSuccess">
+        <li *ngFor="let todo of todos.data">
+          {{ todo.title }}
+        </li>
+      </ul>
+    </ng-container>
+  `,
+})
+export class TodosPageComponent {
+  todos$ = inject(TodosService).getTodos().result$;
+}
+```
+
 ### Infinite Query
 
 ### Persisted Query
