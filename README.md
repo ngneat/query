@@ -133,6 +133,8 @@ Note that using the `*subscribe` directive is optional. Subscriptions can be mad
 Inject the `InfiniteQueryProvider` in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/infinite-queries) hook, except the query function should return an `observable`.
 
 ```ts
+import { InfiniteQueryProvider } from '@ngneat/query';
+
 @Injectable({ providedIn: 'root' })
 export class ProjectsService {
   private useInfiniteQuery = inject(InfiniteQueryProvider);
@@ -207,6 +209,8 @@ Checkout the complete [example](https://github.com/ngneat/query/blob/main/packag
 You can provide the `QUERY_CLIENT_OPTIONS` provider to set the global [options](https://tanstack.com/query/v4/docs/reference/QueryClient) of the query client instance:
 
 ```ts
+import { QUERY_CLIENT_OPTIONS } from '@ngneat/query';
+
 {
   provide: QUERY_CLIENT_OPTIONS,
   useValue: {
@@ -241,7 +245,46 @@ export class TodosPageComponent {
 
 ## Entity Utils
 
+```ts
+import { addEntity, QueryClient, QueryProvider } from '@ngneat/query';
+import { tap } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class TodosService {
+  private useQuery = inject(QueryProvider);
+  private queryClient = inject(QueryClient);
+  private http = inject(HttpClient);
+
+  createTodo(body) {
+    return this.http.post('todos', body).pipe(
+      tap((newTodo) => {
+        this.queryClient.setQueryData<TodosResponse>(
+          ['todos'],
+          addEntity('todos', newTodo)
+        );
+      })
+    );
+  }
+}
+```
+
 ## Utils
+
+Implementation of [isFetching](https://tanstack.com/query/v4/docs/reference/useIsFetching) and [isMutating](https://tanstack.com/query/v4/docs/reference/useIsMutating).
+
+```ts
+import { IsFetchingProvider, IsMutatingProvider } from '@ngneat/query';
+
+// How many queries are fetching?
+const isFetching$ = inject(IsFetchingProvider)();
+// How many queries matching the posts prefix are fetching?
+const isFetchingPosts$ = inject(IsFetchingProvider)(['posts']);
+
+// How many mutations are fetching?
+const isMutating$ = inject(IsMutatingProvider)();
+// How many mutations matching the posts prefix are fetching?
+const isMutatingPosts$ = inject(IsMutatingProvider)(['posts']);
+```
 
 ## Devtools
 
