@@ -36,6 +36,7 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
 
 - [Installation](#installation)
 - [Queries](#queries)
+  - [Query Client](#query-client)
   - [Query](#query)
   - [Infinite Query](#infinite-query)
   - [Persisted Query](#persisted-query)
@@ -43,10 +44,10 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
   - [Mutation Result](#mutation-result)
   - [Mutation](#mutation)
 - [Query Global Options](#query-global-options)
-- [Devtools](#testing-directives)
 - [Operators](#operators)
 - [Entity Utils](#utils)
 - [Utils](#utils)
+- [Devtools](#testing-directives)
 
 ## Installation
 
@@ -56,6 +57,17 @@ yarn add @ngneat/query
 ```
 
 ## Queries
+
+## Query Client
+
+Inject the `QueryClient` provider to get access to the query client [instance](https://tanstack.com/query/v4/docs/reference/QueryClient):
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class TodosService {
+  private queryClient = inject(QueryClient);
+}
+```
 
 ### Query
 
@@ -192,13 +204,46 @@ Checkout the complete [example](https://github.com/ngneat/query/blob/main/packag
 
 ## Query Global Options
 
-## Devtools
+You can provide the `QUERY_CLIENT_OPTIONS` provider to set the global [options](https://tanstack.com/query/v4/docs/reference/QueryClient) of the query client instance:
+
+```ts
+{
+  provide: QUERY_CLIENT_OPTIONS,
+  useValue: {
+    defaultOptions: {
+      queries: {
+        staleTime: 3000
+      }
+    }
+  }
+}
+```
+
+Note that the default `staleTime` of this library is `Infinity`.
 
 ## Operators
+
+```ts
+import { filterError, filterSuccess, selectResult } from '@ngneat/query';
+
+export class TodosPageComponent {
+  todosService = inject(TodosService);
+
+  ngOnInit() {
+    this.todosService.getTodos().result$.pipe(filterError());
+    this.todosService.getTodos().result$.pipe(filterSuccess());
+    this.todosService
+      .getTodos()
+      .result$.pipe(selectResult((result) => result.data.foo));
+  }
+}
+```
 
 ## Entity Utils
 
 ## Utils
+
+## Devtools
 
 ## Created By
 

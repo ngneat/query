@@ -2,7 +2,7 @@ export { QueryProvider } from './lib/query';
 export { MutationProvider } from './lib/mutation';
 
 export { InfiniteQueryProvider } from './lib/infinite-query';
-export { QUERY_CLIENT_CONFIG } from './lib/providers';
+export { QUERY_CLIENT_OPTIONS as QUERY_CLIENT_CONFIG } from './lib/providers';
 export { QueryClient } from './lib/query-client';
 export { createMutationResult } from './lib/mutation-result';
 
