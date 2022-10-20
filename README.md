@@ -87,7 +87,7 @@ export class TodosService {
 }
 ```
 
-Use it in your components:
+Use it in your component:
 
 ```ts
 import { SubscribeModule } from '@ngneat/subscribe';
@@ -114,7 +114,37 @@ export class TodosPageComponent {
 }
 ```
 
+Note that using the `*subscribe` directive is optional. Subscriptions can be made using any method you choose.
+
 ### Infinite Query
+
+Inject the `QueryProvider` in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/infinite-queries) hook, except the query function should return an `observable`.
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class ProjectsService {
+  private useInfiniteQuery = inject(InfiniteQueryProvider);
+
+  getProjects() {
+    return this.useInfiniteQuery(
+      ['projects'],
+      ({ pageParam = 0 }) => {
+        return getProjects(pageParam);
+      },
+      {
+        getNextPageParam(projects) {
+          return projects.nextId;
+        },
+        getPreviousPageParam(projects) {
+          return projects.previousId;
+        },
+      }
+    );
+  }
+}
+```
+
+Checkout the complete [example](https://github.com/ngneat/query/blob/main/packages/playground/src/app/infinite-query-page/infinite-query-page.component.ts) in our playground.
 
 ### Persisted Query
 
