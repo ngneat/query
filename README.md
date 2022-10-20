@@ -118,7 +118,7 @@ Note that using the `*subscribe` directive is optional. Subscriptions can be mad
 
 ### Infinite Query
 
-Inject the `QueryProvider` in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/infinite-queries) hook, except the query function should return an `observable`.
+Inject the `InfiniteQueryProvider` in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/infinite-queries) hook, except the query function should return an `observable`.
 
 ```ts
 @Injectable({ providedIn: 'root' })
@@ -147,6 +147,42 @@ export class ProjectsService {
 Checkout the complete [example](https://github.com/ngneat/query/blob/main/packages/playground/src/app/infinite-query-page/infinite-query-page.component.ts) in our playground.
 
 ### Persisted Query
+
+Use the `PersistedQueryProvider` when you want to use the `keepPreviousData` feature. For example, to implement the [pagination](https://tanstack.com/query/v4/docs/guides/paginated-queries) functionality:
+
+```ts
+import { inject, Injectable } from '@angular/core';
+import {
+  PersistedQueryProvider,
+  QueryClient,
+  queryOptions,
+} from '@ngneat/query';
+import { firstValueFrom } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class PaginationService {
+  private queryClient = inject(QueryClient);
+
+  getProjects = inject(PersistedQueryProvider)(
+    (queryKey: ['projects', number]) => {
+      return queryOptions({
+        queryKey,
+        queryFn: ({ queryKey }) => {
+          return fetchProjects(queryKey[1]);
+        },
+      });
+    }
+  );
+
+  prefetch(page: number) {
+    return this.queryClient.prefetchQuery(['projects', page], () =>
+      firstValueFrom(fetchProjects(page))
+    );
+  }
+}
+```
+
+Checkout the complete [example](https://github.com/ngneat/query/blob/main/packages/playground/src/app/pagination-page/pagination-page.component.ts) in our playground.
 
 ## Mutations
 
