@@ -126,7 +126,7 @@ export class TodosPageComponent {
 }
 ```
 
-Note that using the `*subscribe` directive is optional. Subscriptions can be made using any method you choose.
+Note that using the `*subscribe` [directive](https://github.com/ngneat/subscribe) is optional. Subscriptions can be made using any method you choose.
 
 ### Infinite Query
 
