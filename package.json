@@ -8,7 +8,7 @@
     "build:devtools": "nx build devtools",
     "build:all": "nx run-many --target=build --all --exclude=backend",
     "test:all": "nx run-many --target=test --exclude=backend,playground --all",
-    "start": "nx run-many --parallel --target=serve --projects=playground,backend",
+    "start": "nx serve",
     "format": "nx format:write --all",
     "update": "nx migrate latest",
     "migration": "nx migrate --run-migrations",
