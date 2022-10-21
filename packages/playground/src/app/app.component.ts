@@ -71,6 +71,16 @@ import { RouterModule } from '@angular/router';
                 >Pagination</a
               >
             </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
+                routerLink="default-query-function"
+                >Default Query Function</a
+              >
+            </li>
           </ul>
         </div>
       </div>
