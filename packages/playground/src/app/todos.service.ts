@@ -23,24 +23,16 @@ export class TodosService {
 
   getTodos() {
     return this.useQuery(['todos'], () => {
-      return this.http.get<Todo[]>(`${this.baseURL}/todos`, {
-        params: { id: this.id },
-      });
+      return this.http.get<Todo[]>(
+        'https://jsonplaceholder.typicode.com/todos'
+      );
     });
   }
 
-  addTodo() {
+  addTodoOriginal() {
     return this.useMutation(({ title }: { title: string }) => {
       return this.http
-        .post<{ success: boolean }>(
-          `${this.baseURL}/todos`,
-          { title },
-          {
-            params: {
-              id: this.id,
-            },
-          }
-        )
+        .post<Todo>(`https://jsonplaceholder.typicode.com/todos`, { title })
         .pipe(
           tap(() => {
             this.queryClient.invalidateQueries(['todos']);
@@ -49,17 +41,9 @@ export class TodosService {
     });
   }
 
-  addTodo2({ title }: { title: string }) {
+  addTodoBuiltIn({ title }: { title: string }) {
     return this.http
-      .post<{ success: boolean }>(
-        `${this.baseURL}/todos`,
-        { title },
-        {
-          params: {
-            id: this.id,
-          },
-        }
-      )
+      .post<Todo>(`https://jsonplaceholder.typicode.com/todos`, { title })
       .pipe(
         tap(() => {
           this.queryClient.invalidateQueries(['todos']);

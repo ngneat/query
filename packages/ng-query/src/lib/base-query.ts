@@ -42,7 +42,7 @@ export function baseQuery<
     QueryKey
   >(client, defaultedOptions);
 
-  console.log('NEW OBSERVER INSTANCE');
+  // console.log('NEW OBSERVER INSTANCE');
 
   (
     queryObserver as unknown as {
@@ -67,10 +67,10 @@ export function baseQuery<
         ...queryObserver.options,
       });
 
-      console.log(
-        'NEW OBSERVER SUBSCRIPTION',
-        queryObserver.getCurrentQuery().queryKey
-      );
+      // console.log(
+      //   'NEW OBSERVER SUBSCRIPTION',
+      //   queryObserver.getCurrentQuery().queryKey
+      // );
 
       observer.next(queryObserver.getOptimisticResult(mergedOptions));
 
@@ -83,10 +83,10 @@ export function baseQuery<
       });
 
       return () => {
-        console.log(
-          'OBSERVER UNSUBSCRIBED ',
-          queryObserver.getCurrentQuery().queryKey
-        );
+        // console.log(
+        //   'OBSERVER UNSUBSCRIBED ',
+        //   queryObserver.getCurrentQuery().queryKey
+        // );
 
         (mergedOptions as any)['queryFn']?.[SUBSCRIPTION]?.unsubscribe();
         queryObserverDispose();

@@ -20,16 +20,15 @@ class Mutation {
       'mutationFn'
     > = {}
   ): {
-    mutate: MutationObserver<TData, TError, TVariables>['mutate'];
-    instance: MutationObserver<TData, TError, TVariables>;
-  } & Observable<MutationObserverResult<TData, TError, TVariables>> {
+    result$: Observable<MutationObserverResult<TData, TError, TVariables>>;
+  } & MutationObserver<TData, TError, TVariables> {
     const sourceSubscription = new Subscription();
 
     const mutationObserver = new MutationObserver<TData, TError, TVariables>(
       this.instance,
       {
         ...options,
-        mutationFn: (vars) => {
+        mutationFn(vars) {
           return new Promise<TData>((res, rej) => {
             const subscription = mutationFn(vars).subscribe({
               next: res,
@@ -42,7 +41,7 @@ class Mutation {
       }
     );
 
-    const $ = new Observable((observer) => {
+    (mutationObserver as any)['result$'] = new Observable((observer) => {
       observer.next(mutationObserver.getCurrentResult());
 
       const mutationObserverDispose = mutationObserver.subscribe(
@@ -52,16 +51,14 @@ class Mutation {
       );
 
       return () => {
-        console.log('mutationObserver unsubscribed');
         sourceSubscription.unsubscribe();
         mutationObserverDispose();
       };
-    }) as any;
+    });
 
-    $['mutate'] = mutationObserver.mutate.bind(mutationObserver);
-    $['instance'] = mutationObserver;
-
-    return $;
+    return mutationObserver as {
+      result$: Observable<MutationObserverResult<TData, TError, TVariables>>;
+    } & MutationObserver<TData, TError, TVariables>;
   }
 }
 

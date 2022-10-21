@@ -1,22 +1,22 @@
 import { BehaviorSubject, MonoTypeOperatorFunction, pipe, tap } from 'rxjs';
 
-class MutationAsyncState<Response = unknown, Error = unknown> {
+class MutationResult<Response = unknown, Error = unknown> {
   data: Response | null = null;
   isError = false;
   isLoading = false;
   isSuccess = false;
   error: Error | null = null;
 
-  constructor(result: Partial<MutationAsyncState> = {}) {
+  constructor(result: Partial<MutationResult> = {}) {
     Object.assign(this, result);
   }
 }
 
-export function createAsyncStore<Response, Error = unknown>(
-  options: Partial<MutationAsyncState> = {}
+export function useMutationResult<Response, Error = unknown>(
+  options: Partial<MutationResult> = {}
 ) {
-  const store = new BehaviorSubject<MutationAsyncState<Response, Error>>(
-    new MutationAsyncState(options)
+  const store = new BehaviorSubject<MutationResult<Response, Error>>(
+    new MutationResult(options)
   );
 
   function update(data: Response | ((res: Response) => Response)) {
@@ -27,7 +27,7 @@ export function createAsyncStore<Response, Error = unknown>(
     }
 
     store.next(
-      new MutationAsyncState({
+      new MutationResult({
         data: resolved,
         isSuccess: true,
       })
@@ -35,7 +35,7 @@ export function createAsyncStore<Response, Error = unknown>(
   }
 
   return {
-    value$: store.asObservable(),
+    result$: store.asObservable(),
     track<T extends Response>(): MonoTypeOperatorFunction<T> {
       return pipe(
         tap({
@@ -44,14 +44,14 @@ export function createAsyncStore<Response, Error = unknown>(
           },
           subscribe() {
             store.next(
-              new MutationAsyncState({
+              new MutationResult({
                 isLoading: true,
               })
             );
           },
           error(err) {
             store.next(
-              new MutationAsyncState({
+              new MutationResult({
                 error: err,
                 isError: true,
               })

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
-import { createAsyncStore } from '@ngneat/query';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { useMutationResult } from '@ngneat/query';
 import { SubscribeModule } from '@ngneat/subscribe';
-import { BehaviorSubject, exhaustMap, Subject, switchMap } from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { TodosService } from '../todos.service';
 
@@ -12,6 +12,27 @@ import { TodosService } from '../todos.service';
   imports: [CommonModule, SpinnerComponent, SubscribeModule],
   template: `
     <h2 class="mb-3">Todos</h2>
+
+    <div class="mb-3">
+      <button
+        (click)="addTodoBuiltIn()"
+        id="add-todo-1"
+        class="btn btn-info mt-2"
+        *subscribe="addTodoMutation.result$ as addTodoMutation"
+      >
+        Add todo built in impl {{ addTodoMutation.isLoading ? 'Loading' : '' }}
+      </button>
+
+      <button
+        (click)="addTodoOriginal()"
+        id="add-todo-2"
+        class="btn btn-info mt-2 ml-3"
+        *subscribe="addTodoMutationOriginal.result$ as addTodoMutationOriginal"
+      >
+        Add todo original impl
+        {{ addTodoMutationOriginal.isLoading ? 'Loading' : '' }}
+      </button>
+    </div>
 
     <ng-container *subscribe="todos$ as todos">
       <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
@@ -45,31 +66,10 @@ import { TodosService } from '../todos.service';
         <div class="card-body">{{ todo.data.id }} - {{ todo.data.title }}</div>
       </div>
     </ng-container>
-
-    <hr />
-    <h2 class="mt-3">Mutation</h2>
-
-    <button
-      (click)="addTodo()"
-      id="add-todo-1"
-      class="btn btn-info mt-2"
-      *subscribe="addTodoMutation$ as addTodoMutation"
-    >
-      Add todo {{ addTodoMutation.isLoading ? 'Loading' : '' }}
-    </button>
-
-    <button
-      (click)="addTodo2()"
-      id="add-todo-2"
-      class="btn btn-info mt-2 ml-3"
-      *subscribe="addTodoMutation.value$ as addTodoMutation"
-    >
-      Add todo v2 {{ addTodoMutation.isLoading ? 'Loading' : '' }}
-    </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BasicPageComponent implements OnDestroy {
+export class BasicPageComponent {
   private todosService = inject(TodosService);
   todo = new BehaviorSubject<number>(100);
   todos$ = this.todosService.getTodos().result$;
@@ -77,38 +77,19 @@ export class BasicPageComponent implements OnDestroy {
     .asObservable()
     .pipe(switchMap((id) => this.todosService.getTodo(id).result$));
 
-  clickAddTodo$ = new Subject();
-  clickAddTodo2$ = new Subject();
+  addTodoMutationOriginal = this.todosService.addTodoOriginal();
+  addTodoMutation = useMutationResult();
 
-  addTodoMutation$ = this.todosService.addTodo();
-  addTodoMutation = createAsyncStore();
+  addTodoOriginal() {
+    this.addTodoMutationOriginal.mutate({ title: 'foo' }).then((res) => {
+      console.log(res);
+    });
+  }
 
-  constructor() {
-    this.clickAddTodo$
-      .pipe(exhaustMap(() => this.addTodoMutation$.mutate({ title: 'foo' })))
+  addTodoBuiltIn() {
+    this.todosService
+      .addTodoBuiltIn({ title: 'foo' })
+      .pipe(this.addTodoMutation.track())
       .subscribe(console.log);
-
-    this.clickAddTodo2$
-      .pipe(
-        exhaustMap(() =>
-          this.todosService
-            .addTodo2({ title: 'foo' })
-            .pipe(this.addTodoMutation.track())
-        )
-      )
-      .subscribe(console.log);
-  }
-
-  addTodo() {
-    this.clickAddTodo$.next(true);
-  }
-
-  addTodo2() {
-    this.clickAddTodo2$.next(true);
-  }
-
-  ngOnDestroy(): void {
-      this.clickAddTodo$.unsubscribe();
-      this.clickAddTodo2$.unsubscribe();
   }
 }
