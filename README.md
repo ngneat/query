@@ -411,7 +411,7 @@ const isMutatingPosts$ = inject(IsMutatingProvider)(['posts']);
 
 ## Devtools
 
-Install the `@ngneat/query-devtools` package. Lazy load and use it only in `develpoment` enviroment:
+Install the `@ngneat/query-devtools` package. Lazy load and use it only in `development` environment:
 
 ```ts
 import { ENVIRONMENT_INITIALIZER } from '@angular/core';
