@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { createMutationResult } from '@ngneat/query';
+import { useMutationResult } from '@ngneat/query';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -62,7 +62,7 @@ import { TodosService } from '../todos.service';
       (click)="addTodo2()"
       id="add-todo-2"
       class="btn btn-info mt-2 ml-3"
-      *subscribe="addTodoMutation.value$ as addTodoMutation"
+      *subscribe="addTodoMutation.result$ as addTodoMutation"
     >
       Add todo v2 {{ addTodoMutation.isLoading ? 'Loading' : '' }}
     </button>
@@ -78,7 +78,7 @@ export class BasicPageComponent {
     .pipe(switchMap((id) => this.todosService.getTodo(id).result$));
 
   addTodoMutation$ = this.todosService.addTodo();
-  addTodoMutation = createMutationResult();
+  addTodoMutation = useMutationResult();
 
   addTodo() {
     this.addTodoMutation$.mutate({ title: 'foo' }).then((res) => {

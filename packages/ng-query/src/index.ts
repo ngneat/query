@@ -4,7 +4,7 @@ export { MutationProvider } from './lib/mutation';
 export { InfiniteQueryProvider } from './lib/infinite-query';
 export { QUERY_CLIENT_OPTIONS as QUERY_CLIENT_CONFIG } from './lib/providers';
 export { QueryClient } from './lib/query-client';
-export { createMutationResult } from './lib/mutation-result';
+export { useMutationResult } from './lib/mutation-result';
 
 export { filterError } from './lib/operators/filter-error.operator';
 export { filterSuccess } from './lib/operators/filter-success.operator';

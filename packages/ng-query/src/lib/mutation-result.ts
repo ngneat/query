@@ -12,7 +12,7 @@ class MutationResult<Response = unknown, Error = unknown> {
   }
 }
 
-export function createMutationResult<Response, Error = unknown>(
+export function useMutationResult<Response, Error = unknown>(
   options: Partial<MutationResult> = {}
 ) {
   const store = new BehaviorSubject<MutationResult<Response, Error>>(
@@ -35,7 +35,7 @@ export function createMutationResult<Response, Error = unknown>(
   }
 
   return {
-    value$: store.asObservable(),
+    result$: store.asObservable(),
     track<T extends Response>(): MonoTypeOperatorFunction<T> {
       return pipe(
         tap({

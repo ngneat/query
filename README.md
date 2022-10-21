@@ -202,7 +202,123 @@ Checkout the complete [example](https://github.com/ngneat/query/blob/main/packag
 
 ### Mutation Result
 
+The official `mutation` function can be a little verbose. Generally, you can use the following in-house simplified implementation.
+
+```ts
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { QueryClient } from '@ngneat/query';
+
+@Injectable({ providedIn: 'root' })
+export class TodosService {
+  private http = inject(HttpClient);
+  private queryClient = inject(QueryClient);
+
+  addTodo({ title }: { title: string }) {
+    return this.http.post<{ success: boolean }>(`todos`, { title }).pipe(
+      tap((newTodo) => {
+        // Invalidate to refetch
+        this.queryClient.invalidateQueries(['todos']);
+        // Or update manually
+        this.queryClient.setQueryData<TodosResponse>(
+          ['todos'],
+          addEntity('todos', newTodo)
+        );
+      })
+    );
+  }
+}
+```
+
+And in the component:
+
+```ts
+import { QueryClient, useMutationResult } from '@ngneat/query';
+
+@Component({
+  template: `
+    <input #ref />
+
+    <button
+      (click)="addTodo({ title: ref.value })"
+      *subscribe="addTodoMutation.result$ as addTodoMutation"
+    >
+      Add todo {{ addTodoMutation.isLoading ? 'Loading' : '' }}
+    </button>
+  `,
+})
+export class TodosPageComponent {
+  private todosService = inject(TodosService);
+  addTodoMutation = useMutationResult();
+
+  addTodo({ title }) {
+    this.todosService
+      .addTodo({ title })
+      .pipe(this.addTodoMutation.track())
+      .subscribe();
+  }
+}
+```
+
 ### Mutation
+
+You can use the original `mutation` [functionality](https://tanstack.com/query/v4/docs/reference/useMutation) if you prefer.
+
+```ts
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { QueryClient, MutationProvider } from '@ngneat/query';
+
+@Injectable({ providedIn: 'root' })
+export class TodosService {
+  private http = inject(HttpClient);
+  private queryClient = inject(QueryClient);
+  private useMutation = inject(MutationProvider);
+
+  addTodo() {
+    return this.useMutation(({ title }: { title: string }) => {
+      return this.http.post<{ success: boolean }>(`todos`, { title }).pipe(
+        tap((newTodo) => {
+          // Invalidate to refetch
+          this.queryClient.invalidateQueries(['todos']);
+          // Or update manually
+          this.queryClient.setQueryData<TodosResponse>(
+            ['todos'],
+            addEntity('todos', newTodo)
+          );
+        })
+      );
+    });
+  }
+}
+```
+
+And in the component:
+
+```ts
+@Component({
+  template: `
+    <input #ref />
+
+    <button
+      (click)="addTodo({ title: ref.value })"
+      *subscribe="addTodoMutation$ as addTodoMutation"
+    >
+      Add todo {{ addTodoMutation.isLoading ? 'Loading' : '' }}
+    </button>
+  `,
+})
+export class TodosPageComponent {
+  private todosService = inject(TodosService);
+  addTodoMutation$ = this.todosService.addTodo();
+
+  addTodo({ title }) {
+    this.addTodoMutation$.mutate({ title }).then((res) => {
+      console.log(res.success);
+    });
+  }
+}
+```
 
 ## Query Global Options
 
@@ -245,8 +361,15 @@ export class TodosPageComponent {
 
 ## Entity Utils
 
+The library exposes the `addEntity`, and `removeEntity` helpers:
+
 ```ts
-import { addEntity, QueryClient, QueryProvider } from '@ngneat/query';
+import {
+  addEntity,
+  QueryClient,
+  QueryProvider,
+  removeEntity,
+} from '@ngneat/query';
 import { tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -287,6 +410,32 @@ const isMutatingPosts$ = inject(IsMutatingProvider)(['posts']);
 ```
 
 ## Devtools
+
+Install the `@ngneat/query-devtools` package. Lazy load and use it only in `develpoment` enviroment:
+
+```ts
+import { ENVIRONMENT_INITIALIZER } from '@angular/core';
+import { environment } from './environments/environment';
+
+import { QueryClient } from '@ngneat/query';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    environment.production
+      ? []
+      : {
+          provide: ENVIRONMENT_INITIALIZER,
+          multi: true,
+          useValue() {
+            const queryClient = inject(QueryClient);
+            import('@ngneat/query-devtools').then((m) => {
+              m.ngQueryDevtools({ queryClient });
+            });
+          },
+        },
+  ],
+});
+```
 
 ## Created By
 
