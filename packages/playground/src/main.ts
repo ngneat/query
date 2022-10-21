@@ -8,13 +8,16 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BasicPageComponent } from './app/basic-page/basic-page.component';
 import { InfiniteQueryPageComponent } from './app/infinite-query-page/infinite-query-page.component';
 import { PaginationPageComponent } from './app/pagination-page/pagination-page.component';
 import { SimplePageComponent } from './app/simple-page/simple-page.component';
 import { DynamicQueriesPageComponent } from './app/dynamic-queries-page/dynamic-queries-page.component';
-import { QueryClient } from '@ngneat/query';
+import { QUERY_CLIENT_CONFIG, QueryClient } from '@ngneat/query';
+import { DefaultQueryFunctionPageComponent } from './app/default-query-function-page/default-query-function-page.component';
+import { QueryClientConfig, QueryFunction } from '@tanstack/react-query';
+import { firstValueFrom } from 'rxjs';
 
 if (environment.production) {
   enableProdMode();
@@ -46,6 +49,25 @@ bootstrapApplication(AppComponent, {
         });
       },
     },
+    {
+      provide: QUERY_CLIENT_CONFIG,
+      useFactory: () => {
+        const httpClient = inject(HttpClient);
+        const queryFn: QueryFunction = async ({ queryKey }) =>
+          firstValueFrom(
+            httpClient.get<unknown[]>(
+              `https://jsonplaceholder.typicode.com${queryKey[0]}`
+            )
+          );
+        return <QueryClientConfig>{
+          defaultOptions: {
+            queries: {
+              queryFn,
+            },
+          },
+        };
+      },
+    },
     importProvidersFrom(
       HttpClientModule,
       RouterModule.forRoot(
@@ -69,6 +91,10 @@ bootstrapApplication(AppComponent, {
           {
             path: 'pagination',
             component: PaginationPageComponent,
+          },
+          {
+            path: 'default-query-function',
+            component: DefaultQueryFunctionPageComponent,
           },
         ],
         { initialNavigation: 'enabledBlocking' }
