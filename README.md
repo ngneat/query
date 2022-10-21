@@ -302,7 +302,7 @@ And in the component:
 
     <button
       (click)="addTodo({ title: ref.value })"
-      *subscribe="addTodoMutation$ as addTodoMutation"
+      *subscribe="addTodoMutation.result$ as addTodoMutation"
     >
       Add todo {{ addTodoMutation.isLoading ? 'Loading' : '' }}
     </button>
@@ -310,7 +310,7 @@ And in the component:
 })
 export class TodosPageComponent {
   private todosService = inject(TodosService);
-  addTodoMutation$ = this.todosService.addTodo();
+  addTodoMutation = this.todosService.addTodo();
 
   addTodo({ title }) {
     this.addTodoMutation$.mutate({ title }).then((res) => {

@@ -50,21 +50,22 @@ import { TodosService } from '../todos.service';
     <h2 class="mt-3">Mutation</h2>
 
     <button
-      (click)="addTodo()"
+      (click)="addTodoBuiltIn()"
       id="add-todo-1"
       class="btn btn-info mt-2"
-      *subscribe="addTodoMutation$ as addTodoMutation"
+      *subscribe="addTodoMutation.result$ as addTodoMutation"
     >
-      Add todo {{ addTodoMutation.isLoading ? 'Loading' : '' }}
+      Add todo built in impl {{ addTodoMutation.isLoading ? 'Loading' : '' }}
     </button>
 
     <button
-      (click)="addTodo2()"
+      (click)="addTodoOriginal()"
       id="add-todo-2"
       class="btn btn-info mt-2 ml-3"
-      *subscribe="addTodoMutation.result$ as addTodoMutation"
+      *subscribe="addTodoMutationOriginal.result$ as addTodoMutationOriginal"
     >
-      Add todo v2 {{ addTodoMutation.isLoading ? 'Loading' : '' }}
+      Add todo original impl
+      {{ addTodoMutationOriginal.isLoading ? 'Loading' : '' }}
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,18 +78,18 @@ export class BasicPageComponent {
     .asObservable()
     .pipe(switchMap((id) => this.todosService.getTodo(id).result$));
 
-  addTodoMutation$ = this.todosService.addTodo();
+  addTodoMutationOriginal = this.todosService.addTodoOriginal();
   addTodoMutation = useMutationResult();
 
-  addTodo() {
-    this.addTodoMutation$.mutate({ title: 'foo' }).then((res) => {
+  addTodoOriginal() {
+    this.addTodoMutationOriginal.mutate({ title: 'foo' }).then((res) => {
       console.log(res.success);
     });
   }
 
-  addTodo2() {
+  addTodoBuiltIn() {
     this.todosService
-      .addTodo2({ title: 'foo' })
+      .addTodoBuiltIn({ title: 'foo' })
       .pipe(this.addTodoMutation.track())
       .subscribe(console.log);
   }

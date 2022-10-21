@@ -24,7 +24,7 @@ export class TodosService {
     });
   }
 
-  addTodo() {
+  addTodoOriginal() {
     return this.useMutation(({ title }: { title: string }) => {
       return this.http
         .post<{ success: boolean }>(`http://localhost:3333/todos`, { title })
@@ -36,7 +36,7 @@ export class TodosService {
     });
   }
 
-  addTodo2({ title }: { title: string }) {
+  addTodoBuiltIn({ title }: { title: string }) {
     return this.http
       .post<{ success: boolean }>(`http://localhost:3333/todos`, { title })
       .pipe(
