@@ -20,14 +20,16 @@ export class TodosService {
 
   getTodos() {
     return this.useQuery(['todos'], () => {
-      return this.http.get<Todo[]>('http://localhost:3333/todos');
+      return this.http.get<Todo[]>(
+        'https://jsonplaceholder.typicode.com/todos'
+      );
     });
   }
 
   addTodoOriginal() {
     return this.useMutation(({ title }: { title: string }) => {
       return this.http
-        .post<{ success: boolean }>(`http://localhost:3333/todos`, { title })
+        .post<Todo>(`https://jsonplaceholder.typicode.com/todos`, { title })
         .pipe(
           tap(() => {
             this.queryClient.invalidateQueries(['todos']);
@@ -38,7 +40,7 @@ export class TodosService {
 
   addTodoBuiltIn({ title }: { title: string }) {
     return this.http
-      .post<{ success: boolean }>(`http://localhost:3333/todos`, { title })
+      .post<Todo>(`https://jsonplaceholder.typicode.com/todos`, { title })
       .pipe(
         tap(() => {
           this.queryClient.invalidateQueries(['todos']);

@@ -13,6 +13,27 @@ import { TodosService } from '../todos.service';
   template: `
     <h2 class="mb-3">Todos</h2>
 
+    <div class="mb-3">
+      <button
+        (click)="addTodoBuiltIn()"
+        id="add-todo-1"
+        class="btn btn-info mt-2"
+        *subscribe="addTodoMutation.result$ as addTodoMutation"
+      >
+        Add todo built in impl {{ addTodoMutation.isLoading ? 'Loading' : '' }}
+      </button>
+
+      <button
+        (click)="addTodoOriginal()"
+        id="add-todo-2"
+        class="btn btn-info mt-2 ml-3"
+        *subscribe="addTodoMutationOriginal.result$ as addTodoMutationOriginal"
+      >
+        Add todo original impl
+        {{ addTodoMutationOriginal.isLoading ? 'Loading' : '' }}
+      </button>
+    </div>
+
     <ng-container *subscribe="todos$ as todos">
       <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
 
@@ -45,28 +66,6 @@ import { TodosService } from '../todos.service';
         <div class="card-body">{{ todo.data.id }} - {{ todo.data.title }}</div>
       </div>
     </ng-container>
-
-    <hr />
-    <h2 class="mt-3">Mutation</h2>
-
-    <button
-      (click)="addTodoBuiltIn()"
-      id="add-todo-1"
-      class="btn btn-info mt-2"
-      *subscribe="addTodoMutation.result$ as addTodoMutation"
-    >
-      Add todo built in impl {{ addTodoMutation.isLoading ? 'Loading' : '' }}
-    </button>
-
-    <button
-      (click)="addTodoOriginal()"
-      id="add-todo-2"
-      class="btn btn-info mt-2 ml-3"
-      *subscribe="addTodoMutationOriginal.result$ as addTodoMutationOriginal"
-    >
-      Add todo original impl
-      {{ addTodoMutationOriginal.isLoading ? 'Loading' : '' }}
-    </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -83,7 +82,7 @@ export class BasicPageComponent {
 
   addTodoOriginal() {
     this.addTodoMutationOriginal.mutate({ title: 'foo' }).then((res) => {
-      console.log(res.success);
+      console.log(res);
     });
   }
 

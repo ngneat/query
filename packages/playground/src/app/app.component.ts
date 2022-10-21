@@ -57,16 +57,6 @@ import { RouterModule } from '@angular/router';
                 class="nav-link"
                 routerLinkActive="active"
                 aria-current="page"
-                routerLink="mutations"
-                >Mutations</a
-              >
-            </li>
-
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                routerLinkActive="active"
-                aria-current="page"
                 routerLink="infinite"
                 >Infinite Query</a
               >

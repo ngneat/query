@@ -10,7 +10,6 @@ import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { BasicPageComponent } from './app/basic-page/basic-page.component';
-import { MutationsPageComponent } from './app/mutations-page/mutations-page.component';
 import { InfiniteQueryPageComponent } from './app/infinite-query-page/infinite-query-page.component';
 import { PaginationPageComponent } from './app/pagination-page/pagination-page.component';
 import { SimplePageComponent } from './app/simple-page/simple-page.component';
@@ -50,10 +49,6 @@ bootstrapApplication(AppComponent, {
           {
             path: 'dynamic',
             component: DynamicQueriesPageComponent,
-          },
-          {
-            path: 'mutations',
-            component: MutationsPageComponent,
           },
           {
             path: 'infinite',
