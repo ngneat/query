@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { MutationProvider, QueryClient, QueryProvider } from '@ngneat/query';
 import { delay, tap } from 'rxjs';
-import { environment } from '../environments/environment';
 
 interface Todo {
   id: number;
@@ -14,12 +13,10 @@ interface Todo {
   providedIn: 'root',
 })
 export class TodosService {
-  private id = window.crypto.randomUUID();
   private http = inject(HttpClient);
   private queryClient = inject(QueryClient);
   private useQuery = inject(QueryProvider);
   private useMutation = inject(MutationProvider);
-  baseURL = environment.apiURL;
 
   getTodos() {
     return this.useQuery(['todos'], () => {
