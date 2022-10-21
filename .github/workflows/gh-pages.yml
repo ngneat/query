@@ -25,7 +25,11 @@ jobs:
       - name: Install and Build
         run: |
           npm ci
+<<<<<<< HEAD
           npx nx build playground -- --base-href /ng-query/
+=======
+          npx nx build playground -- --base-href /query/
+>>>>>>> c839d8fa5bf2354fdd4475e90a53d338541be744
       - name: Duplicated index.html
         # https://angular.io/guide/deployment#deploy-to-github-pages
         # To prevent 404 errors for application routes when refreshing the page

@@ -22,18 +22,30 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    environment.production
-      ? []
-      : {
-          provide: ENVIRONMENT_INITIALIZER,
-          multi: true,
-          useValue() {
-            const queryClient = inject(QueryClient);
-            import('@ngneat/query-devtools').then((m) => {
-              m.ngQueryDevtools({ queryClient });
-            });
-          },
-        },
+    // This is to enable devtools in the playground
+    // For your application, please check environment.production as the following
+    // environment.production
+    //   ? []
+    //   : {
+    //       provide: ENVIRONMENT_INITIALIZER,
+    //       multi: true,
+    //       useValue() {
+    //         const queryClient = inject(QueryClient);
+    //         import('@ngneat/query-devtools').then((m) => {
+    //           m.ngQueryDevtools({ queryClient });
+    //         });
+    //       },
+    //     },
+    {
+      provide: ENVIRONMENT_INITIALIZER,
+      multi: true,
+      useValue() {
+        const queryClient = inject(QueryClient);
+        import('@ngneat/query-devtools').then((m) => {
+          m.ngQueryDevtools({ queryClient });
+        });
+      },
+    },
     importProvidersFrom(
       HttpClientModule,
       RouterModule.forRoot(
