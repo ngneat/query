@@ -5,6 +5,7 @@
   "scripts": {
     "c": "cz",
     "build": "nx build ng-query",
+    "build:playground": "nx build playground --skip-nx-cache",
     "build:devtools": "nx build devtools",
     "build:all": "nx run-many --target=build --all --exclude=backend",
     "test:all": "nx run-many --target=test --exclude=backend,playground --all",
