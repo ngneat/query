@@ -4,11 +4,9 @@ import { QueryClient, QueryProvider } from '@ngneat/query';
 import {
   BehaviorSubject,
   delay,
-  distinct,
   distinctUntilChanged,
   firstValueFrom,
   map,
-  ReplaySubject,
   scan,
   tap,
 } from 'rxjs';
@@ -57,7 +55,6 @@ export class RickAndMortyService {
             tap((character) => this.prefetchedCharacterIds.next(character.id))
           )
         ),
-
       {
         staleTime: 1_000_000,
       }
