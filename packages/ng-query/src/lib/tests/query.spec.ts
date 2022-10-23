@@ -1,11 +1,17 @@
 import { QueryProvider, UseQuery } from '../query';
 import { TestBed } from '@angular/core/testing';
-import { fetcher, rejectFetcher, simpleFetcher } from './test-utils';
+import {
+  fetcher,
+  flushPromises,
+  rejectFetcher,
+  simpleFetcher,
+} from './test-utils';
 import { QueryClient } from '../query-client';
 import { QueryClient as QueryCore } from '@tanstack/query-core';
 import { QueryObserver } from '@tanstack/query-core';
 import { baseQuery } from '../base-query';
 import { skip, firstValueFrom } from 'rxjs';
+import { subscribeSpyTo } from '@hirez_io/observer-spy';
 jest.mock('../base-query');
 
 describe('useQuery', () => {
@@ -41,8 +47,11 @@ describe('useQuery', () => {
   it('should resolve to success: useQuery(key, dataFn)', async () => {
     const query = useQuery(['key2'], fetcher('result2'));
 
-    const result = await firstValueFrom(query.result$.pipe(skip(1)));
-    expect(result).toMatchObject({
+    const observerSpy = subscribeSpyTo(query.result$);
+    await flushPromises();
+    const [loading, success] = observerSpy.getValues();
+    expect(loading.status).toBe('loading');
+    expect(success).toMatchObject({
       status: 'success',
       data: 'result2',
       isLoading: false,
@@ -50,10 +59,6 @@ describe('useQuery', () => {
       isFetched: true,
       isSuccess: true,
     });
-
-    /* expect(query.result$).toBeObservable( */
-    /*   cold('ab', { a: expect.any(Object), b: expectedResult }) */
-    /* ); */
   });
 
   it('should resolve to success: useQuery(optionsObj)', async () => {
