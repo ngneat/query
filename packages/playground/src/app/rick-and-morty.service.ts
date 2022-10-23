@@ -35,7 +35,6 @@ export class RickAndMortyService {
     return this.queryClient.prefetchQuery(
       ['character', id],
       () => firstValueFrom(this.getCharacterRaw(id)),
-
       {
         staleTime: 1_000_000,
       }
