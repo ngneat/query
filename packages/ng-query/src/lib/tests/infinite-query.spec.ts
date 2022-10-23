@@ -107,7 +107,7 @@ describe('useQuery', () => {
     ]);
   });
 
-  it('should fetch next page', async () => {
+  it('should fetch previous page', async () => {
     const pageSize = 5;
     const query = useInfiniteQuery(['key6'], infiniteFetcher(0, pageSize), {
       getPreviousPageParam: (data) => {
