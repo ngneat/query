@@ -97,8 +97,7 @@ describe('useQuery', () => {
 
     const observerSpy = subscribeSpyTo(query.result$);
     await flushPromises();
-    query.fetchNextPage();
-    await flushPromises();
+    await query.fetchNextPage();
 
     expect(observerSpy.getValuesLength()).toBe(4);
     expect(observerSpy.getLastValue()?.data?.pageParams).toStrictEqual([
@@ -117,8 +116,7 @@ describe('useQuery', () => {
 
     const observerSpy = subscribeSpyTo(query.result$);
     await flushPromises();
-    query.fetchPreviousPage();
-    await flushPromises();
+    await query.fetchPreviousPage();
 
     expect(observerSpy.getValuesLength()).toBe(4);
     expect(observerSpy.getLastValue()?.data?.pageParams).toStrictEqual([
