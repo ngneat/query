@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
-import { BehaviorSubject, ReplaySubject, switchMap } from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
 import { RickAndMortyService, Character } from '../rick-and-morty.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
@@ -11,18 +11,18 @@ import { SpinnerComponent } from '../spinner/spinner.component';
   imports: [CommonModule, SubscribeModule, SpinnerComponent],
   template: `
     <p>
-      Hovering over a character will prefetch it, and when it's been prefetched
-      it will turn <strong>bold</strong>. Clicking on a prefetched character
-      will show their stats below immediately.
+      Hovering over a character will prefetch it. Clicking on a prefetched
+      character will show their stats below immediately.
     </p>
 
     <div class="grid grid-cols-2 gap-8">
       <section *subscribe="characters$ as characters">
+        <h2>Characters</h2>
         <ng-query-spinner *ngIf="characters.isLoading"></ng-query-spinner>
 
         <ul class="list-group" *ngIf="characters.isSuccess">
           <li
-            class="list-group-item"
+            class="list-group-item hover:bg-sky-100"
             *ngFor="let character of characters.data; trackBy: trackBy"
             (click)="selectCharacter(character)"
             (mouseenter)="prefetchCharacter(character)"
@@ -33,12 +33,13 @@ import { SpinnerComponent } from '../spinner/spinner.component';
       </section>
 
       <section *subscribe="selectedCharacter$ as selectedCharacter">
+        <h2>Selected character</h2>
         <ng-query-spinner
           *ngIf="selectedCharacter.isLoading"
         ></ng-query-spinner>
         <ng-container *ngIf="selectedCharacter.isSuccess">
           <img [src]="selectedCharacter.data.image" alt="" srcset="" />
-          <div>{{ selectedCharacter.data.name }}</div>
+          <pre>{{ selectedCharacter.data | json }}</pre>
         </ng-container>
       </section>
     </div>

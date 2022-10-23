@@ -1,10 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import {
-  PersistedQueryProvider,
-  QueryClient,
-  QueryProvider,
-} from '@ngneat/query';
+import { QueryClient, QueryProvider } from '@ngneat/query';
 import { delay, firstValueFrom, map } from 'rxjs';
 
 export interface Character {
