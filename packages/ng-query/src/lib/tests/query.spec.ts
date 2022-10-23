@@ -1,17 +1,12 @@
 import { QueryProvider, UseQuery } from '../query';
 import { TestBed } from '@angular/core/testing';
-import {
-  fetcher,
-  flushPromises,
-  rejectFetcher,
-  simpleFetcher,
-} from './test-utils';
+import { fetcher, flushPromises, simpleFetcher } from './test-utils';
 import { QueryClient } from '../query-client';
 import { QueryClient as QueryCore } from '@tanstack/query-core';
 import { QueryObserver } from '@tanstack/query-core';
 import { baseQuery } from '../base-query';
-import { skip, firstValueFrom } from 'rxjs';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
+import { throwError } from 'rxjs';
 jest.mock('../base-query');
 
 describe('useQuery', () => {
@@ -68,8 +63,11 @@ describe('useQuery', () => {
       enabled: true,
     });
 
-    const result = await firstValueFrom(query.result$.pipe(skip(1)));
-    expect(result).toMatchObject({
+    const observerSpy = subscribeSpyTo(query.result$);
+    await flushPromises();
+    const [loading, success] = observerSpy.getValues();
+    expect(loading.status).toBe('loading');
+    expect(success).toMatchObject({
       status: 'success',
       data: 'result31',
       isLoading: false,
@@ -85,8 +83,11 @@ describe('useQuery', () => {
       enabled: true,
     });
 
-    const result = await firstValueFrom(query.result$.pipe(skip(1)));
-    expect(result).toMatchObject({
+    const observerSpy = subscribeSpyTo(query.result$);
+    await flushPromises();
+    const [loading, success] = observerSpy.getValues();
+    expect(loading.status).toBe('loading');
+    expect(success).toMatchObject({
       status: 'success',
       data: 'result32',
       isLoading: false,
@@ -97,11 +98,17 @@ describe('useQuery', () => {
   });
 
   it.skip('should reject if queryFn errors out', async () => {
-    const query = useQuery(['key3'], rejectFetcher<string>());
+    const query = useQuery(['key3'], () => {
+      return throwError('error here');
+    });
 
-    const result = await firstValueFrom(query.result$.pipe(skip(1)));
+    const observerSpy = subscribeSpyTo(query.result$);
 
-    expect(result).toMatchObject({
+    await flushPromises();
+    const [loading, error] = observerSpy.getValues();
+    expect(loading.status).toBe('loading');
+
+    expect(error).toMatchObject({
       status: 'error',
       data: undefined,
       error: { message: 'Some error' },
@@ -118,14 +125,14 @@ describe('useQuery', () => {
     const onSuccess = jest.fn();
 
     useQuery(['key6'], simpleFetcher, {
-      onSuccess,
+      onSuccess: () => {
+        console.log('here');
+      },
       staleTime: 1000,
     });
 
-    expect(onSuccess).toBeCalledTimes(1);
-  });
+    await flushPromises(4000);
 
-  it.skip('should update query on reactive (Ref) key change', async () => {
-    // do we expect query to be updated if key changes ?
+    expect(onSuccess).toBeCalledTimes(1);
   });
 });
