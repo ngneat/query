@@ -81,6 +81,16 @@ import { RouterModule } from '@angular/router';
                 >Default Query Function</a
               >
             </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
+                routerLink="prefetching"
+                >Prefetching</a
+              >
+            </li>
           </ul>
         </div>
       </div>

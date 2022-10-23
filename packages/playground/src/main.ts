@@ -18,6 +18,7 @@ import { QUERY_CLIENT_CONFIG, QueryClient } from '@ngneat/query';
 import { DefaultQueryFunctionPageComponent } from './app/default-query-function-page/default-query-function-page.component';
 import { QueryClientConfig, QueryFunction } from '@tanstack/react-query';
 import { firstValueFrom } from 'rxjs';
+import { PrefetchingPageComponent } from './app/prefetching-page/prefetching-page.component';
 
 if (environment.production) {
   enableProdMode();
@@ -95,6 +96,10 @@ bootstrapApplication(AppComponent, {
           {
             path: 'default-query-function',
             component: DefaultQueryFunctionPageComponent,
+          },
+          {
+            path: 'prefetching',
+            component: PrefetchingPageComponent,
           },
         ],
         { initialNavigation: 'enabledBlocking' }
