@@ -1,7 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { QueryClient, QueryProvider } from '@ngneat/query';
-import { delay, firstValueFrom, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  delay,
+  distinct,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+  ReplaySubject,
+  scan,
+  tap,
+} from 'rxjs';
 
 export interface Character {
   readonly id: number;
@@ -19,6 +29,13 @@ export class RickAndMortyService {
   private useQuery = inject(QueryProvider);
   private queryClient = inject(QueryClient);
 
+  private prefetchedCharacterIds = new BehaviorSubject<number>(1);
+  private prefetchedCharacterIds$ = this.prefetchedCharacterIds
+    .asObservable()
+    .pipe(
+      scan((acc: Set<number>, curr: number) => acc.add(curr), new Set<number>())
+    );
+
   getCharacters() {
     return this.useQuery(['characters'], () =>
       this.http
@@ -34,11 +51,23 @@ export class RickAndMortyService {
   prefetchCharacter(id: number) {
     return this.queryClient.prefetchQuery(
       ['character', id],
-      () => firstValueFrom(this.getCharacterRaw(id)),
+      () =>
+        firstValueFrom(
+          this.getCharacterRaw(id).pipe(
+            tap((character) => this.prefetchedCharacterIds.next(character.id))
+          )
+        ),
 
       {
         staleTime: 1_000_000,
       }
+    );
+  }
+
+  isCharacterPrefetched(id: number) {
+    return this.prefetchedCharacterIds$.pipe(
+      map((prefetchedCharacterIds) => prefetchedCharacterIds.has(id)),
+      distinctUntilChanged()
     );
   }
 
