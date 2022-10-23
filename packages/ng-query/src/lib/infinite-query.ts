@@ -148,7 +148,9 @@ class InfiniteQuery {
   }
 }
 
-export const InfiniteQueryProvider = new InjectionToken<InfiniteQuery['use']>(
+export type UseInfiniteQuery = InfiniteQuery['use'];
+
+export const InfiniteQueryProvider = new InjectionToken<UseInfiniteQuery>(
   'InfiniteQueryProvider',
   {
     providedIn: 'root',
