@@ -2,6 +2,7 @@ import {
   QueryClient,
   QueryFunctionContext,
   QueryObserver,
+  QueryObserverResult,
   QueryOptions,
 } from '@tanstack/query-core';
 import { Subscription, take, tap } from 'rxjs';
@@ -57,4 +58,18 @@ export function buildQuery<TQueryFnData>(
   );
 
   return baseQuery(client, Observer, options);
+}
+
+export function createSyncObserverResult<T>(
+  data: T,
+  options: Partial<QueryObserverResult<T>> = {}
+): QueryObserverResult<T> {
+  return {
+    data,
+    isLoading: false,
+    isError: false,
+    isSuccess: true,
+    status: 'success',
+    ...options,
+  } as QueryObserverResult<T>;
 }
