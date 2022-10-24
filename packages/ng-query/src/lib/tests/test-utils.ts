@@ -43,3 +43,11 @@ export function infiniteFetcher(cursor: number, pageSize: number = 5) {
     });
   };
 }
+
+export function successMutator<T>(param: T): Observable<T> {
+  return of(param);
+}
+
+export function errorMutator<T>(_: T): Observable<Error> {
+  return throwError(() => new Error('some error'));
+}
