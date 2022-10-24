@@ -61,8 +61,9 @@ class Mutation {
     } & MutationObserver<TData, TError, TVariables>;
   }
 }
+export type UseMutation = Mutation['use'];
 
-export const MutationProvider = new InjectionToken<Mutation['use']>(
+export const MutationProvider = new InjectionToken<UseMutation>(
   'MutationProvider',
   {
     providedIn: 'root',
