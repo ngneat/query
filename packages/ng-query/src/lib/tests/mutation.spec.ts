@@ -49,7 +49,7 @@ describe('useMutation', () => {
   it('should return error when request fails', async () => {
     const mutation = useMutation(errorMutator);
 
-    mutation.mutate({});
+    await expect(mutation.mutate({})).rejects.toThrowError('some error');
 
     const observerSpy = subscribeSpyTo(mutation.result$);
     await flushPromises(400);
