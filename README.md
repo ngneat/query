@@ -400,6 +400,7 @@ import {
   IsFetchingProvider,
   IsMutatingProvider,
   createSyncObserverResult,
+  mapResultData
 } from '@ngneat/query';
 
 // How many queries are fetching?
@@ -414,6 +415,14 @@ const isMutatingPosts$ = inject(IsMutatingProvider)(['posts']);
 
 // Create sync successfull observer in case we want to work with one interface
 of(createSyncObserverResult(data, options?))
+
+// Map the result `data`
+getTodos().pipe(
+  mapResultData(data => {
+    return {
+      todos: data.todos.filter(predicate)
+    }
+}))
 ```
 
 ## Devtools
