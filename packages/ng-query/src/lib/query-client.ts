@@ -8,13 +8,14 @@ export const QueryClient = new InjectionToken<QueryCore>('QueryClient', {
     const options = inject(QUERY_CLIENT_OPTIONS);
 
     return new QueryCore({
+      ...options,
       defaultOptions: {
+        ...options?.defaultOptions,
         queries: {
           staleTime: Infinity,
           ...options?.defaultOptions?.queries,
         },
       },
-      ...options,
     });
   },
 });
