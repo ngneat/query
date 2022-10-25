@@ -396,7 +396,11 @@ export class TodosService {
 Implementation of [isFetching](https://tanstack.com/query/v4/docs/reference/useIsFetching) and [isMutating](https://tanstack.com/query/v4/docs/reference/useIsMutating).
 
 ```ts
-import { IsFetchingProvider, IsMutatingProvider } from '@ngneat/query';
+import {
+  IsFetchingProvider,
+  IsMutatingProvider,
+  createSyncObserverResult,
+} from '@ngneat/query';
 
 // How many queries are fetching?
 const isFetching$ = inject(IsFetchingProvider)();
@@ -407,6 +411,9 @@ const isFetchingPosts$ = inject(IsFetchingProvider)(['posts']);
 const isMutating$ = inject(IsMutatingProvider)();
 // How many mutations matching the posts prefix are fetching?
 const isMutatingPosts$ = inject(IsMutatingProvider)(['posts']);
+
+// Create sync successfull observer in case we want to work with one interface
+of(createSyncObserverResult(data, options?))
 ```
 
 ## Devtools

@@ -12,5 +12,5 @@ export { selectResult } from './lib/operators/select-result.operator';
 export { IsFetchingProvider } from './lib/is-fetching';
 export { IsMutatingProvider } from './lib/is-mutating';
 export { PersistedQueryProvider, queryOptions } from './lib/persisted-query';
-export { fromQueryFn } from './lib/utils';
+export { fromQueryFn, createSyncObserverResult } from './lib/utils';
 export * from './lib/entity-utils';
