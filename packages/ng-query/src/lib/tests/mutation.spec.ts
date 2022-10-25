@@ -52,7 +52,7 @@ describe('useMutation', () => {
     await expect(mutation.mutate({})).rejects.toThrowError('some error');
 
     const observerSpy = subscribeSpyTo(mutation.result$);
-    await flushPromises(400);
+    await flushPromises();
     const result = observerSpy.getLastValue();
 
     expect(result).toMatchObject({
