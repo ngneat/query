@@ -34,7 +34,6 @@ export type NgQueryObserverReturnType<
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
 > = Unsubscribable & {
-  updateQueryKey: (queryKey: QueryKey) => void;
   result$: Observable<QueryObserverResult<TData, TError>>;
 } & Omit<
     QueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
