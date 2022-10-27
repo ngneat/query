@@ -8,16 +8,17 @@ import {
   firstValueFrom,
   map,
   scan,
-  tap,
+  tap
 } from 'rxjs';
+import {
+  Character,
+  Episode,
+  Episodes,
+  Location
+} from './types/rick-morty.types';
 
-export interface Character {
-  readonly id: number;
-  readonly name: string;
-  readonly image: string;
-}
-
-const CHARACTER_API_URL = 'https://rickandmortyapi.com/api/character';
+const BASE_URL = 'https://rickandmortyapi.com/api';
+const CHARACTER_API_URL = `${BASE_URL}/character`;
 
 @Injectable({
   providedIn: 'root',
@@ -33,14 +34,6 @@ export class RickAndMortyService {
     .pipe(
       scan((acc: Set<number>, curr: number) => acc.add(curr), new Set<number>())
     );
-
-  getCharacters() {
-    return this.useQuery(['characters'], () =>
-      this.http
-        .get<{ results: Character[] }>(CHARACTER_API_URL)
-        .pipe(map(({ results }) => results))
-    );
-  }
 
   getCharacter(id: number) {
     return this.useQuery(['character', id], () => this.getCharacterRaw(id));
@@ -72,5 +65,31 @@ export class RickAndMortyService {
     return this.http
       .get<Character>(`${CHARACTER_API_URL}/${id}`)
       .pipe(delay(1000));
+  }
+
+  getCharacters() {
+    return this.useQuery(['characters'], () =>
+      this.http
+        .get<{ results: Character[] }>(CHARACTER_API_URL)
+        .pipe(map(({ results }) => results))
+    );
+  }
+
+  getEpisodes() {
+    return this.useQuery(['episodes'], () =>
+      this.http.get<Episodes>(`${BASE_URL}/episode`)
+    );
+  }
+
+  getEpisode(episodeId: string) {
+    return this.useQuery(['episode', episodeId], () =>
+      this.http.get<Episode>(`${BASE_URL}/episode/${episodeId}`)
+    );
+  }
+
+  getLocation(locationId: string) {
+    return this.useQuery(['location', locationId], () =>
+      this.http.get<Location>(`${BASE_URL}/location/${locationId}`)
+    );
   }
 }
