@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { QueryClient } from '@ngneat/query';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { GithubApiService } from '../github.service';
 
@@ -21,10 +22,18 @@ import { GithubApiService } from '../github.service';
 
       <div *ngIf="repo.isFetching">Updating...</div>
     </ng-container>
+
+    <button (click)="invalidate()">Invalidate</button>
   `,
 })
 export class SimplePageComponent {
+  client = inject(QueryClient);
+
   constructor(private githubApiService: GithubApiService) {}
 
   repo$ = this.githubApiService.getRepository('ngneat/ng-query').result$;
+
+  invalidate() {
+    this.client.invalidateQueries(['repository', 'ngneat/ng-query']);
+  }
 }
