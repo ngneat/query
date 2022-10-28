@@ -344,7 +344,12 @@ Note that the default `staleTime` of this library is `Infinity`.
 ## Operators
 
 ```ts
-import { filterError, filterSuccess, selectResult } from '@ngneat/query';
+import {
+  filterError,
+  filterSuccess,
+  selectResult,
+  mapResultData,
+} from '@ngneat/query';
 
 export class TodosPageComponent {
   todosService = inject(TodosService);
@@ -355,6 +360,15 @@ export class TodosPageComponent {
     this.todosService
       .getTodos()
       .result$.pipe(selectResult((result) => result.data.foo));
+
+    // Map the result `data`
+    this.todosService.getTodos().pipe(
+      mapResultData((data) => {
+        return {
+          todos: data.todos.filter(predicate),
+        };
+      })
+    );
   }
 }
 ```
@@ -399,8 +413,7 @@ Implementation of [isFetching](https://tanstack.com/query/v4/docs/reference/useI
 import {
   IsFetchingProvider,
   IsMutatingProvider,
-  createSyncObserverResult,
-  mapResultData
+  createSyncObserverResult
 } from '@ngneat/query';
 
 // How many queries are fetching?
@@ -415,14 +428,6 @@ const isMutatingPosts$ = inject(IsMutatingProvider)(['posts']);
 
 // Create sync successfull observer in case we want to work with one interface
 of(createSyncObserverResult(data, options?))
-
-// Map the result `data`
-getTodos().pipe(
-  mapResultData(data => {
-    return {
-      todos: data.todos.filter(predicate)
-    }
-}))
 ```
 
 ## Devtools
