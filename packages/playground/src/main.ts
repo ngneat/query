@@ -101,6 +101,11 @@ bootstrapApplication(AppComponent, {
             path: 'prefetching',
             component: PrefetchingPageComponent,
           },
+          {
+            path: 'rick-morty',
+            loadChildren: () =>
+              import('./app/rick-morty/rick-morty.route').then((m) => m.routes),
+          },
         ],
         { initialNavigation: 'enabledBlocking' }
       )

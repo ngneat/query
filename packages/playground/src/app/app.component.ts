@@ -91,6 +91,16 @@ import { RouterModule } from '@angular/router';
                 >Prefetching</a
               >
             </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
+                routerLink="rick-morty"
+                >Rick Morty</a
+              >
+            </li>
           </ul>
         </div>
       </div>
