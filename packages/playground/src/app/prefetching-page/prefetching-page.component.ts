@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
-import { BehaviorSubject, ReplaySubject, switchMap } from 'rxjs';
-import { RickAndMortyService, Character } from '../rick-and-morty.service';
+import { BehaviorSubject, switchMap } from 'rxjs';
+import { RickAndMortyService } from '../rick-and-morty.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
+import { Character } from '../types/rick-morty.types';
 
 @Component({
   selector: 'ng-query-prefetching',
