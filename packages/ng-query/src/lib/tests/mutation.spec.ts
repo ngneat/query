@@ -47,6 +47,9 @@ describe('useMutation', () => {
   });
 
   it('should return error when request fails', async () => {
+    const spy = jest.spyOn(console, 'error');
+    spy.mockImplementation(jest.fn());
+
     const mutation = useMutation(errorMutator);
 
     await expect(mutation.mutate({})).rejects.toThrowError('some error');
@@ -63,6 +66,7 @@ describe('useMutation', () => {
       data: undefined,
       error: Error('some error'),
     });
+    spy.mockRestore();
   });
 
   it('should return data when request succeeds', async () => {
