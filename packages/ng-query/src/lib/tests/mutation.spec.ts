@@ -73,10 +73,10 @@ describe('useMutation', () => {
     const mock = 'Mock data';
     const mutation = useMutation((params: string) => successMutator(params));
 
-    mutation.mutate(mock);
+    await mutation.mutate(mock);
 
     const observerSpy = subscribeSpyTo(mutation.result$);
-    await flushPromises(400);
+    await flushPromises(0);
     const result = observerSpy.getLastValue();
 
     expect(result).toMatchObject({
@@ -92,12 +92,11 @@ describe('useMutation', () => {
   it('should reset state after invoking mutation.reset', async () => {
     const mutation = useMutation((params: string) => successMutator(params));
 
-    mutation.mutate('');
+    await mutation.mutate('');
 
     const observerSpy = subscribeSpyTo(mutation.result$);
-    await flushPromises(400);
     mutation.reset();
-    await flushPromises(10);
+    await flushPromises(0);
     const result = observerSpy.getLastValue();
 
     expect(result).toMatchObject({
