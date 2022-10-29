@@ -2,7 +2,10 @@
 export default {
   displayName: 'ng-query',
   preset: '../../jest.preset.js',
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  setupFilesAfterEnv: [
+    '<rootDir>/src/test-setup.ts',
+    '../../node_modules/@hirez_io/observer-spy/dist/setup-auto-unsubscribe.js',
+  ],
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
