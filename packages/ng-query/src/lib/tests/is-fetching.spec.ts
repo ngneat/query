@@ -1,18 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
-import { UseIsMutating, IsMutatingProvider } from '../is-mutating';
-import { MutationProvider, UseMutation } from '../mutation';
-import {
-  flushPromises,
-  delayFetcher,
-  simpleFetcher,
-  successMutator,
-} from './test-utils';
-import { delay } from 'rxjs';
-import { UseIsFetching, IsFetchingProvider } from '../is-fetching';
-import { QueryClient as QueryCore } from '@tanstack/query-core';
-import { QueryClient } from '../query-client';
-import { UseQuery, QueryProvider } from '../query';
+import { IsFetchingProvider, UseIsFetching } from '../is-fetching';
+import { QueryProvider, UseQuery } from '../query';
+import { delayFetcher, flushPromises } from './test-utils';
 
 describe('isFetching', () => {
   let useIsFetching: UseIsFetching;
