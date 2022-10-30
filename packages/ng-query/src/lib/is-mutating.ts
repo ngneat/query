@@ -25,7 +25,7 @@ class IsMutating {
     const [filters] = parseMutationFilterArgs(arg1, arg2);
 
     return new Observable<number>((obs) => {
-      obs.next(0);
+      obs.next(this.instance.isMutating(filters));
       this.instance.getMutationCache().subscribe(
         notifyManager.batchCalls(() => {
           obs.next(this.instance.isMutating(filters));
