@@ -1,6 +1,11 @@
 import { QueryProvider, UseQuery } from '../query';
 import { TestBed } from '@angular/core/testing';
-import { fetcher, flushPromises, simpleFetcher } from './test-utils';
+import {
+  errorMutator,
+  fetcher,
+  flushPromises,
+  simpleFetcher,
+} from './test-utils';
 import { QueryClient } from '../query-client';
 import { QueryClient as QueryCore } from '@tanstack/query-core';
 import { QueryObserver } from '@tanstack/query-core';
@@ -97,41 +102,38 @@ describe('useQuery', () => {
     });
   });
 
-  it.skip('should reject if queryFn errors out', async () => {
-    const query = useQuery(['key3'], () => {
-      return throwError('error here');
-    });
+  it('should reject if queryFn errors out', async () => {
+    const spy = jest.spyOn(console, 'error');
+    spy.mockImplementation(jest.fn());
+    const query = useQuery(['key4'], errorMutator, { retry: false });
 
     const observerSpy = subscribeSpyTo(query.result$);
-
     await flushPromises();
-    const [loading, error] = observerSpy.getValues();
-    expect(loading.status).toBe('loading');
+    const error = observerSpy.getLastValue();
 
     expect(error).toMatchObject({
       status: 'error',
       data: undefined,
-      error: { message: 'Some error' },
+      error: Error('some error'),
       isLoading: false,
       isFetching: false,
       isFetched: true,
       isError: true,
       failureCount: 1,
-      failureReason: { message: 'Some error' },
     });
+    spy.mockRestore();
   });
 
-  it.skip('should call onSuccess callback', async () => {
+  it('should call onSuccess callback', async () => {
     const onSuccess = jest.fn();
 
-    useQuery(['key6'], simpleFetcher, {
-      onSuccess: () => {
-        console.log('here');
-      },
-      staleTime: 1000,
+    const query = useQuery(['key6'], simpleFetcher, {
+      onSuccess,
     });
 
-    await flushPromises(4000);
+    subscribeSpyTo(query.result$);
+
+    await flushPromises(100);
 
     expect(onSuccess).toBeCalledTimes(1);
   });
