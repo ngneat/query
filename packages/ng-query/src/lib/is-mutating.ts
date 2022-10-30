@@ -24,17 +24,20 @@ class IsMutating {
   ): Observable<number> {
     const [filters] = parseMutationFilterArgs(arg1, arg2);
 
-    return new Observable<number>((obs) =>
+    return new Observable<number>((obs) => {
+      obs.next(0);
       this.instance.getMutationCache().subscribe(
         notifyManager.batchCalls(() => {
           obs.next(this.instance.isMutating(filters));
         })
-      )
-    ).pipe(distinctUntilChanged());
+      );
+    }).pipe(distinctUntilChanged());
   }
 }
 
-export const IsMutatingProvider = new InjectionToken<IsMutating['use']>(
+export type UseIsMutating = IsMutating['use'];
+
+export const IsMutatingProvider = new InjectionToken<UseIsMutating>(
   'IsIsMutating',
   {
     providedIn: 'root',
