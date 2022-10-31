@@ -258,7 +258,9 @@ export class Query {
   }
 }
 
-export const QueryProvider = new InjectionToken<Query['use']>('QueryProvider', {
+export type UseQuery = Query['use'];
+
+export const QueryProvider = new InjectionToken<UseQuery>('QueryProvider', {
   providedIn: 'root',
   factory() {
     const query = new Query();

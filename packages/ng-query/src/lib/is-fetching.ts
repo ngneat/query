@@ -18,17 +18,20 @@ class IsFetching {
   use(arg1?: QueryKey | QueryFilters, arg2?: QueryFilters): Observable<number> {
     const [filters] = parseFilterArgs(arg1, arg2);
 
-    return new Observable<number>((obs) =>
+    return new Observable<number>((obs) => {
+      obs.next(this.instance.isFetching(filters));
       this.instance.getQueryCache().subscribe(
         notifyManager.batchCalls(() => {
           obs.next(this.instance.isFetching(filters));
         })
-      )
-    ).pipe(distinctUntilChanged());
+      );
+    }).pipe(distinctUntilChanged());
   }
 }
 
-export const IsFetchingProvider = new InjectionToken<IsFetching['use']>(
+export type UseIsFetching = IsFetching['use'];
+
+export const IsFetchingProvider = new InjectionToken<UseIsFetching>(
   'IsFetching',
   {
     providedIn: 'root',

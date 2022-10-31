@@ -42,7 +42,7 @@ class PersistedQuery {
   >(
     queryObserverOptionsFn: (
       key: TQueryKey,
-      params: Params
+      params?: Params
     ) => NgQueryObserverOptions<
       TQueryFnData,
       TError,
@@ -58,7 +58,7 @@ class PersistedQuery {
       TQueryKey
     >;
 
-    return (key: TQueryKey, params: Params) => {
+    return (key: TQueryKey, params?: Params) => {
       const mergedOptions = {
         ...queryObserverOptionsFn(key, params),
         keepPreviousData: true,
@@ -85,7 +85,9 @@ class PersistedQuery {
   }
 }
 
-export const PersistedQueryProvider = new InjectionToken<PersistedQuery['use']>(
+export type UsePersistedQuery = PersistedQuery['use'];
+
+export const PersistedQueryProvider = new InjectionToken<UsePersistedQuery>(
   'PersistedQueryProvider',
   {
     providedIn: 'root',
