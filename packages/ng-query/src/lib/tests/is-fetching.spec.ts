@@ -31,7 +31,7 @@ describe('isFetching', () => {
 
     expect(spy.getLastValue()).toBe(2);
 
-    await flushPromises(100);
+    await flushPromises(500);
     expect(spy.getLastValue()).toBe(0);
   });
 });
