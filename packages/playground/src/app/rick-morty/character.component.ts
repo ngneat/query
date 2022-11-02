@@ -56,7 +56,7 @@ import { LocationComponent } from './location.component';
             </tr>
           </tbody>
         </table>
-        <h4>Characters</h4>
+        <h4>Episodes</h4>
         <character-episode
           *ngFor="let episode of character.data.episode"
           [episode]="episode"
