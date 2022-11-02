@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { QueryClient } from '@ngneat/query';
 import { SubscribeModule } from '@ngneat/subscribe';
@@ -6,7 +6,7 @@ import { GithubApiService } from '../github.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, SubscribeModule],
+  imports: [NgIf, SubscribeModule],
   template: `
     <ng-container *subscribe="repo$ as repo">
       <p *ngIf="repo.isLoading">Loading...</p>

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -8,7 +8,7 @@ import { ScrollDirective } from './scroll.directive';
 @Component({
   selector: 'ng-query-infinite-query-page',
   standalone: true,
-  imports: [CommonModule, SpinnerComponent, SubscribeModule, ScrollDirective],
+  imports: [NgIf, NgForOf, SpinnerComponent, SubscribeModule, ScrollDirective],
   styles: [
     `
       :host {

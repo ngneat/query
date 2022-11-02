@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, JsonPipe, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { BehaviorSubject, switchMap } from 'rxjs';
@@ -9,7 +9,7 @@ import { Character } from '../types/rick-morty.types';
 @Component({
   selector: 'ng-query-prefetching',
   standalone: true,
-  imports: [CommonModule, SubscribeModule, SpinnerComponent],
+  imports: [NgIf, NgForOf, AsyncPipe, JsonPipe, SubscribeModule, SpinnerComponent],
   template: `
     <p>
       Hovering over a character will prefetch it, and when it's been prefetched
@@ -41,7 +41,7 @@ import { Character } from '../types/rick-morty.types';
           *ngIf="selectedCharacter.isLoading"
         ></ng-query-spinner>
         <ng-container *ngIf="selectedCharacter.isSuccess">
-          <img [src]="selectedCharacter.data.image" alt="" srcset="" />
+          <img [src]="selectedCharacter.data.image" [alt]="selectedCharacter.data.name" />
           <pre>{{ selectedCharacter.data | json }}</pre>
         </ng-container>
       </section>
@@ -54,10 +54,10 @@ export class PrefetchingPageComponent {
   private service = inject(RickAndMortyService);
   characters$ = this.service.getCharacters().result$;
 
-  private selectedCharacterId = new BehaviorSubject<number>(1);
+  private selectedCharacterId = new BehaviorSubject(1);
   selectedCharacter$ = this.selectedCharacterId
     .asObservable()
-    .pipe(switchMap((id: number) => this.service.getCharacter(id).result$));
+    .pipe(switchMap((id) => this.service.getCharacter(id).result$));
 
   prefetchCharacter(character: Character) {
     this.service.prefetchCharacter(character.id);
