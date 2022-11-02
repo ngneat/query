@@ -1,8 +1,8 @@
-import { CommonModule } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SubscribeModule } from '@ngneat/subscribe';
-import { map, switchMap } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs';
 import { RickAndMortyService } from '../rick-and-morty.service';
 import { CharacterEpisodeComponent } from './character-episode.component';
 import { LocationComponent } from './location.component';
@@ -10,7 +10,8 @@ import { LocationComponent } from './location.component';
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgForOf,
     SubscribeModule,
     RouterModule,
     CharacterEpisodeComponent,
@@ -49,18 +50,18 @@ import { LocationComponent } from './location.component';
             <tr>
               <td>Location</td>
               <td>
-                <location
+                <ng-query-location
                   [locationUrl]="character.data.location.url"
-                ></location>
+                ></ng-query-location>
               </td>
             </tr>
           </tbody>
         </table>
         <h4>Episodes</h4>
-        <character-episode
+        <ng-query-character-episode
           *ngFor="let episode of character.data.episode"
           [episode]="episode"
-        ></character-episode>
+        ></ng-query-character-episode>
       </ng-container>
     </ng-container>
   `,
@@ -68,7 +69,11 @@ import { LocationComponent } from './location.component';
 export class CharacterComponent {
   route = inject(ActivatedRoute);
   apiService = inject(RickAndMortyService);
-  characterId$ = this.route.params.pipe(map((params) => params['characterId']));
+  characterId$ = this.route.paramMap.pipe(
+    map((params) => params.get('characterId')),
+    filter(Boolean),
+    map(idStr => +idStr)
+  );
   character$ = this.characterId$.pipe(
     switchMap(
       (characterId) => this.apiService.getCharacter(characterId).result$

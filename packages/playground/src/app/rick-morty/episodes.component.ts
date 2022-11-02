@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SubscribeModule } from '@ngneat/subscribe';
@@ -6,7 +6,7 @@ import { RickAndMortyService } from '../rick-and-morty.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, SubscribeModule, RouterModule],
+  imports: [NgIf, NgForOf, SubscribeModule, RouterModule],
   template: `
     <ng-container *subscribe="episodes$ as episodes">
       <p *ngIf="episodes.status === 'loading'">Loading...</p>

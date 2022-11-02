@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject, combineLatest, switchMap } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { TodosService } from '../todos.service';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -8,7 +8,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 @Component({
   selector: 'ng-query-dynamic-queries-page',
   standalone: true,
-  imports: [CommonModule, SubscribeModule, SpinnerComponent],
+  imports: [NgIf, NgForOf, NgClass, SubscribeModule, SpinnerComponent],
   template: `
     <h2 class="mb-3">Dynamic queries</h2>
 

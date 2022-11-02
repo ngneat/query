@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { QueryProvider } from '@ngneat/query';
 import { SubscribeModule } from '@ngneat/subscribe';
@@ -14,7 +14,7 @@ interface Post {
 @Component({
   selector: 'ng-query-default-query-function-page',
   standalone: true,
-  imports: [CommonModule, SubscribeModule],
+  imports: [NgIf, AsyncPipe, NgForOf, SubscribeModule],
   template: `
     <p>
       In this example we are creating queries by only supplying a query key

@@ -106,7 +106,7 @@ import { SubscribeModule } from '@ngneat/subscribe';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, SpinnerComponent, SubscribeModule],
+  imports: [NgIf, NgForOf, SpinnerComponent, SubscribeModule],
   template: `
     <ng-container *subscribe="todos$ as todos">
       <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>

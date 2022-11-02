@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { useMutationResult } from '@ngneat/query';
 import { SubscribeModule } from '@ngneat/subscribe';
@@ -9,7 +9,7 @@ import { TodosService } from '../todos.service';
 @Component({
   selector: 'ng-query-basic-page',
   standalone: true,
-  imports: [CommonModule, SpinnerComponent, SubscribeModule],
+  imports: [NgIf, NgForOf, SpinnerComponent, SubscribeModule],
   template: `
     <h2 class="mb-3">Todos</h2>
 

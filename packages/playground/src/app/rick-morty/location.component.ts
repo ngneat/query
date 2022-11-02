@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { ReplaySubject, switchMap } from 'rxjs';
@@ -6,8 +6,8 @@ import { RickAndMortyService } from '../rick-and-morty.service';
 
 @Component({
   standalone: true,
-  selector: 'location',
-  imports: [CommonModule, SubscribeModule],
+  selector: 'ng-query-location',
+  imports: [NgIf, SubscribeModule],
   template: ` <ng-container *subscribe="location$ as location">
     <p *ngIf="location.status === 'loading'">Loading...</p>
     <p *ngIf="location.status === 'error'">Error :(</p>

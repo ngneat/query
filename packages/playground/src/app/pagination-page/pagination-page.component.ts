@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { BehaviorSubject, switchMap, tap } from 'rxjs';
@@ -8,7 +8,7 @@ import { PaginationService } from './pagination.service';
 @Component({
   selector: 'ng-query-pagination-page',
   standalone: true,
-  imports: [CommonModule, SubscribeModule, SpinnerComponent],
+  imports: [NgIf, NgForOf, SubscribeModule, SpinnerComponent],
   template: `
     <p>
       In this example, each page of data remains visible as the next page is
