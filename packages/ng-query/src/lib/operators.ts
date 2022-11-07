@@ -10,9 +10,8 @@ import {
 
 export function mapResultData<
   T extends QueryObserverResult,
-  R,
   Data = NonNullable<T['data']>
->(mapFn: (data: Data) => R): OperatorFunction<T, QueryObserverResult<Data>> {
+>(mapFn: (data: Data) => Data): OperatorFunction<T, QueryObserverResult<Data>> {
   return pipe(
     map((result) => {
       return {

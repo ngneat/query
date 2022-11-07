@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/query",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "description": "Primitives for managing, caching and syncing asynchronous and remote data in Angular",
   "license": "MIT",
   "repository": "ngneat/query",
