@@ -8,9 +8,11 @@ import {
   pipe,
 } from 'rxjs';
 
-export function mapResultData<T extends QueryObserverResult, R>(
-  mapFn: (data: NonNullable<T['data']>) => R
-): OperatorFunction<T, QueryObserverResult<R>> {
+export function mapResultData<
+  T extends QueryObserverResult,
+  R,
+  Data = NonNullable<T['data']>
+>(mapFn: (data: Data) => R): OperatorFunction<T, QueryObserverResult<Data>> {
   return pipe(
     map((result) => {
       return {
