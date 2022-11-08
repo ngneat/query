@@ -7,11 +7,11 @@ import {
 } from '@tanstack/query-core';
 import { distinctUntilChanged, Observable } from 'rxjs';
 
-import { QueryClient } from './query-client';
+import { QueryClientService } from './query-client';
 
 @Injectable({ providedIn: 'root' })
-class IsFetching {
-  private instance = inject(QueryClient);
+class IsFetchingService {
+  private instance = inject(QueryClientService);
 
   use(filters?: QueryFilters): Observable<number>;
   use(queryKey?: QueryKey, filters?: QueryFilters): Observable<number>;
@@ -29,14 +29,14 @@ class IsFetching {
   }
 }
 
-export type UseIsFetching = IsFetching['use'];
+export type UseIsFetching = IsFetchingService['use'];
 
-export const IsFetchingProvider = new InjectionToken<UseIsFetching>(
-  'IsFetching',
+export const UseIsFetching = new InjectionToken<UseIsFetching>(
+  'UseIsFetching',
   {
     providedIn: 'root',
     factory() {
-      const query = new IsFetching();
+      const query = new IsFetchingService();
       return query.use.bind(query);
     },
   }

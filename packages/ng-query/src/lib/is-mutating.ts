@@ -7,11 +7,11 @@ import {
 } from '@tanstack/query-core';
 import { distinctUntilChanged, Observable } from 'rxjs';
 
-import { QueryClient } from './query-client';
+import { QueryClientService } from './query-client';
 
 @Injectable({ providedIn: 'root' })
-class IsMutating {
-  private instance = inject(QueryClient);
+class IsMutatingService {
+  private instance = inject(QueryClientService);
 
   use(filters?: MutationFilters): Observable<number>;
   use(
@@ -35,14 +35,14 @@ class IsMutating {
   }
 }
 
-export type UseIsMutating = IsMutating['use'];
+export type UseIsMutating = IsMutatingService['use'];
 
-export const IsMutatingProvider = new InjectionToken<UseIsMutating>(
-  'IsIsMutating',
+export const UseIsMutating = new InjectionToken<UseIsMutating>(
+  'UseIsMutating',
   {
     providedIn: 'root',
     factory() {
-      const query = new IsMutating();
+      const query = new IsMutatingService();
       return query.use.bind(query);
     },
   }

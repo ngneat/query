@@ -7,11 +7,11 @@ import {
 } from '@tanstack/query-core';
 import { Observable, Subscription } from 'rxjs';
 
-import { QueryClient } from './query-client';
+import { QueryClientService } from './query-client';
 
 @Injectable({ providedIn: 'root' })
 class Mutation {
-  private instance = inject(QueryClient);
+  private instance = inject(QueryClientService);
 
   use<TData, TError, TVariables>(
     mutationFn: (vars: TVariables) => Observable<TData>,
