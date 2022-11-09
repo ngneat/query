@@ -1,18 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
-import { UseIsMutating, IsMutatingProvider } from '../is-mutating';
-import { MutationProvider, UseMutation } from '../mutation';
+import { UseIsMutating } from '../is-mutating';
+import { UseMutation, MutationService } from '../mutation';
 import { flushPromises, successMutator } from './test-utils';
 import { delay } from 'rxjs';
 
 describe('isMutating', () => {
   let useIsMutating: UseIsMutating;
-  let useMutation: UseMutation;
+  let useMutation: MutationService['use'];
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    useIsMutating = TestBed.inject(IsMutatingProvider);
-    useMutation = TestBed.inject(MutationProvider);
+    useIsMutating = TestBed.inject(UseIsMutating);
+    useMutation = TestBed.inject(UseMutation);
   });
 
   it('should be defined', async () => {

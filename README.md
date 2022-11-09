@@ -60,26 +60,28 @@ yarn add @ngneat/query
 
 ## Query Client
 
-Inject the `QueryClient` provider to get access to the query client [instance](https://tanstack.com/query/v4/docs/reference/QueryClient):
+Inject the `QueryClientService` provider to get access to the query client [instance](https://tanstack.com/query/v4/docs/reference/QueryClient):
 
 ```ts
+import { QueryClientService } from '@ngneat/query';
+
 @Injectable({ providedIn: 'root' })
 export class TodosService {
-  private queryClient = inject(QueryClient);
+  private queryClient = inject(QueryClientService);
 }
 ```
 
 ### Query
 
-Inject the `QueryProvider` in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/queries) hook, except the query function should return an `observable`.
+Inject the `UseQuery` in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/queries) hook, except the query function should return an `observable`.
 
 ```ts
-import { QueryProvider } from '@ngneat/query';
+import { UseQuery } from '@ngneat/query';
 
 @Injectable({ providedIn: 'root' })
 export class TodosService {
   private http = inject(HttpClient);
-  private useQuery = inject(QueryProvider);
+  private useQuery = inject(UseQuery);
 
   getTodos() {
     return this.useQuery(['todos'], () => {
@@ -130,14 +132,14 @@ Note that using the `*subscribe` [directive](https://github.com/ngneat/subscribe
 
 ### Infinite Query
 
-Inject the `InfiniteQueryProvider` in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/infinite-queries) hook, except the query function should return an `observable`.
+Inject the `UseInfiniteQuery` provider in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/infinite-queries) hook, except the query function should return an `observable`.
 
 ```ts
-import { InfiniteQueryProvider } from '@ngneat/query';
+import { UseInfiniteQuery } from '@ngneat/query';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectsService {
-  private useInfiniteQuery = inject(InfiniteQueryProvider);
+  private useInfiniteQuery = inject(UseInfiniteQuery);
 
   getProjects() {
     return this.useInfiniteQuery(
@@ -162,31 +164,29 @@ Checkout the complete [example](https://github.com/ngneat/query/blob/main/packag
 
 ### Persisted Query
 
-Use the `PersistedQueryProvider` when you want to use the `keepPreviousData` feature. For example, to implement the [pagination](https://tanstack.com/query/v4/docs/guides/paginated-queries) functionality:
+Use the `UsePersistedQuery` provider when you want to use the `keepPreviousData` feature. For example, to implement the [pagination](https://tanstack.com/query/v4/docs/guides/paginated-queries) functionality:
 
 ```ts
 import { inject, Injectable } from '@angular/core';
 import {
-  PersistedQueryProvider,
-  QueryClient,
+  UsePersistedQuery,
+  QueryClientService,
   queryOptions,
 } from '@ngneat/query';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PaginationService {
-  private queryClient = inject(QueryClient);
+  private queryClient = inject(QueryClientService);
 
-  getProjects = inject(PersistedQueryProvider)(
-    (queryKey: ['projects', number]) => {
-      return queryOptions({
-        queryKey,
-        queryFn: ({ queryKey }) => {
-          return fetchProjects(queryKey[1]);
-        },
-      });
-    }
-  );
+  getProjects = inject(UsePersistedQuery)((queryKey: ['projects', number]) => {
+    return queryOptions({
+      queryKey,
+      queryFn: ({ queryKey }) => {
+        return fetchProjects(queryKey[1]);
+      },
+    });
+  });
 
   prefetch(page: number) {
     return this.queryClient.prefetchQuery(['projects', page], () =>
@@ -207,12 +207,12 @@ The official `mutation` function can be a little verbose. Generally, you can use
 ```ts
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { QueryClient } from '@ngneat/query';
+import { QueryClientService } from '@ngneat/query';
 
 @Injectable({ providedIn: 'root' })
 export class TodosService {
   private http = inject(HttpClient);
-  private queryClient = inject(QueryClient);
+  private queryClient = inject(QueryClientService);
 
   addTodo({ title }: { title: string }) {
     return this.http.post<{ success: boolean }>(`todos`, { title }).pipe(
@@ -233,7 +233,7 @@ export class TodosService {
 And in the component:
 
 ```ts
-import { QueryClient, useMutationResult } from '@ngneat/query';
+import { QueryClientService, useMutationResult } from '@ngneat/query';
 
 @Component({
   template: `
@@ -267,13 +267,13 @@ You can use the original `mutation` [functionality](https://tanstack.com/query/v
 ```ts
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { QueryClient, MutationProvider } from '@ngneat/query';
+import { QueryClientService, UseMutation } from '@ngneat/query';
 
 @Injectable({ providedIn: 'root' })
 export class TodosService {
   private http = inject(HttpClient);
-  private queryClient = inject(QueryClient);
-  private useMutation = inject(MutationProvider);
+  private queryClient = inject(QueryClientService);
+  private useMutation = inject(UseMutation);
 
   addTodo() {
     return this.useMutation(({ title }: { title: string }) => {
@@ -380,16 +380,16 @@ The library exposes the `addEntity`, and `removeEntity` helpers:
 ```ts
 import {
   addEntity,
-  QueryClient,
-  QueryProvider,
+  QueryClientService,
+  UseQuery,
   removeEntity,
 } from '@ngneat/query';
 import { tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TodosService {
-  private useQuery = inject(QueryProvider);
-  private queryClient = inject(QueryClient);
+  private useQuery = inject(UseQuery);
+  private queryClient = inject(QueryClientService);
   private http = inject(HttpClient);
 
   createTodo(body) {
@@ -411,23 +411,34 @@ Implementation of [isFetching](https://tanstack.com/query/v4/docs/reference/useI
 
 ```ts
 import {
-  IsFetchingProvider,
-  IsMutatingProvider,
+  UseIsFetching,
+  UseIsMutating,
   createSyncObserverResult
 } from '@ngneat/query';
 
 // How many queries are fetching?
-const isFetching$ = inject(IsFetchingProvider)();
+const isFetching$ = inject(UseIsFetching)();
 // How many queries matching the posts prefix are fetching?
-const isFetchingPosts$ = inject(IsFetchingProvider)(['posts']);
+const isFetchingPosts$ = inject(UseIsMutating)(['posts']);
 
 // How many mutations are fetching?
-const isMutating$ = inject(IsMutatingProvider)();
+const isMutating$ = inject(UseIsFetching)();
 // How many mutations matching the posts prefix are fetching?
-const isMutatingPosts$ = inject(IsMutatingProvider)(['posts']);
+const isMutatingPosts$ = inject(UseIsMutating)(['posts']);
 
 // Create sync successfull observer in case we want to work with one interface
 of(createSyncObserverResult(data, options?))
+```
+
+## Use Constructor DI
+
+You can use the `constructor` version instead of `inject`:
+
+```ts
+QueryService.use(...)
+PersistedQueryService.use(...)
+InfiniteQueryService.use(...)
+MutationService.use(...)
 ```
 
 ## Devtools
@@ -438,7 +449,7 @@ Install the `@ngneat/query-devtools` package. Lazy load and use it only in `deve
 import { ENVIRONMENT_INITIALIZER } from '@angular/core';
 import { environment } from './environments/environment';
 
-import { QueryClient } from '@ngneat/query';
+import { QueryClientService } from '@ngneat/query';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -448,7 +459,7 @@ bootstrapApplication(AppComponent, {
           provide: ENVIRONMENT_INITIALIZER,
           multi: true,
           useValue() {
-            const queryClient = inject(QueryClient);
+            const queryClient = inject(QueryClientService);
             import('@ngneat/query-devtools').then((m) => {
               m.ngQueryDevtools({ queryClient });
             });

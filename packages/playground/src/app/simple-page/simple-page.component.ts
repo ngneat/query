@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { QueryClient } from '@ngneat/query';
+import { QueryClientService } from '@ngneat/query';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { GithubApiService } from '../github.service';
 
@@ -27,7 +27,7 @@ import { GithubApiService } from '../github.service';
   `,
 })
 export class SimplePageComponent {
-  client = inject(QueryClient);
+  client = inject(QueryClientService);
 
   constructor(private githubApiService: GithubApiService) {}
 

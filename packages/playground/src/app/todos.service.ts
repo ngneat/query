@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { MutationProvider, QueryClient, QueryProvider } from '@ngneat/query';
+import { QueryClientService, UseMutation, UseQuery } from '@ngneat/query';
 import { delay, tap } from 'rxjs';
 
 interface Todo {
@@ -14,9 +14,9 @@ interface Todo {
 })
 export class TodosService {
   private http = inject(HttpClient);
-  private queryClient = inject(QueryClient);
-  private useQuery = inject(QueryProvider);
-  private useMutation = inject(MutationProvider);
+  private queryClient = inject(QueryClientService);
+  private useQuery = inject(UseQuery);
+  private useMutation = inject(UseMutation);
 
   getTodos() {
     return this.useQuery(['todos'], () => {

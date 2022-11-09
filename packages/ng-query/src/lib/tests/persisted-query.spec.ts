@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
-import { PersistedQueryProvider, UsePersistedQuery } from '../persisted-query';
+import { UsePersistedQuery } from '../persisted-query';
 import { flushPromises, persistedFetcher } from './test-utils';
 
 describe('usePersistedQuery', () => {
@@ -8,7 +8,7 @@ describe('usePersistedQuery', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    usePersistedQuery = TestBed.inject(PersistedQueryProvider);
+    usePersistedQuery = TestBed.inject(UsePersistedQuery);
   });
 
   it('should be defined', () => {

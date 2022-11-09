@@ -1,6 +1,6 @@
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { QueryProvider } from '@ngneat/query';
+import { UseQuery } from '@ngneat/query';
 import { SubscribeModule } from '@ngneat/subscribe';
 import { switchMap, filter, ReplaySubject } from 'rxjs';
 
@@ -58,7 +58,7 @@ interface Post {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DefaultQueryFunctionPageComponent {
-  useQuery = inject(QueryProvider);
+  useQuery = inject(UseQuery);
   selectedPostId$ = new ReplaySubject<number | null>(1);
 
   posts$ = this.useQuery<Post[]>(['/posts']).result$;

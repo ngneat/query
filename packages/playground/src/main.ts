@@ -14,7 +14,7 @@ import { InfiniteQueryPageComponent } from './app/infinite-query-page/infinite-q
 import { PaginationPageComponent } from './app/pagination-page/pagination-page.component';
 import { SimplePageComponent } from './app/simple-page/simple-page.component';
 import { DynamicQueriesPageComponent } from './app/dynamic-queries-page/dynamic-queries-page.component';
-import { QUERY_CLIENT_CONFIG, QueryClient } from '@ngneat/query';
+import { QUERY_CLIENT_OPTIONS, QueryClientService } from '@ngneat/query';
 import { DefaultQueryFunctionPageComponent } from './app/default-query-function-page/default-query-function-page.component';
 import { QueryClientConfig, QueryFunction } from '@tanstack/react-query';
 import { firstValueFrom } from 'rxjs';
@@ -44,14 +44,14 @@ bootstrapApplication(AppComponent, {
       provide: ENVIRONMENT_INITIALIZER,
       multi: true,
       useValue() {
-        const queryClient = inject(QueryClient);
+        const queryClient = inject(QueryClientService);
         import('@ngneat/query-devtools').then((m) => {
           m.ngQueryDevtools({ queryClient });
         });
       },
     },
     {
-      provide: QUERY_CLIENT_CONFIG,
+      provide: QUERY_CLIENT_OPTIONS,
       useFactory: () => {
         const httpClient = inject(HttpClient);
         const queryFn: QueryFunction = async ({ queryKey }) =>

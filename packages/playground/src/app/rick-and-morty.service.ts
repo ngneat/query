@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { QueryClient, QueryProvider } from '@ngneat/query';
+import { QueryClientService, UseQuery } from '@ngneat/query';
 import {
   BehaviorSubject,
   delay,
@@ -8,13 +8,13 @@ import {
   firstValueFrom,
   map,
   scan,
-  tap
+  tap,
 } from 'rxjs';
 import {
   Character,
   Episode,
   Episodes,
-  Location
+  Location,
 } from './types/rick-morty.types';
 
 const BASE_URL = 'https://rickandmortyapi.com/api';
@@ -25,8 +25,8 @@ const CHARACTER_API_URL = `${BASE_URL}/character`;
 })
 export class RickAndMortyService {
   private http = inject(HttpClient);
-  private useQuery = inject(QueryProvider);
-  private queryClient = inject(QueryClient);
+  private useQuery = inject(UseQuery);
+  private queryClient = inject(QueryClientService);
 
   private prefetchedCharacterIds = new BehaviorSubject<number>(1);
   private prefetchedCharacterIds$ = this.prefetchedCharacterIds

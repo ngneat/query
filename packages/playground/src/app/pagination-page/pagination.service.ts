@@ -1,16 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import {
-  PersistedQueryProvider,
-  QueryClient,
+  QueryClientService,
   queryOptions,
+  UsePersistedQuery,
 } from '@ngneat/query';
 import { delay, firstValueFrom, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PaginationService {
-  private queryClient = inject(QueryClient);
+  private queryClient = inject(QueryClientService);
 
-  getProjects = inject(PersistedQueryProvider)(
+  getProjects = inject(UsePersistedQuery)(
     (queryKey: ['projects', number], params) => {
       return queryOptions({
         queryKey,

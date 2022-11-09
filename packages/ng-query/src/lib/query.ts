@@ -10,7 +10,7 @@ import {
 } from '@tanstack/query-core';
 import { Observable, Unsubscribable } from 'rxjs';
 
-import { QueryClient } from './query-client';
+import { QueryClientService } from './query-client';
 import { ObservableQueryFn } from './types';
 import { buildQuery } from './utils';
 
@@ -54,8 +54,8 @@ type NgQueryObserverDefinedReturnType<
 >;
 
 @Injectable({ providedIn: 'root' })
-export class Query {
-  private instance = inject(QueryClient);
+export class QueryService {
+  private instance = inject(QueryClientService);
 
   use<
     TQueryFnData = unknown,
@@ -258,12 +258,12 @@ export class Query {
   }
 }
 
-export type UseQuery = Query['use'];
+export type UseQuery = QueryService['use'];
 
-export const QueryProvider = new InjectionToken<UseQuery>('QueryProvider', {
+export const UseQuery = new InjectionToken<UseQuery>('UseQuery', {
   providedIn: 'root',
   factory() {
-    const query = new Query();
+    const query = new QueryService();
     return query.use.bind(query);
   },
 });

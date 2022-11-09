@@ -1,6 +1,6 @@
-import { InfiniteQueryProvider, UseInfiniteQuery } from '../infinite-query';
+import { UseInfiniteQuery } from '../infinite-query';
 import { TestBed } from '@angular/core/testing';
-import { QueryClient } from '../query-client';
+import { QueryClientService } from '../query-client';
 import {
   InfiniteQueryObserver,
   QueryClient as QueryCore,
@@ -16,8 +16,8 @@ describe('useQuery', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    useInfiniteQuery = TestBed.inject(InfiniteQueryProvider);
-    client = TestBed.inject(QueryClient);
+    useInfiniteQuery = TestBed.inject(UseInfiniteQuery);
+    client = TestBed.inject(QueryClientService);
   });
 
   it('should be defined', async () => {

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { InfiniteQueryProvider } from '@ngneat/query';
+import { UseInfiniteQuery } from '@ngneat/query';
 import { Observable } from 'rxjs';
 interface Project {
   id: number;
@@ -14,7 +14,7 @@ export interface Projects {
 
 @Injectable({ providedIn: 'root' })
 export class ProjectsService {
-  private useInfiniteQuery = inject(InfiniteQueryProvider);
+  private useInfiniteQuery = inject(UseInfiniteQuery);
   getProjects() {
     return this.useInfiniteQuery(
       ['projects'],

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
-import { IsFetchingProvider, UseIsFetching } from '../is-fetching';
-import { QueryProvider, UseQuery } from '../query';
+import { UseIsFetching } from '../is-fetching';
+import { UseQuery } from '../query';
 import { delayFetcher, flushPromises } from './test-utils';
 
 describe('isFetching', () => {
@@ -10,8 +10,8 @@ describe('isFetching', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    useIsFetching = TestBed.inject(IsFetchingProvider);
-    useQuery = TestBed.inject(QueryProvider);
+    useIsFetching = TestBed.inject(UseIsFetching);
+    useQuery = TestBed.inject(UseQuery);
   });
 
   it('should be defined', async () => {

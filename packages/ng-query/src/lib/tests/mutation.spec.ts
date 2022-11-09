@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
-import { UseMutation, MutationProvider } from '../mutation';
+import { UseMutation, MutationService } from '../mutation';
 import { errorMutator, flushPromises, successMutator } from './test-utils';
 
 describe('useMutation', () => {
-  let useMutation: UseMutation;
+  let useMutation: MutationService['use'];
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    useMutation = TestBed.inject(MutationProvider);
+    useMutation = TestBed.inject(UseMutation);
   });
 
   it('should be defined', async () => {

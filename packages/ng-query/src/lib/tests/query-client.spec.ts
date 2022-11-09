@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { QueryClient } from '../query-client';
+import { QueryClientService } from '../query-client';
 import { QueryClient as QueryCore } from '@tanstack/query-core';
 import { QUERY_CLIENT_OPTIONS } from '../providers';
 
@@ -8,7 +8,7 @@ describe('Query Client', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    client = TestBed.inject(QueryClient);
+    client = TestBed.inject(QueryClientService);
   });
 
   it('should be defined', async () => {
@@ -43,7 +43,7 @@ describe('Query Client with default options', () => {
         },
       ],
     });
-    client = TestBed.inject(QueryClient);
+    client = TestBed.inject(QueryClientService);
   });
 
   it('should be defined', async () => {
