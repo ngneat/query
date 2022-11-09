@@ -35,17 +35,14 @@ export function filterError() {
   };
 }
 
-export function filterSuccess() {
-  return function <T>(
-    source: Observable<QueryObserverResult<T>>
-  ): Observable<QueryObserverResult<T>> {
-    return source.pipe(
-      filter(
-        (result): result is QueryObserverResult<Exclude<T, null>> =>
-          result.status === 'success' && result.data !== null
-      )
-    );
-  };
+export function filterSuccess<T>(): OperatorFunction<
+  QueryObserverResult<T>,
+  QueryObserverResult & { data: NonNullable<T> }
+> {
+  return filter(
+    (result): result is any =>
+      result.status === 'success' && result.data !== null
+  );
 }
 
 export function selectResult<T, R>(
