@@ -28,7 +28,7 @@ export function queryOptions<
 }
 
 @Injectable({ providedIn: 'root' })
-class PersistedQueryService {
+export class PersistedQueryService {
   private useQuery = inject(UseQuery);
   private client = inject(QueryClientService);
 

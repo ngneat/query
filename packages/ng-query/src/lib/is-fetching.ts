@@ -10,7 +10,7 @@ import { distinctUntilChanged, Observable } from 'rxjs';
 import { QueryClientService } from './query-client';
 
 @Injectable({ providedIn: 'root' })
-class IsFetchingService {
+export class IsFetchingService {
   private instance = inject(QueryClientService);
 
   use(filters?: QueryFilters): Observable<number>;

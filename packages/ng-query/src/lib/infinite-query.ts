@@ -45,7 +45,7 @@ type NgInfiniteQueryObserverReturnType<
     'subscribe'
   >;
 @Injectable({ providedIn: 'root' })
-class InfiniteQueryService {
+export class InfiniteQueryService {
   private instance = inject(QueryClientService);
 
   use<

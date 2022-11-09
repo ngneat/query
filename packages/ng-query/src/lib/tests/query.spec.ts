@@ -1,4 +1,4 @@
-import { QueryProvider, UseQuery } from '../query';
+import { UseQuery } from '../query';
 import { TestBed } from '@angular/core/testing';
 import {
   errorMutator,
@@ -6,12 +6,12 @@ import {
   flushPromises,
   simpleFetcher,
 } from './test-utils';
-import { QueryClient } from '../query-client';
+import { QueryClientService } from '../query-client';
 import { QueryClient as QueryCore } from '@tanstack/query-core';
 import { QueryObserver } from '@tanstack/query-core';
 import { baseQuery } from '../base-query';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
-import { throwError } from 'rxjs';
+
 jest.mock('../base-query');
 
 describe('useQuery', () => {
@@ -20,8 +20,8 @@ describe('useQuery', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    useQuery = TestBed.inject(QueryProvider);
-    client = TestBed.inject(QueryClient);
+    useQuery = TestBed.inject(UseQuery);
+    client = TestBed.inject(QueryClientService);
   });
 
   it('should properly execute query', () => {

@@ -10,7 +10,7 @@ import { distinctUntilChanged, Observable } from 'rxjs';
 import { QueryClientService } from './query-client';
 
 @Injectable({ providedIn: 'root' })
-class IsMutatingService {
+export class IsMutatingService {
   private instance = inject(QueryClientService);
 
   use(filters?: MutationFilters): Observable<number>;

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { QueryProvider } from '@ngneat/query';
+import { UseQuery } from '@ngneat/query';
 
 interface Repository {
   name: string;
@@ -15,7 +15,7 @@ interface Repository {
 })
 export class GithubApiService {
   http = inject(HttpClient);
-  useQuery = inject(QueryProvider);
+  useQuery = inject(UseQuery);
 
   getRepository(repositoryName: string) {
     return this.useQuery(['repository', repositoryName], () =>

@@ -10,7 +10,7 @@ import { Observable, Subscription } from 'rxjs';
 import { QueryClientService } from './query-client';
 
 @Injectable({ providedIn: 'root' })
-class Mutation {
+export class MutationService {
   private instance = inject(QueryClientService);
 
   use<TData, TError, TVariables>(
@@ -61,14 +61,13 @@ class Mutation {
     } & MutationObserver<TData, TError, TVariables>;
   }
 }
-export type UseMutation = Mutation['use'];
 
-export const MutationProvider = new InjectionToken<UseMutation>(
+export const UseMutation = new InjectionToken<MutationService['use']>(
   'MutationProvider',
   {
     providedIn: 'root',
     factory() {
-      const mutation = new Mutation();
+      const mutation = new MutationService();
       return mutation.use.bind(mutation);
     },
   }
