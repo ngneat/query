@@ -1,9 +1,12 @@
-import { QueryObserverResult } from '@tanstack/query-core';
+import {
+  QueryObserverResult,
+  QueryObserverSuccessResult,
+  QueryObserverLoadingErrorResult,
+} from '@tanstack/query-core';
 import {
   distinctUntilChanged,
   filter,
   map,
-  Observable,
   OperatorFunction,
   pipe,
 } from 'rxjs';
@@ -22,30 +25,24 @@ export function mapResultData<
   );
 }
 
-export function filterError() {
-  return function (
-    source: Observable<QueryObserverResult<null>>
-  ): Observable<QueryObserverResult<null>> {
-    return source.pipe(
-      filter(
-        (result): result is QueryObserverResult<null> =>
-          result.status === 'error' && result.data === null
-      )
-    );
-  };
+export function filterError<T, E>(): OperatorFunction<
+  QueryObserverResult<T>,
+  QueryObserverLoadingErrorResult<T, E>
+> {
+  return filter(
+    (result): result is QueryObserverLoadingErrorResult<T, E> =>
+      result.status === 'error'
+  );
 }
 
-export function filterSuccess() {
-  return function <T>(
-    source: Observable<QueryObserverResult<T>>
-  ): Observable<QueryObserverResult<T>> {
-    return source.pipe(
-      filter(
-        (result): result is QueryObserverResult<Exclude<T, null>> =>
-          result.status === 'success' && result.data !== null
-      )
-    );
-  };
+export function filterSuccess<T>(): OperatorFunction<
+  QueryObserverResult<T>,
+  QueryObserverSuccessResult<T>
+> {
+  return filter(
+    (result): result is QueryObserverSuccessResult<T> =>
+      result.status === 'success'
+  );
 }
 
 export function selectResult<T, R>(
