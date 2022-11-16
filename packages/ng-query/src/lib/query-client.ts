@@ -7,18 +7,7 @@ export const QueryClientService = new InjectionToken<QueryCore>(
   {
     providedIn: 'root',
     factory() {
-      const options = inject(QUERY_CLIENT_OPTIONS);
-
-      return new QueryCore({
-        ...options,
-        defaultOptions: {
-          ...options?.defaultOptions,
-          queries: {
-            staleTime: Infinity,
-            ...options?.defaultOptions?.queries,
-          },
-        },
-      });
+      return new QueryCore(inject(QUERY_CLIENT_OPTIONS));
     },
   }
 );

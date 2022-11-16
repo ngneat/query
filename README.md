@@ -339,8 +339,6 @@ import { QUERY_CLIENT_OPTIONS } from '@ngneat/query';
 }
 ```
 
-Note that the default `staleTime` of this library is `Infinity`.
-
 ## Operators
 
 ```ts

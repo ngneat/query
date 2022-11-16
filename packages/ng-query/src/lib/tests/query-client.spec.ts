@@ -14,14 +14,6 @@ describe('Query Client', () => {
   it('should be defined', async () => {
     expect(client).toBeTruthy();
   });
-
-  it('should have stateTime Infinity', async () => {
-    expect(client.getDefaultOptions()).toMatchObject({
-      queries: {
-        staleTime: Infinity,
-      },
-    });
-  });
 });
 
 describe('Query Client with default options', () => {
