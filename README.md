@@ -48,6 +48,7 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
 - [Entity Utils](#utils)
 - [Utils](#utils)
 - [Devtools](#testing-directives)
+- [SSR](#ssr)
 
 ## Installation
 
@@ -463,6 +464,59 @@ bootstrapApplication(AppComponent, {
             });
           },
         },
+  ],
+});
+```
+
+## SSR
+
+On the Server:
+```ts
+import { QueryClient as ProvideQueryClient } from '@ngneat/query';
+import { QueryClient, dehydrate } from '@tanstack/query-core';
+import { renderApplication } from '@angular/platform-server';
+
+async function handleRequest(req, res) {
+  const queryClient = new QueryClient();
+  let html = await renderApplication(AppComponent, {
+    providers: [
+      {
+        provide: ProvideQueryClient,
+        useValue: queryClient,
+      },
+    ],
+  });
+  const queryState = JSON.stringify(dehydrate(queryClient));
+  html = html.replace(
+    '</body>',
+    `<script>window.__QUERY_STATE__ = ${queryState}</script></body>`
+  );
+
+  res.send(html);
+  queryClient.clear();
+}
+
+```
+Client:
+```ts
+import { importProvidersFrom } from '@angular/core';
+import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
+import { QueryClient as ProvideQueryClient } from '@ngneat/query';
+import { QueryClient, hydrate } from '@tanstack/query-core';
+
+const queryClient = new QueryClient();
+const dehydratedState = JSON.parse(window.__QUERY_STATE__);
+hydrate(queryClient, dehydratedState);
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    importProvidersFrom(
+      BrowserModule.withServerTransition({ appId: 'server-app' })
+    ),
+    {
+      provide: ProvideQueryClient,
+      useValue: queryClient,
+    },
   ],
 });
 ```
