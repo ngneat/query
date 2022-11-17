@@ -1,24 +1,45 @@
-import { inject, Injectable, InjectionToken, OnDestroy } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import {
+  inject,
+  Injectable,
+  InjectionToken,
+  OnDestroy,
+  PLATFORM_ID,
+  Provider,
+} from '@angular/core';
 import { QueryClient as QueryCore } from '@tanstack/query-core';
 import { QUERY_CLIENT_OPTIONS } from './providers';
 
-export const QueryClient = new InjectionToken<QueryCore>('QueryClient', {
+const QueryClient = new InjectionToken<QueryCore>('QueryClient', {
   providedIn: 'root',
   factory() {
     return new QueryCore(inject(QUERY_CLIENT_OPTIONS));
   },
 });
 
+export const provideQueryClient = (queryClient: QueryCore): Provider => {
+  return {
+    provide: QueryClient,
+    useValue: queryClient,
+  };
+};
+
 @Injectable({
   providedIn: 'root',
 })
 class QueryClientHooks implements OnDestroy {
   instance = inject(QueryClient);
+  platformId = inject(PLATFORM_ID);
+
   constructor() {
-    this.instance.mount();
+    if (isPlatformBrowser(this.platformId)) {
+      this.instance.mount();
+    }
   }
   ngOnDestroy() {
-    this.instance.unmount();
+    if (isPlatformBrowser(this.platformId)) {
+      this.instance.unmount();
+    }
   }
 }
 

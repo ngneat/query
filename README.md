@@ -472,19 +472,14 @@ bootstrapApplication(AppComponent, {
 
 On the Server:
 ```ts
-import { QueryClient as ProvideQueryClient } from '@ngneat/query';
+import { provideQueryClient } from '@ngneat/query';
 import { QueryClient, dehydrate } from '@tanstack/query-core';
 import { renderApplication } from '@angular/platform-server';
 
 async function handleRequest(req, res) {
   const queryClient = new QueryClient();
   let html = await renderApplication(AppComponent, {
-    providers: [
-      {
-        provide: ProvideQueryClient,
-        useValue: queryClient,
-      },
-    ],
+    providers: [provideQueryClient(queryClient)],
   });
   const queryState = JSON.stringify(dehydrate(queryClient));
   html = html.replace(
@@ -495,13 +490,12 @@ async function handleRequest(req, res) {
   res.send(html);
   queryClient.clear();
 }
-
 ```
 Client:
 ```ts
 import { importProvidersFrom } from '@angular/core';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
-import { QueryClient as ProvideQueryClient } from '@ngneat/query';
+import { provideQueryClient } from '@ngneat/query';
 import { QueryClient, hydrate } from '@tanstack/query-core';
 
 const queryClient = new QueryClient();
@@ -513,10 +507,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(
       BrowserModule.withServerTransition({ appId: 'server-app' })
     ),
-    {
-      provide: ProvideQueryClient,
-      useValue: queryClient,
-    },
+    provideQueryClient(queryClient),
   ],
 });
 ```
