@@ -27,19 +27,15 @@ export const provideQueryClient = (queryClient: QueryCore): Provider => {
 @Injectable({
   providedIn: 'root',
 })
-class QueryClientHooks implements OnDestroy {
+class QueryClientMount implements OnDestroy {
   instance = inject(QueryClient);
-  isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor() {
-    if (this.isBrowser) {
-      this.instance.mount();
-    }
+    this.instance.mount();
   }
+
   ngOnDestroy() {
-    if (this.isBrowser) {
-      this.instance.unmount();
-    }
+    this.instance.unmount();
   }
 }
 
@@ -48,7 +44,9 @@ export const QueryClientService = new InjectionToken<QueryCore>(
   {
     providedIn: 'root',
     factory() {
-      inject(QueryClientHooks);
+      if (isPlatformBrowser(inject(PLATFORM_ID))) {
+        inject(QueryClientMount);
+      }
       return inject(QueryClient);
     },
   }
