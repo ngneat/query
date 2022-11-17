@@ -29,15 +29,15 @@ export const provideQueryClient = (queryClient: QueryCore): Provider => {
 })
 class QueryClientHooks implements OnDestroy {
   instance = inject(QueryClient);
-  platformId = inject(PLATFORM_ID);
+  isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor() {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       this.instance.mount();
     }
   }
   ngOnDestroy() {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       this.instance.unmount();
     }
   }
