@@ -2,7 +2,10 @@ export { UseQuery, QueryService } from './lib/query';
 export { MutationService, UseMutation } from './lib/mutation';
 
 export { UseInfiniteQuery, InfiniteQueryService } from './lib/infinite-query';
-export { QUERY_CLIENT_OPTIONS } from './lib/providers';
+export {
+  QUERY_CLIENT_OPTIONS,
+  provideQueryClientOptions,
+} from './lib/providers';
 export { QueryClientService, provideQueryClient } from './lib/query-client';
 export { useMutationResult } from './lib/mutation-result';
 

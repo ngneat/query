@@ -10,3 +10,10 @@ export const QUERY_CLIENT_OPTIONS = new InjectionToken<QueryClientConfig>(
     },
   }
 );
+
+export function provideQueryClientOptions(options: QueryClientConfig) {
+  return {
+    provide: QUERY_CLIENT_OPTIONS,
+    useValue: options,
+  };
+}
