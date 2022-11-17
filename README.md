@@ -326,17 +326,18 @@ export class TodosPageComponent {
 You can provide the `QUERY_CLIENT_OPTIONS` provider to set the global [options](https://tanstack.com/query/v4/docs/reference/QueryClient) of the query client instance:
 
 ```ts
-import { QUERY_CLIENT_OPTIONS } from '@ngneat/query';
+import { provideQueryClientOptions } from '@ngneat/query';
 
 {
-  provide: QUERY_CLIENT_OPTIONS,
-  useValue: {
-    defaultOptions: {
-      queries: {
-        staleTime: 3000
-      }
-    }
-  }
+  providers: [
+    provideQueryClientOptions({
+      defaultOptions: {
+        queries: {
+          staleTime: 3000,
+        },
+      },
+    }),
+  ];
 }
 ```
 
@@ -471,6 +472,7 @@ bootstrapApplication(AppComponent, {
 ## SSR
 
 On the Server:
+
 ```ts
 import { provideQueryClient } from '@ngneat/query';
 import { QueryClient, dehydrate } from '@tanstack/query-core';
@@ -491,7 +493,9 @@ async function handleRequest(req, res) {
   queryClient.clear();
 }
 ```
+
 Client:
+
 ```ts
 import { importProvidersFrom } from '@angular/core';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
