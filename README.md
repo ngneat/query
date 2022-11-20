@@ -375,14 +375,14 @@ export class TodosPageComponent {
 
 ## Entity Utils
 
-The library exposes the `arrayPush`, and `removeEntity` helpers:
+The library exposes the `arrayPush`, and `arrayRemove` helpers:
 
 ```ts
 import {
   arrayPush,
   QueryClientService,
   UseQuery,
-  removeEntity,
+  arrayRemove,
 } from '@ngneat/query';
 import { tap } from 'rxjs';
 
