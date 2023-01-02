@@ -50,7 +50,7 @@ export function buildQuery<TQueryFnData>(
   options: QueryOptions
 ) {
   const originalQueryFn = options.queryFn as ObservableQueryFn<TQueryFnData>;
-  console.log(originalQueryFn);
+
   options.queryFn &&= fromQueryFn(
     originalQueryFn,
     client,
@@ -81,4 +81,13 @@ export function someRequestsStatusOf(
   const toArray = Array.isArray(requests) ? requests : Object.values(requests);
 
   return toArray.some((req) => req.status === status);
+}
+
+export function allRequestsStatusOf(
+  requests: Array<QueryObserverResult> | Record<string, QueryObserverResult>,
+  status: QueryObserverResult['status']
+) {
+  const toArray = Array.isArray(requests) ? requests : Object.values(requests);
+
+  return !toArray.some((req) => req.status !== status);
 }

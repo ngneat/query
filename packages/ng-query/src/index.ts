@@ -21,5 +21,6 @@ export {
   fromQueryFn,
   createSyncObserverResult,
   someRequestsStatusOf,
+  allRequestsStatusOf,
 } from './lib/utils';
 export * from './lib/entity-utils';
