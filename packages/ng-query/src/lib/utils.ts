@@ -74,11 +74,11 @@ export function createSyncObserverResult<T>(
   } as QueryObserverResult<T>;
 }
 
-export function allRequestsStatusOf(
+export function someRequestsStatusOf(
   requests: Array<QueryObserverResult> | Record<string, QueryObserverResult>,
   status: QueryObserverResult['status']
 ) {
   const toArray = Array.isArray(requests) ? requests : Object.values(requests);
 
-  return toArray.some((req) => req.status !== status);
+  return toArray.some((req) => req.status === status);
 }
