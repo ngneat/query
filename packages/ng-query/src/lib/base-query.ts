@@ -75,6 +75,7 @@ export function baseQuery<
 
         (mergedOptions as any)['queryFn']?.[SUBSCRIPTION]?.unsubscribe();
         queryObserverDispose();
+        console.log((mergedOptions as any)['queryFn']?.[SUBSCRIPTION]);
       };
     }).pipe(
       shareReplay({

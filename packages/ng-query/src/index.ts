@@ -17,5 +17,9 @@ export {
   queryOptions,
   PersistedQueryService,
 } from './lib/persisted-query';
-export { fromQueryFn, createSyncObserverResult } from './lib/utils';
+export {
+  fromQueryFn,
+  createSyncObserverResult,
+  allRequestsStatusOf,
+} from './lib/utils';
 export * from './lib/entity-utils';

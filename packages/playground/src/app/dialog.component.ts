@@ -1,23 +1,18 @@
-import { CommonModule, NgIf } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
+
+import { HttpClient } from '@angular/common/http';
 import { QueryClientService, UseQuery } from '@ngneat/query';
-import { SubscribeModule } from '@ngneat/subscribe';
 import { map } from 'rxjs';
-import { DialogComponent } from '../dialog.component';
-import { GithubApiService } from '../github.service';
+import { CommonModule } from '@angular/common';
+
 const API_URL = 'https://random-data-api.com/api/v2/users?size=3';
 
 @Component({
+  selector: 'ng-query-custom-dialog',
   standalone: true,
-  imports: [SubscribeModule, DialogComponent, CommonModule],
+  imports: [CommonModule],
   template: `
-    <div>
-      <button (click)="queryClient.invalidateQueries(['characters'])">
-        Invalidate Query
-      </button>
-
-      <button (click)="showDialog = !showDialog">Toggle Dialog</button>
+    <dialog open>
       <ng-container *ngIf="characters$ | async as characters">
         <p *ngIf="characters.status === 'loading'">Loading...</p>
         <p *ngIf="characters.status === 'error'">Error :(</p>
@@ -27,21 +22,20 @@ const API_URL = 'https://random-data-api.com/api/v2/users?size=3';
           </article>
         </ng-container>
       </ng-container>
-      <ng-query-custom-dialog *ngIf="showDialog"></ng-query-custom-dialog>
-    </div>
+    </dialog>
   `,
 })
-export class SimplePageComponent {
+export class DialogComponent {
   http = inject(HttpClient);
   useQuery = inject(UseQuery);
   queryClient = inject(QueryClientService);
-
-  showDialog = false;
+  dialog = true;
   characters$;
 
   constructor() {
     const f = () => this.http.get<any>(API_URL);
-    f['aaa'] = 'comp';
+    f['aaa'] = 'dialog';
+
     this.characters$ = this.useQuery(['characters'], f).result$;
   }
 }
