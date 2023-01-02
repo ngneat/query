@@ -20,6 +20,6 @@ export {
 export {
   fromQueryFn,
   createSyncObserverResult,
-  allRequestsStatusOf,
+  someRequestsStatusOf,
 } from './lib/utils';
 export * from './lib/entity-utils';
