@@ -1,6 +1,6 @@
 type DataUpdateFunction<TInput, TOutput> = (input: TInput) => TOutput;
 
-export function addEntity<T extends Record<string, any>, K extends keyof T>(
+export function arrayPush<T extends Record<string, any>, K extends keyof T>(
   entitiesKey: K,
   entity: T[K] extends any[] ? T[K][0] : never
 ): DataUpdateFunction<T | undefined, T | undefined> {
@@ -16,7 +16,7 @@ export function addEntity<T extends Record<string, any>, K extends keyof T>(
   };
 }
 
-export function removeEntity<T extends Record<string, any>, K extends keyof T>(
+export function arrayRemove<T extends Record<string, any>, K extends keyof T>(
   entitiesKey: K,
   entityId: string | number,
   entityIdKey: keyof T = 'id'

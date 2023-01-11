@@ -222,7 +222,7 @@ export class TodosService {
         // Or update manually
         this.queryClient.setQueryData<TodosResponse>(
           ['todos'],
-          addEntity('todos', newTodo)
+          arrayPush('todos', newTodo)
         );
       })
     );
@@ -284,7 +284,7 @@ export class TodosService {
           // Or update manually
           this.queryClient.setQueryData<TodosResponse>(
             ['todos'],
-            addEntity('todos', newTodo)
+            arrayPush('todos', newTodo)
           );
         })
       );
@@ -374,14 +374,14 @@ export class TodosPageComponent {
 
 ## Entity Utils
 
-The library exposes the `addEntity`, and `removeEntity` helpers:
+The library exposes the `arrayPush`, and `arrayRemove` helpers:
 
 ```ts
 import {
-  addEntity,
+  arrayPush,
   QueryClientService,
   UseQuery,
-  removeEntity,
+  arrayRemove,
 } from '@ngneat/query';
 import { tap } from 'rxjs';
 
@@ -396,7 +396,7 @@ export class TodosService {
       tap((newTodo) => {
         this.queryClient.setQueryData<TodosResponse>(
           ['todos'],
-          addEntity('todos', newTodo)
+          arrayPush('todos', newTodo)
         );
       })
     );
