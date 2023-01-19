@@ -101,6 +101,16 @@ import { RouterModule } from '@angular/router';
                 >Rick Morty</a
               >
             </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
+                routerLink="optimistic-updates"
+                >Optimistic updates</a
+              >
+            </li>
           </ul>
         </div>
       </div>

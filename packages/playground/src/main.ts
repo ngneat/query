@@ -19,6 +19,7 @@ import { DefaultQueryFunctionPageComponent } from './app/default-query-function-
 import { QueryClientConfig, QueryFunction } from '@tanstack/react-query';
 import { firstValueFrom } from 'rxjs';
 import { PrefetchingPageComponent } from './app/prefetching-page/prefetching-page.component';
+import { OptimisticUpdatesPageComponent } from './app/optimistic-updates-page/optimistic-updates-page.component';
 
 if (environment.production) {
   enableProdMode();
@@ -105,6 +106,10 @@ bootstrapApplication(AppComponent, {
             path: 'rick-morty',
             loadChildren: () =>
               import('./app/rick-morty/rick-morty.route').then((m) => m.routes),
+          },
+          {
+            path: 'optimistic-updates',
+            component: OptimisticUpdatesPageComponent,
           },
         ],
         { initialNavigation: 'enabledBlocking' }
