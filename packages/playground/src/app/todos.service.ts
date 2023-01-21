@@ -26,6 +26,18 @@ export class TodosService {
     });
   }
 
+  getTodosWithOptions(options?: { refetchInterval: number }) {
+    return this.useQuery(
+      ['todos'],
+      () => {
+        return this.http.get<Todo[]>(
+          'https://jsonplaceholder.typicode.com/todos'
+        );
+      },
+      options
+    );
+  }
+
   addTodoOriginal() {
     return this.useMutation(({ title }: { title: string }) => {
       return this.http

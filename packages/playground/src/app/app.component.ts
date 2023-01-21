@@ -111,6 +111,16 @@ import { RouterModule } from '@angular/router';
                 >Optimistic updates</a
               >
             </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
+                routerLink="auto-refetching"
+                >Auto Refetching</a
+              >
+            </li>
           </ul>
         </div>
       </div>

@@ -20,6 +20,8 @@ import { QueryClientConfig, QueryFunction } from '@tanstack/react-query';
 import { firstValueFrom } from 'rxjs';
 import { PrefetchingPageComponent } from './app/prefetching-page/prefetching-page.component';
 import { OptimisticUpdatesPageComponent } from './app/optimistic-updates-page/optimistic-updates-page.component';
+import { AutoRefetchingPageComponent } from './app/auto-refetching-page/auto-refetching-page.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 if (environment.production) {
   enableProdMode();
@@ -72,6 +74,7 @@ bootstrapApplication(AppComponent, {
     },
     importProvidersFrom(
       HttpClientModule,
+      BrowserAnimationsModule,
       RouterModule.forRoot(
         [
           {
@@ -110,6 +113,10 @@ bootstrapApplication(AppComponent, {
           {
             path: 'optimistic-updates',
             component: OptimisticUpdatesPageComponent,
+          },
+          {
+            path: 'auto-refetching',
+            component: AutoRefetchingPageComponent,
           },
         ],
         { initialNavigation: 'enabledBlocking' }
