@@ -7,7 +7,6 @@ import {
   QueryObserverResult,
 } from '@tanstack/query-core';
 import { Observable, shareReplay } from 'rxjs';
-import { SUBSCRIPTION } from './utils';
 
 export function baseQuery<
   TQueryFnData = unknown,
@@ -42,8 +41,6 @@ export function baseQuery<
     QueryKey
   >(client, defaultedOptions);
 
-  // console.log('NEW OBSERVER INSTANCE');
-
   (queryObserver as unknown as { result$: Observable<unknown> }).result$ =
     new Observable<QueryObserverResult<TData, TError>>((observer) => {
       const mergedOptions = client.defaultQueryOptions({
@@ -51,11 +48,6 @@ export function baseQuery<
         // The query key can be changed, so we need to rebuild it each time
         ...queryObserver.options,
       });
-
-      // console.log(
-      //   'NEW OBSERVER SUBSCRIPTION',
-      //   queryObserver.getCurrentQuery().queryKey
-      // );
 
       observer.next(queryObserver.getOptimisticResult(mergedOptions));
 
@@ -68,12 +60,6 @@ export function baseQuery<
       });
 
       return () => {
-        // console.log(
-        //   'OBSERVER UNSUBSCRIBED ',
-        //   queryObserver.getCurrentQuery().queryKey
-        // );
-
-        (mergedOptions as any)['queryFn']?.[SUBSCRIPTION]?.unsubscribe();
         queryObserverDispose();
       };
     }).pipe(

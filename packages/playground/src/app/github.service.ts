@@ -19,9 +19,7 @@ export class GithubApiService {
 
   getRepository(repositoryName: string) {
     return this.useQuery(['repository', repositoryName], () =>
-      this.http.get<Repository>(
-        `https://api.github.com/repos/${repositoryName}`
-      )
+      this.http.get<Repository>(`https://reqres.in/api/users?delay=5`)
     );
   }
 }

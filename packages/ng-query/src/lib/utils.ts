@@ -5,19 +5,15 @@ import {
   QueryObserverResult,
   QueryOptions,
 } from '@tanstack/query-core';
-import { Subscription, take, tap } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { baseQuery } from './base-query';
 import { ObservableQueryFn } from './types';
-
-export const SUBSCRIPTION = Symbol('SUBSCRIPTION');
 
 export function fromQueryFn<TQueryFnData>(
   originalQueryFn: ObservableQueryFn<TQueryFnData>,
   client: QueryClient,
   queryKey: unknown[]
 ) {
-  let sourceSubscription: Subscription | null = new Subscription();
-
   function queryFn$(queryFnArgs: QueryFunctionContext) {
     return new Promise<TQueryFnData>((res, rej) => {
       const subscription = originalQueryFn(queryFnArgs)
@@ -26,7 +22,6 @@ export function fromQueryFn<TQueryFnData>(
           tap({
             unsubscribe: () => {
               client.cancelQueries(queryKey);
-              sourceSubscription = null;
             },
           })
         )
@@ -35,11 +30,11 @@ export function fromQueryFn<TQueryFnData>(
           error: rej,
         });
 
-      sourceSubscription?.add(subscription);
+      queryFnArgs.signal?.addEventListener('abort', () => {
+        subscription.unsubscribe();
+      });
     });
   }
-
-  (queryFn$ as any)[SUBSCRIPTION] = sourceSubscription;
 
   return queryFn$;
 }
