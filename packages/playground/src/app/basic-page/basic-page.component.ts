@@ -80,6 +80,10 @@ export class BasicPageComponent {
   addTodoMutationOriginal = this.todosService.addTodoOriginal();
   addTodoMutation = useMutationResult();
 
+  constructor() {
+    this.addTodoMutationOriginal.result$.subscribe().unsubscribe();
+  }
+
   addTodoOriginal() {
     this.addTodoMutationOriginal.mutate({ title: 'foo' }).then((res) => {
       console.log(res);
