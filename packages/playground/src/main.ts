@@ -22,6 +22,7 @@ import { PrefetchingPageComponent } from './app/prefetching-page/prefetching-pag
 import { OptimisticUpdatesPageComponent } from './app/optimistic-updates-page/optimistic-updates-page.component';
 import { AutoRefetchingPageComponent } from './app/auto-refetching-page/auto-refetching-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PlaceholderPageComponent } from './app/placeholder-page/placeholder-page.component';
 
 if (environment.production) {
   enableProdMode();
@@ -117,6 +118,10 @@ bootstrapApplication(AppComponent, {
           {
             path: 'auto-refetching',
             component: AutoRefetchingPageComponent,
+          },
+          {
+            path: 'placeholder-query-data',
+            component: PlaceholderPageComponent,
           },
         ],
         { initialNavigation: 'enabledBlocking' }

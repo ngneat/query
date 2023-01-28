@@ -121,6 +121,16 @@ import { RouterModule } from '@angular/router';
                 >Auto Refetching</a
               >
             </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
+                routerLink="placeholder-query-data"
+                >Placeholder Query Data</a
+              >
+            </li>
           </ul>
         </div>
       </div>
