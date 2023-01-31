@@ -33,9 +33,11 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
 
 ## Table of Contents
 
+- [Features](#features)
+- [Table of Contents](#table-of-contents)
 - [Installation](#installation)
 - [Queries](#queries)
-  - [Query Client](#query-client)
+- [Query Client](#query-client)
   - [Query](#query)
   - [Infinite Query](#infinite-query)
   - [Persisted Query](#persisted-query)
@@ -44,10 +46,13 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
   - [Mutation](#mutation)
 - [Query Global Options](#query-global-options)
 - [Operators](#operators)
-- [Entity Utils](#utils)
+- [Entity Utils](#entity-utils)
 - [Utils](#utils)
-- [Devtools](#testing-directives)
+- [Use Constructor DI](#use-constructor-di)
+- [Devtools](#devtools)
 - [SSR](#ssr)
+- [Created By](#created-by)
+- [Contributors ✨](#contributors-)
 
 ## Installation
 
@@ -418,14 +423,14 @@ import {
 // How many queries are fetching?
 const isFetching$ = inject(UseIsFetching)();
 // How many queries matching the posts prefix are fetching?
-const isFetchingPosts$ = inject(UseIsMutating)(['posts']);
+const isFetchingPosts$ = inject(UseIsFetching)(['posts']);
 
 // How many mutations are fetching?
-const isMutating$ = inject(UseIsFetching)();
+const isMutating$ = inject(UseIsMutating)();
 // How many mutations matching the posts prefix are fetching?
 const isMutatingPosts$ = inject(UseIsMutating)(['posts']);
 
-// Create sync successfull observer in case we want to work with one interface
+// Create sync successful observer in case we want to work with one interface
 of(createSyncObserverResult(data, options?))
 ```
 
