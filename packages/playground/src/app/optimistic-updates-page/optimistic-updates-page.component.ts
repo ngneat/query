@@ -43,7 +43,7 @@ interface Todo {
           />
         </div>
         <button
-          type="button"
+          type="submit"
           class="btn btn-info self-center"
           [disabled]="!title"
         >
