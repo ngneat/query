@@ -8,7 +8,7 @@ import {
   filter,
   map,
   OperatorFunction,
-  pipe,
+  pipe, tap,
 } from 'rxjs';
 
 export function mapResultData<T extends QueryObserverResult, R>(
@@ -40,7 +40,7 @@ export function filterSuccess<T>(): OperatorFunction<
 > {
   return filter(
     (result): result is QueryObserverSuccessResult<T> =>
-      result.status === 'success'
+      result.isSuccess
   );
 }
 
@@ -48,4 +48,12 @@ export function selectResult<T, R>(
   mapFn: (result: T) => R
 ): OperatorFunction<T, R> {
   return pipe(map(mapFn), distinctUntilChanged());
+}
+
+export function tapSuccess<T extends  QueryObserverResult>(cb: (data: NonNullable<T['data']>) => void) {
+  return tap<T>((result) => {
+    if (result.isSuccess) {
+      cb(result.data as any);
+    }
+  });
 }
