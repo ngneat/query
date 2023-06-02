@@ -57,3 +57,12 @@ export function tapSuccess<T extends  QueryObserverResult>(cb: (data: NonNullabl
     }
   });
 }
+
+export function tapError<T extends  QueryObserverResult>(cb: (error: NonNullable<T['error']>) => void) {
+  return tap<T>((result) => {
+    if (result.isError) {
+      cb(result.error as any);
+    }
+  });
+}
+
