@@ -347,15 +347,20 @@ import { provideQueryClientOptions } from '@ngneat/query';
 
 ## Operators
 
+### mapResultData
+
 ```ts
 import {
   filterError,
   filterSuccess,
   selectResult,
   mapResultData,
+  tapSuccess,
+  tapError
 } from '@ngneat/query';
 
 export class TodosPageComponent {
+  public todos: Array<Todo>;
   todosService = inject(TodosService);
 
   ngOnInit() {
@@ -371,6 +376,18 @@ export class TodosPageComponent {
         return {
           todos: data.todos.filter(predicate),
         };
+      })
+    );
+
+    // process error or success result directly
+    this.todosService.getTodos().result$.pipe(
+      tapSuccess((data) => {
+        // get result data directly if success
+        this.todos = data
+      }),
+       tapError((error) => {
+        // do what you want with error (display modal, toast, etc)
+        alert(error.message)
       })
     );
   }
