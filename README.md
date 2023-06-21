@@ -347,8 +347,6 @@ import { provideQueryClientOptions } from '@ngneat/query';
 
 ## Operators
 
-### mapResultData
-
 ```ts
 import {
   filterError,
@@ -389,7 +387,7 @@ export class TodosPageComponent {
         // do what you want with error (display modal, toast, etc)
         alert(error.message)
       })
-    );
+    ).subscribe();
   }
 }
 ```
