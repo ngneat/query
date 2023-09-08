@@ -118,7 +118,6 @@ import { PlaceholderDataFromCacheComponent } from './placeholder-data-from-cache
         border-left-style: solid;
         border-left-width: 0.25rem;
         border-left-color: var(--bs-gray-500);
-        quotes: '\201C''\201D''\2018''\2019';
       }
     `,
   ],

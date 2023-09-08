@@ -9,7 +9,14 @@ import { Character } from '../types/rick-morty.types';
 @Component({
   selector: 'ng-query-prefetching',
   standalone: true,
-  imports: [NgIf, NgForOf, AsyncPipe, JsonPipe, SubscribeModule, SpinnerComponent],
+  imports: [
+    NgIf,
+    NgForOf,
+    AsyncPipe,
+    JsonPipe,
+    SubscribeModule,
+    SpinnerComponent,
+  ],
   template: `
     <p>
       Hovering over a character will prefetch it, and when it's been prefetched
@@ -41,7 +48,10 @@ import { Character } from '../types/rick-morty.types';
           *ngIf="selectedCharacter.isLoading"
         ></ng-query-spinner>
         <ng-container *ngIf="selectedCharacter.isSuccess">
-          <img [src]="selectedCharacter.data.image" [alt]="selectedCharacter.data.name" />
+          <img
+            [src]="selectedCharacter.data.image"
+            [alt]="selectedCharacter.data.name"
+          />
           <pre>{{ selectedCharacter.data | json }}</pre>
         </ng-container>
       </section>

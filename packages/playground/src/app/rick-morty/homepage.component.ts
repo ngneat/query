@@ -4,7 +4,10 @@ import { Component, OnInit } from '@angular/core';
   standalone: true,
   template: `
     <h2>ngneat/query Demo</h2>
-    <p>The TanStack Query (also known as react-query) adapter for Angular applications</p>
+    <p>
+      The TanStack Query (also known as react-query) adapter for Angular
+      applications
+    </p>
     <p>Using the Rick And Morty API</p>
     <p>
       (Built by <a href="https://www.twitter.com/tuantrungvo">@tuantrungvo</a>)

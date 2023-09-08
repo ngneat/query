@@ -72,7 +72,7 @@ export class CharacterComponent {
   characterId$ = this.route.paramMap.pipe(
     map((params) => params.get('characterId')),
     filter(Boolean),
-    map(idStr => +idStr)
+    map((idStr) => +idStr)
   );
   character$ = this.characterId$.pipe(
     switchMap(

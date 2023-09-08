@@ -2,11 +2,7 @@ import { NgForOf, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SubscribeModule } from '@ngneat/subscribe';
-import {
-  filter,
-  map,
-  switchMap
-} from 'rxjs';
+import { filter, map, switchMap } from 'rxjs';
 import { RickAndMortyService } from '../rick-and-morty.service';
 import { EpisodeCharacterComponent } from './episode-character.component';
 
@@ -39,7 +35,7 @@ export class EpisodeComponent {
   apiService = inject(RickAndMortyService);
   episodeId$ = this.route.paramMap.pipe(
     map((params) => params.get('episodeId')),
-    filter(Boolean),
+    filter(Boolean)
   );
   episode$ = this.episodeId$.pipe(
     switchMap((episodeId) => this.apiService.getEpisode(episodeId).result$)
