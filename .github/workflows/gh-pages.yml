@@ -24,7 +24,7 @@ jobs:
           cache: 'npm'
       - name: Install and Build
         run: |
-          npm ci
+          npm ci --legacy-peer-deps 
           npx nx build playground -- --base-href /query/
       - name: Duplicated index.html
         # https://angular.io/guide/deployment#deploy-to-github-pages
