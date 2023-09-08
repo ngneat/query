@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/query-devtools",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0",
   "description": "Developer tools to interact with and visualize the ngneat/query cache",
   "license": "MIT",
   "repository": "ngneat/query",
