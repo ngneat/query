@@ -46,7 +46,6 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
   - [Mutation](#mutation)
 - [Query Global Options](#query-global-options)
 - [Operators](#operators)
-- [Entity Utils](#entity-utils)
 - [Utils](#utils)
 - [Use Constructor DI](#use-constructor-di)
 - [Devtools](#devtools)
@@ -353,8 +352,10 @@ import {
   filterSuccess,
   selectResult,
   mapResultData,
+  mapResultsData,
   tapSuccess,
-  tapError
+  tapError,
+  startWithQueryResult,
 } from '@ngneat/query';
 
 export class TodosPageComponent {
@@ -378,48 +379,19 @@ export class TodosPageComponent {
     );
 
     // process error or success result directly
-    this.todosService.getTodos().result$.pipe(
-      tapSuccess((data) => {
-        // get result data directly if success
-        this.todos = data
-      }),
-       tapError((error) => {
-        // do what you want with error (display modal, toast, etc)
-        alert(error.message)
-      })
-    ).subscribe();
-  }
-}
-```
-
-## Entity Utils
-
-The library exposes the `addEntity`, and `removeEntity` helpers:
-
-```ts
-import {
-  addEntity,
-  QueryClientService,
-  UseQuery,
-  removeEntity,
-} from '@ngneat/query';
-import { tap } from 'rxjs';
-
-@Injectable({ providedIn: 'root' })
-export class TodosService {
-  private useQuery = inject(UseQuery);
-  private queryClient = inject(QueryClientService);
-  private http = inject(HttpClient);
-
-  createTodo(body) {
-    return this.http.post('todos', body).pipe(
-      tap((newTodo) => {
-        this.queryClient.setQueryData<TodosResponse>(
-          ['todos'],
-          addEntity('todos', newTodo)
-        );
-      })
-    );
+    this.todosService
+      .getTodos()
+      .result$.pipe(
+        tapSuccess((data) => {
+          // get result data directly if success
+          this.todos = data;
+        }),
+        tapError((error) => {
+          // do what you want with error (display modal, toast, etc)
+          alert(error.message);
+        })
+      )
+      .subscribe();
   }
 }
 ```
