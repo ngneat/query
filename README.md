@@ -377,6 +377,22 @@ export class TodosPageComponent {
         };
       })
     );
+    
+    // Map the result `data` of multiple queries
+    combineLatest([
+      this.todosService.getTodos(),
+      this.todosService.getTodos(),
+    ]).pipe(
+      mapResultsData(([todos, todos2]) => {
+        return {
+          todos: todos.data.todos.filter(predicate),
+          todos2: todos2.data.todos.filter(predicate),
+        };
+      })
+    ).subscribe((res) => {
+      console.log(res.todos, res.todos2);
+      // { isLoading: boolean, isSuccess: boolean, isError: boolean, error: unknown, todos: [], todos2: [] }
+    });
 
     // process error or success result directly
     this.todosService
