@@ -131,6 +131,15 @@ import { RouterModule } from '@angular/router';
                 >Placeholder Query Data</a
               >
             </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                aria-current="page"
+                routerLink="parallel-queries"
+              >Parallel Queries</a
+              >
+            </li>
           </ul>
         </div>
       </div>
