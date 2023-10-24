@@ -389,10 +389,7 @@ export class TodosPageComponent {
           todos2: todos2.data.todos.filter(predicate),
         };
       })
-    ).subscribe((res) => {
-      console.log(res.todos, res.todos2);
-      // { isLoading: boolean, isSuccess: boolean, isError: boolean, error: unknown, todos: [], todos2: [] }
-    });
+    ).subscribe(console.log); // { isLoading: boolean, isSuccess: boolean, isError: boolean, error: unknown, data: { todos: [], todos2: [] } }
 
     // process error or success result directly
     this.todosService
