@@ -23,6 +23,7 @@ import { OptimisticUpdatesPageComponent } from './app/optimistic-updates-page/op
 import { AutoRefetchingPageComponent } from './app/auto-refetching-page/auto-refetching-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlaceholderPageComponent } from './app/placeholder-page/placeholder-page.component';
+import {ParallelQueriesPageComponent} from './app/parallel-queries/parallel-queries-page.component';
 
 if (environment.production) {
   enableProdMode();
@@ -123,6 +124,10 @@ bootstrapApplication(AppComponent, {
             path: 'placeholder-query-data',
             component: PlaceholderPageComponent,
           },
+          {
+            path: 'parallel-queries',
+            component: ParallelQueriesPageComponent,
+          }
         ],
         { initialNavigation: 'enabledBlocking' }
       )
