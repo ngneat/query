@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "tslib": "^2.3.0",
-    "@tanstack/query-core": "^4.9.0"
+    "@tanstack/query-core": "^5.4.3"
   },
   "publishConfig": {
     "access": "public"
