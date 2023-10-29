@@ -88,18 +88,20 @@ export class TodosService {
   private useQuery = inject(UseQuery);
 
   getTodos() {
-    return this.useQuery(['todos'], () => {
-      return this.http.get<Todo[]>(
+    return this.useQuery({
+      queryKey: ['todos'],
+      queryFn: this.http.get<Todo[]>(
         'https://jsonplaceholder.typicode.com/todos'
-      );
+      )
     });
   }
 
   getTodo(id: number) {
-    return this.useQuery(['todo', id], () => {
-      return this.http.get<Todo>(
+    return this.useQuery({
+      queryKey: ['todo', id],
+      queryFn: () => this.http.get<Todo>(
         `https://jsonplaceholder.typicode.com/todos/${id}`
-      );
+      )
     });
   }
 }
@@ -108,14 +110,12 @@ export class TodosService {
 Use it in your component:
 
 ```ts
-import { SubscribeModule } from '@ngneat/subscribe';
-
 @Component({
   standalone: true,
-  imports: [NgIf, NgForOf, SpinnerComponent, SubscribeModule],
+  imports: [NgIf, NgForOf, AsyncPipe, SpinnerComponent],
   template: `
-    <ng-container *subscribe="todos$ as todos">
-      <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
+    <ng-container *ngIf="todos$ | async as todos">
+      <ng-query-spinner *ngIf="todos.isPending"></ng-query-spinner>
 
       <p *ngIf="todos.isError">Error...</p>
 
@@ -146,20 +146,14 @@ export class ProjectsService {
   private useInfiniteQuery = inject(UseInfiniteQuery);
 
   getProjects() {
-    return this.useInfiniteQuery(
-      ['projects'],
-      ({ pageParam = 0 }) => {
+    return this.useInfiniteQuery({
+      queryKey: ['projects'],
+      queryFn: ({ pageParam = 0 }) => {
         return getProjects(pageParam);
       },
-      {
-        getNextPageParam(projects) {
-          return projects.nextId;
-        },
-        getPreviousPageParam(projects) {
-          return projects.previousId;
-        },
-      }
-    );
+      getNextPageParam: (projects) => projects.nextId,
+      getPreviousPageParam: (projects) => projects.previousId
+    });
   }
 }
 ```
@@ -245,7 +239,7 @@ import { QueryClientService, useMutationResult } from '@ngneat/query';
 
     <button
       (click)="addTodo({ title: ref.value })"
-      *subscribe="addTodoMutation.result$ as addTodoMutation"
+      *ngIf="(addTodoMutation.result$ | async) as addTodoMutation"
     >
       Add todo {{ addTodoMutation.isLoading ? 'Loading' : '' }}
     </button>
@@ -306,7 +300,7 @@ And in the component:
 
     <button
       (click)="addTodo({ title: ref.value })"
-      *subscribe="addTodoMutation.result$ as addTodoMutation"
+      *ngIf="(addTodoMutation.result$ | async) as addTodoMutation"
     >
       Add todo {{ addTodoMutation.isLoading ? 'Loading' : '' }}
     </button>
