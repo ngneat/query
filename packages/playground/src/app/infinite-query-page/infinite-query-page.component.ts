@@ -1,14 +1,13 @@
-import { NgForOf, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { SubscribeModule } from '@ngneat/subscribe';
-import { SpinnerComponent } from '../spinner/spinner.component';
-import { ProjectsService } from './projects.service';
-import { ScrollDirective } from './scroll.directive';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {SpinnerComponent} from '../spinner/spinner.component';
+import {ProjectsService} from './projects.service';
+import {ScrollDirective} from './scroll.directive';
 
 @Component({
   selector: 'ng-query-infinite-query-page',
   standalone: true,
-  imports: [NgIf, NgForOf, SpinnerComponent, SubscribeModule, ScrollDirective],
+  imports: [NgIf, NgForOf, SpinnerComponent, ScrollDirective, AsyncPipe],
   styles: [
     `
       :host {
@@ -25,7 +24,7 @@ import { ScrollDirective } from './scroll.directive';
     <div
       class="w-100 flex flex-col overflow-auto"
       style="    height: calc(100vh - 56px)"
-      *subscribe="projects$ as projects"
+      *ngIf="projects$ | async as projects"
       (scrollEnd)="projects.hasNextPage && projects.fetchNextPage()"
       ng-scroll
     >
@@ -47,7 +46,7 @@ import { ScrollDirective } from './scroll.directive';
       ></ng-query-spinner>
 
       <ul class="list-group" *ngIf="projects.isSuccess">
-        <ng-container *ngFor="let page of projects.data.pages">
+        <ng-container *ngFor="let page of projects.data?.pages">
           <li
             class="list-group-item h-56 flex items-center rounded my-10"
             [style.background]="'hsla(' + project.id * 30 + ', 60%, 80%, 1)'"

@@ -1,15 +1,14 @@
-import { NgIf } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
-import { SubscribeModule } from '@ngneat/subscribe';
-import { ReplaySubject, switchMap } from 'rxjs';
-import { RickAndMortyService } from '../rick-and-morty.service';
+import {AsyncPipe, NgIf} from '@angular/common';
+import {Component, inject, Input} from '@angular/core';
+import {ReplaySubject, switchMap} from 'rxjs';
+import {RickAndMortyService} from '../rick-and-morty.service';
 
 @Component({
   standalone: true,
   selector: 'ng-query-location',
-  imports: [NgIf, SubscribeModule],
-  template: ` <ng-container *subscribe="location$ as location">
-    <p *ngIf="location.status === 'loading'">Loading...</p>
+  imports: [NgIf, AsyncPipe],
+  template: ` <ng-container *ngIf="location$ | async as location">
+    <p *ngIf="location.status === 'pending'">Loading...</p>
     <p *ngIf="location.status === 'error'">Error :(</p>
     <ng-container *ngIf="location.status === 'success'">
       {{ location.data.name }} - {{ location.data.type }}

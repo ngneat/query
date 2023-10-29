@@ -1,15 +1,14 @@
-import { NgForOf, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { useMutationResult } from '@ngneat/query';
-import { SubscribeModule } from '@ngneat/subscribe';
-import { BehaviorSubject, switchMap } from 'rxjs';
-import { SpinnerComponent } from '../spinner/spinner.component';
-import { TodosService } from '../todos.service';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {useMutationResult} from '@ngneat/query';
+import {BehaviorSubject, switchMap} from 'rxjs';
+import {SpinnerComponent} from '../spinner/spinner.component';
+import {TodosService} from '../todos.service';
 
 @Component({
   selector: 'ng-query-basic-page',
   standalone: true,
-  imports: [NgIf, NgForOf, SpinnerComponent, SubscribeModule],
+  imports: [NgIf, NgForOf, SpinnerComponent, AsyncPipe],
   template: `
     <h2 class="mb-3">Todos</h2>
 
@@ -18,7 +17,7 @@ import { TodosService } from '../todos.service';
         (click)="addTodoBuiltIn()"
         id="add-todo-1"
         class="btn btn-info mt-2"
-        *subscribe="addTodoMutation.result$ as addTodoMutation"
+        *ngIf="addTodoMutation.result$ | async as addTodoMutation"
       >
         Add todo built in impl {{ addTodoMutation.isLoading ? 'Loading' : '' }}
       </button>
@@ -27,15 +26,15 @@ import { TodosService } from '../todos.service';
         (click)="addTodoOriginal()"
         id="add-todo-2"
         class="btn btn-info mt-2 ml-3"
-        *subscribe="addTodoMutationOriginal.result$ as addTodoMutationOriginal"
+        *ngIf="addTodoMutationOriginal.result$ | async as addTodoMutationOriginal"
       >
         Add todo original impl
-        {{ addTodoMutationOriginal.isLoading ? 'Loading' : '' }}
+        {{ addTodoMutationOriginal.isPending ? 'Loading' : '' }}
       </button>
     </div>
 
-    <ng-container *subscribe="todos$ as todos">
-      <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
+    <ng-container *ngIf="todos$ | async as todos">
+      <ng-query-spinner *ngIf="todos.isPending"></ng-query-spinner>
 
       <ul class="list-group" *ngIf="todos.isSuccess">
         <li class="list-group-item" *ngFor="let todo of todos.data">
@@ -44,7 +43,7 @@ import { TodosService } from '../todos.service';
       </ul>
     </ng-container>
 
-    <hr />
+    <hr/>
     <h2 class="mt-3">Single Todo</h2>
 
     <section id="todo-btns-section" class="flex gap-3 items-center">
@@ -59,7 +58,7 @@ import { TodosService } from '../todos.service';
       </button>
     </section>
 
-    <ng-container *subscribe="todo$ as todo">
+    <ng-container *ngIf="todo$ | async as todo">
       <ng-query-spinner class="mt-3" *ngIf="todo.isLoading"></ng-query-spinner>
 
       <div class="card mt-3" id="single-todo-card" *ngIf="todo.isSuccess">
@@ -67,7 +66,7 @@ import { TodosService } from '../todos.service';
       </div>
     </ng-container>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BasicPageComponent {
   private todosService = inject(TodosService);
@@ -81,14 +80,14 @@ export class BasicPageComponent {
   addTodoMutation = useMutationResult();
 
   addTodoOriginal() {
-    this.addTodoMutationOriginal.mutate({ title: 'foo' }).then((res) => {
+    this.addTodoMutationOriginal.mutate({title: 'foo'}).then((res) => {
       console.log(res);
     });
   }
 
   addTodoBuiltIn() {
     this.todosService
-      .addTodoBuiltIn({ title: 'foo' })
+      .addTodoBuiltIn({title: 'foo'})
       .pipe(this.addTodoMutation.track())
       .subscribe(console.log);
   }

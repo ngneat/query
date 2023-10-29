@@ -19,23 +19,26 @@ export class TodosService {
   private useMutation = inject(UseMutation);
 
   getTodos() {
-    return this.useQuery(['todos'], () => {
-      return this.http.get<Todo[]>(
-        'https://jsonplaceholder.typicode.com/todos'
-      );
-    });
-  }
-
-  getTodosWithOptions(options?: { refetchInterval: number }) {
-    return this.useQuery(
-      ['todos'],
-      () => {
+    return this.useQuery({
+      queryKey: ['todos'],
+      queryFn: () => {
         return this.http.get<Todo[]>(
           'https://jsonplaceholder.typicode.com/todos'
         );
       },
-      options
-    );
+    });
+  }
+
+  getTodosWithOptions(options?: { refetchInterval: number }) {
+    return this.useQuery({
+      queryKey: ['todos'],
+      queryFn: () => {
+        return this.http.get<Todo[]>(
+          'https://jsonplaceholder.typicode.com/todos'
+        );
+      },
+      ...options,
+    });
   }
 
   addTodoOriginal() {
@@ -44,7 +47,7 @@ export class TodosService {
         .post<Todo>(`https://jsonplaceholder.typicode.com/todos`, { title })
         .pipe(
           tap(() => {
-            this.queryClient.invalidateQueries(['todos']);
+            this.queryClient.invalidateQueries({queryKey: ['todos']});
           })
         );
     });
@@ -55,16 +58,19 @@ export class TodosService {
       .post<Todo>(`https://jsonplaceholder.typicode.com/todos`, { title })
       .pipe(
         tap(() => {
-          this.queryClient.invalidateQueries(['todos']);
+          this.queryClient.invalidateQueries({queryKey: ['todos']});
         })
       );
   }
 
   getTodo(id: number) {
-    return this.useQuery(['todo', id], () => {
-      return this.http
-        .get<Todo>(`https://jsonplaceholder.typicode.com/todos/${id}`)
-        .pipe(delay(1000));
+    return this.useQuery({
+      queryKey: ['todo', id],
+      queryFn: () => {
+        return this.http.get<Todo>(
+          `https://jsonplaceholder.typicode.com/todos/${id}`
+        );
+      },
     });
   }
 }

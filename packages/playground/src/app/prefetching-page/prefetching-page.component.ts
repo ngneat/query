@@ -1,6 +1,5 @@
 import { AsyncPipe, JsonPipe, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { SubscribeModule } from '@ngneat/subscribe';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { RickAndMortyService } from '../rick-and-morty.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -14,7 +13,6 @@ import { Character } from '../types/rick-morty.types';
     NgForOf,
     AsyncPipe,
     JsonPipe,
-    SubscribeModule,
     SpinnerComponent,
   ],
   template: `
@@ -25,9 +23,9 @@ import { Character } from '../types/rick-morty.types';
     </p>
 
     <div class="grid grid-cols-2 gap-8">
-      <section *subscribe="characters$ as characters">
+      <section *ngIf="characters$ | async as characters">
         <h2>Characters</h2>
-        <ng-query-spinner *ngIf="characters.isLoading"></ng-query-spinner>
+        <ng-query-spinner *ngIf="characters.isPending"></ng-query-spinner>
 
         <ul class="list-group" *ngIf="characters.isSuccess">
           <li
@@ -37,15 +35,15 @@ import { Character } from '../types/rick-morty.types';
             [class.font-bold]="isCharacterPrefetched(character) | async"
             class="list-group-item hover:bg-sky-100"
           >
-            {{ character.name }}
+            {{ character.id }}
           </li>
         </ul>
       </section>
 
-      <section *subscribe="selectedCharacter$ as selectedCharacter">
+      <section *ngIf="selectedCharacter$ | async as selectedCharacter">
         <h2>Selected character</h2>
         <ng-query-spinner
-          *ngIf="selectedCharacter.isLoading"
+          *ngIf="selectedCharacter.isPending"
         ></ng-query-spinner>
         <ng-container *ngIf="selectedCharacter.isSuccess">
           <img
@@ -81,7 +79,7 @@ export class PrefetchingPageComponent {
     this.selectedCharacterId.next(character.id);
   }
 
-  trackBy(_: number, character: { id: number }) {
+  trackBy(_: number, character: Character) {
     return character.id;
   }
 }

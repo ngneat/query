@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject, combineLatest, switchMap } from 'rxjs';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
-import { TodosService } from '../todos.service';
-import { SubscribeModule } from '@ngneat/subscribe';
-import { SpinnerComponent } from '../spinner/spinner.component';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {BehaviorSubject, combineLatest, switchMap} from 'rxjs';
+import {AsyncPipe, NgClass, NgForOf, NgIf} from '@angular/common';
+import {TodosService} from '../todos.service';
+import {SpinnerComponent} from '../spinner/spinner.component';
 
 @Component({
   selector: 'ng-query-dynamic-queries-page',
   standalone: true,
-  imports: [NgIf, NgForOf, NgClass, SubscribeModule, SpinnerComponent],
+  imports: [NgIf, NgForOf, NgClass, SpinnerComponent, AsyncPipe],
   template: `
     <h2 class="mb-3">Dynamic queries</h2>
 
@@ -20,7 +19,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 
     <h4 class="mt-3">Select Todos</h4>
 
-    <ng-container *subscribe="selectedTodoIds as selectedIds">
+    <ng-container *ngIf="selectedTodoIds | async as selectedIds">
       <ng-container *ngFor="let todoId of TODO_IDS">
         <button
           type="button"
@@ -32,7 +31,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
         </button>
       </ng-container>
 
-      <ul class="list-group mt-4" *subscribe="todos$ as todos">
+      <ul class="list-group mt-4" *ngIf="todos$ | async as todos">
         <li class="list-group-item" *ngFor="let todo of todos">
           <ng-query-spinner *ngIf="todo.isLoading"></ng-query-spinner>
           <span *ngIf="todo.isSuccess"

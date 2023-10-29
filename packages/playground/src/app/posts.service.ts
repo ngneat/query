@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { UseQuery } from '@ngneat/query';
-import { NgQueryObserverOptions } from 'packages/ng-query/src/lib/query';
-import { Observable, OperatorFunction } from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {UseQuery} from '@ngneat/query';
+import {NgQueryObserverOptions} from 'packages/ng-query/src/lib/query';
+import {Observable, OperatorFunction} from 'rxjs';
 
 export interface Post {
   userId: number;
@@ -13,16 +13,20 @@ export interface Post {
 
 type UseQueryOptionsPosts =
   | (Omit<
-      NgQueryObserverOptions<Post[], unknown, Post[], Post[], string[]>,
-      'queryFn' | 'queryKey' | 'initialData'
-    > & { initialData?: (() => undefined) | undefined })
+  NgQueryObserverOptions<Post[], Error, Post[], Post[], string[]>,
+  'queryFn' | 'queryKey' | 'initialData'
+> & {
+  initialData?: (() => undefined) | undefined
+})
   | undefined;
 
 type UseQueryOptionsPost =
   | (Omit<
-      NgQueryObserverOptions<Post, unknown, Post, Post, string[]>,
-      'queryFn' | 'queryKey' | 'initialData'
-    > & { initialData?: (() => undefined) | undefined })
+  NgQueryObserverOptions<Post, Error, Post, Post, string[]>,
+  'queryFn' | 'queryKey' | 'initialData'
+> & {
+  initialData?: (() => undefined) | undefined
+})
   | undefined;
 
 function withRxjsOperators<T>(operators: OperatorFunction<T, T>[]) {
@@ -31,7 +35,7 @@ function withRxjsOperators<T>(operators: OperatorFunction<T, T>[]) {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PostsService {
   private http = inject(HttpClient);
@@ -41,15 +45,15 @@ export class PostsService {
     options?: UseQueryOptionsPosts,
     ...operators: OperatorFunction<Post[], Post[]>[]
   ) {
-    return this.useQuery(
-      ['posts'],
-      () => {
+    return this.useQuery({
+      queryKey: ['posts'],
+      queryFn: () => {
         return withRxjsOperators(operators)(() =>
           this.http.get<Post[]>('https://jsonplaceholder.typicode.com/posts')
         );
       },
-      options
-    );
+      ...options,
+    });
   }
 
   get(
@@ -57,16 +61,16 @@ export class PostsService {
     options?: UseQueryOptionsPost,
     ...operators: OperatorFunction<Post, Post>[]
   ) {
-    return this.useQuery(
-      ['post', String(id)],
-      () => {
+    return this.useQuery({
+      queryKey: ['post', String(id)],
+      queryFn: () => {
         return withRxjsOperators(operators)(() =>
           this.http.get<Post>(
             `https://jsonplaceholder.typicode.com/posts/${id}`
           )
         );
       },
-      options
-    );
+      ...options
+  });
   }
 }

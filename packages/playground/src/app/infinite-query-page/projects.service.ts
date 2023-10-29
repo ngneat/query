@@ -16,26 +16,19 @@ export interface Projects {
 export class ProjectsService {
   private useInfiniteQuery = inject(UseInfiniteQuery);
   getProjects() {
-    return this.useInfiniteQuery(
-      ['projects'],
-      ({ pageParam = 0 }) => {
-        return getProjects(pageParam);
-      },
-      {
-        getNextPageParam: (projects) => {
-          return projects.nextId;
-        },
-        getPreviousPageParam: (projects) => {
-          return projects.previousId;
-        },
-      }
-    );
+    return this.useInfiniteQuery({
+      queryKey: ['projects'],
+      initialPageParam: 0,
+      queryFn: ({ pageParam }) => getProjects(pageParam),
+      getNextPageParam: (lastPage) => lastPage.nextId,
+      getPreviousPageParam: (firstPage) => firstPage.previousId
+  });
   }
 }
 
-function getProjects(c: string) {
+function getProjects(c: number) {
   return new Observable<Projects>((observer) => {
-    const cursor = parseInt(c) || 0;
+    const cursor: number = c || 0;
     const pageSize = 5;
 
     const data = Array(pageSize)

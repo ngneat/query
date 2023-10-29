@@ -1,7 +1,6 @@
 import { NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SubscribeModule } from '@ngneat/subscribe';
 import { PlaceholderDataAsValueComponent } from './placeholder-data-as-value.component';
 import { PlaceholderDataFromCacheComponent } from './placeholder-data-from-cache.component';
 
@@ -12,7 +11,6 @@ import { PlaceholderDataFromCacheComponent } from './placeholder-data-from-cache
   imports: [
     NgIf,
     NgForOf,
-    SubscribeModule,
     RouterModule,
     PlaceholderDataAsValueComponent,
     PlaceholderDataFromCacheComponent,

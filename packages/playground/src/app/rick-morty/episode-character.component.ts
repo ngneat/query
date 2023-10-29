@@ -1,17 +1,16 @@
-import { NgIf } from '@angular/common';
+import {AsyncPipe, NgIf} from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SubscribeModule } from '@ngneat/subscribe';
 import { ReplaySubject, filter, switchMap } from 'rxjs';
 import { RickAndMortyService } from '../rick-and-morty.service';
 
 @Component({
   standalone: true,
-  imports: [NgIf, SubscribeModule, RouterModule],
+  imports: [NgIf, RouterModule, AsyncPipe],
   selector: 'ng-query-episode-character',
   template: `
-    <ng-container *subscribe="character$ as character">
-      <p *ngIf="character.status === 'loading'">Loading...</p>
+    <ng-container *ngIf="character$ | async as character">
+      <p *ngIf="character.status === 'pending'">Loading...</p>
       <p *ngIf="character.status === 'error'">Error :(</p>
       <ng-container *ngIf="character.status === 'success'">
         <article class="py-1">

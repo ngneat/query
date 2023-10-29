@@ -1,27 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { QueryClientService, UseQuery } from '@ngneat/query';
-import {
-  BehaviorSubject,
-  delay,
-  distinctUntilChanged,
-  firstValueFrom,
-  map,
-  scan,
-  tap,
-} from 'rxjs';
-import {
-  Character,
-  Episode,
-  Episodes,
-  Location,
-} from './types/rick-morty.types';
+import {HttpClient} from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {QueryClientService, UseQuery} from '@ngneat/query';
+import {BehaviorSubject, delay, distinctUntilChanged, firstValueFrom, map, scan, tap} from 'rxjs';
+import {Character, Episode, Episodes, Location} from './types/rick-morty.types';
 
 const BASE_URL = 'https://rickandmortyapi.com/api';
 const CHARACTER_API_URL = `${BASE_URL}/character`;
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class RickAndMortyService {
   private http = inject(HttpClient);
@@ -36,22 +23,20 @@ export class RickAndMortyService {
     );
 
   getCharacter(id: number) {
-    return this.useQuery(['character', id], () => this.getCharacterRaw(id));
+    return this.useQuery({
+      queryKey: ['character', id],
+      queryFn: () => this.getCharacterRaw(id)
+    });
   }
 
   prefetchCharacter(id: number) {
-    return this.queryClient.prefetchQuery(
-      ['character', id],
-      () =>
-        firstValueFrom(
-          this.getCharacterRaw(id).pipe(
-            tap((character) => this.prefetchedCharacterIds.next(character.id))
-          )
-        ),
-      {
-        staleTime: 1_000_000,
-      }
-    );
+    return this.queryClient.prefetchQuery({
+      queryKey: ['character', id],
+      queryFn: () => firstValueFrom(this.getCharacterRaw(id)
+        .pipe(tap((character) => this.prefetchedCharacterIds.next(character.id)))
+      ),
+      staleTime: 1_000_000
+    });
   }
 
   isCharacterPrefetched(id: number) {
@@ -68,28 +53,34 @@ export class RickAndMortyService {
   }
 
   getCharacters() {
-    return this.useQuery(['characters'], () =>
-      this.http
-        .get<{ results: Character[] }>(CHARACTER_API_URL)
-        .pipe(map(({ results }) => results))
-    );
+    return this.useQuery({
+      queryKey: ['characters'],
+      queryFn: () => this.http
+        .get<{
+          results: Character[]
+        }>(CHARACTER_API_URL)
+        .pipe(map(({results}) => results))
+    });
   }
 
   getEpisodes() {
-    return this.useQuery(['episodes'], () =>
-      this.http.get<Episodes>(`${BASE_URL}/episode`)
-    );
+    return this.useQuery({
+      queryKey: ['episodes'],
+      queryFn: () => this.http.get<Episodes>(`${BASE_URL}/episode`)
+    });
   }
 
   getEpisode(episodeId: string) {
-    return this.useQuery(['episode', episodeId], () =>
-      this.http.get<Episode>(`${BASE_URL}/episode/${episodeId}`)
-    );
+    return this.useQuery({
+      queryKey: ['episode', episodeId],
+      queryFn: () => this.http.get<Episode>(`${BASE_URL}/episode/${episodeId}`)
+    });
   }
 
   getLocation(locationId: string) {
-    return this.useQuery(['location', locationId], () =>
-      this.http.get<Location>(`${BASE_URL}/location/${locationId}`)
-    );
+    return this.useQuery({
+      queryKey: ['location', locationId],
+      queryFn: () => this.http.get<Location>(`${BASE_URL}/location/${locationId}`)
+    });
   }
 }

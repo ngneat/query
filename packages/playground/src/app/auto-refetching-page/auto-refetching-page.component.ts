@@ -2,7 +2,6 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { AsyncPipe, JsonPipe, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SubscribeModule } from '@ngneat/subscribe';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { TodosService } from '../todos.service';
@@ -16,7 +15,6 @@ import { TodosService } from '../todos.service';
     NgForOf,
     AsyncPipe,
     JsonPipe,
-    SubscribeModule,
     FormsModule,
     SpinnerComponent,
   ],
@@ -34,7 +32,7 @@ import { TodosService } from '../todos.service';
     </div>
     <div class="relative">
       <h2>Todo list</h2>
-      <ng-container *subscribe="todos$ as todos">
+      <ng-container *ngIf="todos$ | async as todos">
         <div
           class="flex items-center gap-4 absolute right-0 top-0"
           *ngIf="todos.isFetching"

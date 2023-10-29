@@ -25,9 +25,10 @@ export class PaginationService {
   prefetch(page: number) {
     console.log('PREFETCHING', page);
 
-    return this.queryClient.prefetchQuery(['projects', page], () =>
-      firstValueFrom(fetchProjects(page))
-    );
+    return this.queryClient.prefetchQuery({
+      queryKey: ['projects', page],
+      queryFn: ({ queryKey }) => firstValueFrom(fetchProjects(page))
+    });
   }
 }
 

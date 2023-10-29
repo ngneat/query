@@ -1,8 +1,7 @@
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { UseQuery } from '@ngneat/query';
-import { SubscribeModule } from '@ngneat/subscribe';
-import { switchMap, filter, ReplaySubject } from 'rxjs';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {UseQuery} from '@ngneat/query';
+import {filter, ReplaySubject, switchMap} from 'rxjs';
 
 interface Post {
   userId: number;
@@ -14,7 +13,7 @@ interface Post {
 @Component({
   selector: 'ng-query-default-query-function-page',
   standalone: true,
-  imports: [NgIf, AsyncPipe, NgForOf, SubscribeModule],
+  imports: [NgIf, AsyncPipe, NgForOf],
   template: `
     <p>
       In this example we are creating queries by only supplying a query key
@@ -32,7 +31,7 @@ interface Post {
     </p>
 
     <ng-container *ngIf="selectedPostId$ | async; else postListTpl">
-      <ng-container *subscribe="selectedPost$ as selectedPost">
+      <ng-container *ngIf="selectedPost$ | async as selectedPost">
         <button class="btn btn-link" (click)="selectedPostId$.next(null)">
           Back
         </button>
@@ -44,7 +43,7 @@ interface Post {
     </ng-container>
 
     <ng-template #postListTpl>
-      <ng-container *subscribe="posts$ as posts">
+      <ng-container *ngIf="posts$ | async as posts">
         <button
           *ngFor="let post of posts.data"
           class="btn btn-link block"
@@ -61,9 +60,11 @@ export class DefaultQueryFunctionPageComponent {
   useQuery = inject(UseQuery);
   selectedPostId$ = new ReplaySubject<number | null>(1);
 
-  posts$ = this.useQuery<Post[]>(['/posts']).result$;
+  posts$ = this.useQuery<Post[]>({queryKey: ['/posts']}).result$;
   selectedPost$ = this.selectedPostId$.asObservable().pipe(
     filter(Boolean),
-    switchMap((id) => this.useQuery<Post>([`/posts/${id}`]).result$)
+    switchMap((id) => this.useQuery<Post>({
+      queryKey: [`/posts/${id}`],
+    }).result$)
   );
 }

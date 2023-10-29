@@ -1,7 +1,6 @@
-import { NgForOf, NgIf } from '@angular/common';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { SubscribeModule } from '@ngneat/subscribe';
 import { filter, map, switchMap } from 'rxjs';
 import { RickAndMortyService } from '../rick-and-morty.service';
 import { CharacterEpisodeComponent } from './character-episode.component';
@@ -12,14 +11,14 @@ import { LocationComponent } from './location.component';
   imports: [
     NgIf,
     NgForOf,
-    SubscribeModule,
     RouterModule,
     CharacterEpisodeComponent,
     LocationComponent,
+    AsyncPipe
   ],
   template: `
-    <ng-container *subscribe="character$ as character">
-      <p *ngIf="character.status === 'loading'">Loading...</p>
+    <ng-container *ngIf="character$ | async as character">
+      <p *ngIf="character.status === 'pending'">Loading...</p>
       <p *ngIf="character.status === 'error'">Error :(</p>
       <ng-container *ngIf="character.status === 'success'">
         <h2>{{ character.data.name }}</h2>

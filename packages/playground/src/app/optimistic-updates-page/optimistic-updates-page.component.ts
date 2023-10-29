@@ -3,7 +3,6 @@ import { QueryClientService, UseMutation } from '@ngneat/query';
 import { AsyncPipe, JsonPipe, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SubscribeModule } from '@ngneat/subscribe';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { TodosService } from '../todos.service';
 import { map, tap } from 'rxjs';
@@ -22,7 +21,6 @@ interface Todo {
     NgForOf,
     AsyncPipe,
     JsonPipe,
-    SubscribeModule,
     SpinnerComponent,
     FormsModule,
   ],
@@ -50,7 +48,7 @@ interface Todo {
           add todo
         </button>
       </form>
-      <ng-container *subscribe="todos$ as todos">
+      <ng-container *ngIf="todos$ | async as todos">
         <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
 
         <ul class="list-group" *ngIf="todos.isSuccess">
@@ -78,18 +76,17 @@ export class OptimisticUpdatesPageComponent {
   );
 
   onSubmit() {
-    if (this.title) this.addTodo().mutate();
+    this.title && this.addTodo().mutate({title: this.title});
   }
 
   addTodo() {
-    const { title } = this;
-    return this.useMutation(() => this.mutationFn({ title }), {
-      onMutate: () => this.onMutate({ title }),
+    return this.useMutation(({title}: {title: string}) => this.mutationFn({title}), {
+      onMutate: ({title}) => this.onMutate({ title }),
     });
   }
 
-  /* 
-    this mutation Function is not invalidate the query because it would replace the optimistic update 
+  /*
+    this mutation Function is not invalidate the query because it would replace the optimistic update
     by outdated data since it is using jsonplacehoder and it would not persist the newly created todo.
   */
   mutationFn({ title }: { title: string }) {
@@ -98,7 +95,7 @@ export class OptimisticUpdatesPageComponent {
     });
   }
 
-  /* 
+  /*
     In a real world scenario it would be recommended to invalidate the query so that it gets fresh data from data sources.
     this method could replace mutationFn.
   */
@@ -109,7 +106,7 @@ export class OptimisticUpdatesPageComponent {
       })
       .pipe(
         tap(() => {
-          this.queryClient.invalidateQueries(['todos']);
+          this.queryClient.invalidateQueries({queryKey: ['todos']});
         })
       );
   }

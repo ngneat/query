@@ -1,13 +1,12 @@
 import {AsyncPipe, JsonPipe, NgIf} from '@angular/common';
 import {Component, inject} from '@angular/core';
 import {mapResultsData, QueryClientService} from '@ngneat/query';
-import {SubscribeModule} from '@ngneat/subscribe';
 import {combineLatest, Subject, switchMap} from 'rxjs';
 import {GithubApiService} from '../github.service';
 
 @Component({
   standalone: true,
-  imports: [NgIf, SubscribeModule, AsyncPipe, JsonPipe],
+  imports: [NgIf, AsyncPipe, JsonPipe],
   template: `
     <ng-container *ngIf="repo$ | async as repo">
       <p *ngIf="repo.isLoading">Loading...</p>
@@ -43,7 +42,9 @@ export class ParallelQueriesPageComponent {
   );
 
   invalidate() {
-    this.client.invalidateQueries(['repository', 'ngneat/ng-query']);
-    this.client.invalidateQueries(['repository', 'ngneat/spectator']);
+    this.client.invalidateQueries({queryKey: ['repository', 'ngneat/ng-query']});
+    this.client.invalidateQueries({queryKey: ['repository', 'ngneat/spectator'
+  ]
+  });
   }
 }

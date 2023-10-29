@@ -1,14 +1,13 @@
-import { NgForOf, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { SubscribeModule } from '@ngneat/subscribe';
-import { BehaviorSubject, switchMap, tap } from 'rxjs';
-import { SpinnerComponent } from '../spinner/spinner.component';
-import { PaginationService } from './pagination.service';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {BehaviorSubject, switchMap, tap} from 'rxjs';
+import {SpinnerComponent} from '../spinner/spinner.component';
+import {PaginationService} from './pagination.service';
 
 @Component({
   selector: 'ng-query-pagination-page',
   standalone: true,
-  imports: [NgIf, NgForOf, SubscribeModule, SpinnerComponent],
+  imports: [NgIf, NgForOf, SpinnerComponent, AsyncPipe],
   template: `
     <p>
       In this example, each page of data remains visible as the next page is
@@ -18,7 +17,7 @@ import { PaginationService } from './pagination.service';
       instantaneously while they are also refetched invisibly in the background.
     </p>
 
-    <ng-container *subscribe="projects$ as projects">
+    <ng-container *ngIf="projects$ | async as projects">
       <ng-query-spinner *ngIf="projects.isLoading"></ng-query-spinner>
 
       <ul class="list-group" *ngIf="projects.isSuccess">
@@ -34,14 +33,14 @@ import { PaginationService } from './pagination.service';
         <button
           (click)="prevPage()"
           [disabled]="page === 0"
-          *subscribe="page$ as page"
+          *ngIf="page$ | async as page"
         >
           Previous Page
         </button>
 
         <button
           (click)="nextPage()"
-          [disabled]="projects.isPreviousData || !projects.data?.hasMore"
+          [disabled]="projects.isPlaceholderData || !projects.data?.hasMore"
         >
           Next Page
         </button>

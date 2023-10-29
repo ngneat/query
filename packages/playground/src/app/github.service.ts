@@ -18,8 +18,13 @@ export class GithubApiService {
   useQuery = inject(UseQuery);
 
   getRepository(repositoryName: string) {
-    return this.useQuery(['repository', repositoryName], () =>
-      this.http.get<Repository>(`https://reqres.in/api/users?delay=5`)
-    );
+    return this.useQuery({
+      queryKey: ['repository', repositoryName],
+      queryFn: () => {
+        return this.http.get<Repository>(
+          `https://api.github.com/repos/${repositoryName}`
+        );
+      },
+    });
   }
 }
