@@ -1,5 +1,5 @@
 import {
-  notifyManager,
+  DefaultError,
   QueryClient,
   QueryKey,
   QueryObserver,
@@ -10,7 +10,7 @@ import { Observable, shareReplay } from 'rxjs';
 
 export function baseQuery<
   TQueryFnData = unknown,
-  TError = unknown,
+  TError = DefaultError,
   TData = TQueryFnData,
   TQueryData = TQueryFnData
 >(
@@ -20,18 +20,6 @@ export function baseQuery<
 ) {
   const defaultedOptions = client.defaultQueryOptions(options);
   defaultedOptions._optimisticResults = 'optimistic';
-
-  defaultedOptions.onError &&= notifyManager.batchCalls(
-    defaultedOptions.onError
-  );
-
-  defaultedOptions.onSuccess &&= notifyManager.batchCalls(
-    defaultedOptions.onSuccess
-  );
-
-  defaultedOptions.onSettled &&= notifyManager.batchCalls(
-    defaultedOptions.onSettled
-  );
 
   const queryObserver = new Observer<
     TQueryFnData,

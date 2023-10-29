@@ -2,6 +2,7 @@ import {
   QueryObserverResult,
   QueryObserverSuccessResult,
   QueryObserverLoadingErrorResult,
+  DefaultError,
 } from '@tanstack/query-core';
 import {
   distinctUntilChanged,
@@ -44,7 +45,7 @@ export function mapResultsData<T extends QueryObserverResult[], R>(
       }
 
       return {
-        isLoading: someRequestsStatusOf(result, 'loading'),
+        isPending: someRequestsStatusOf(result, 'pending'),
         isSuccess: allRequestsStatusOf(result, 'success'),
         isError: someRequestsStatusOf(result, 'error'),
         error: result.find((r) => r.isError)?.error,
@@ -56,7 +57,7 @@ export function mapResultsData<T extends QueryObserverResult[], R>(
 
 export type ObservableQueryResult<T> = Observable<QueryObserverResult<T>>;
 
-export function filterError<T, E>(): OperatorFunction<
+export function filterError<T, E extends DefaultError>(): OperatorFunction<
   QueryObserverResult<T>,
   QueryObserverLoadingErrorResult<T, E>
 > {
@@ -105,11 +106,11 @@ export function startWithQueryResult<T>(): OperatorFunction<T, T> {
   return startWith({
     error: null,
     isError: false,
-    isLoading: true,
+    isPending: true,
     isSuccess: false,
   } as T);
 }
 
 export function isPendingState<T extends QueryObserverResult>(res: T) {
-  return res.isLoading || res.isFetching;
+  return res.isPending || res.isFetching;
 }

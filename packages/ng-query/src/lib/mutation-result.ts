@@ -1,6 +1,7 @@
 import { BehaviorSubject, MonoTypeOperatorFunction, pipe, tap } from 'rxjs';
+import { DefaultError } from '@tanstack/query-core';
 
-class MutationResult<Response = unknown, Error = unknown> {
+class MutationResult<Response = unknown, Error = DefaultError> {
   data: Response | null = null;
   isError = false;
   isLoading = false;
@@ -12,7 +13,7 @@ class MutationResult<Response = unknown, Error = unknown> {
   }
 }
 
-export function useMutationResult<Response, Error = unknown>(
+export function useMutationResult<Response, Error = DefaultError>(
   options: Partial<MutationResult> = {}
 ) {
   const store = new BehaviorSubject<MutationResult<Response, Error>>(

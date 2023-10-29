@@ -1,5 +1,5 @@
 import { inject, Injectable, InjectionToken } from '@angular/core';
-import { QueryKey, QueryOptions } from '@tanstack/query-core';
+import { DefaultError, QueryKey, QueryOptions } from '@tanstack/query-core';
 import {
   NgQueryObserverOptions,
   NgQueryObserverReturnType,
@@ -11,7 +11,7 @@ import { fromQueryFn } from './utils';
 
 export function queryOptions<
   TQueryFnData = unknown,
-  TError = unknown,
+  TError = DefaultError,
   TData = TQueryFnData,
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
@@ -34,7 +34,7 @@ export class PersistedQueryService {
 
   use<
     TQueryFnData = unknown,
-    TError = unknown,
+    TError = DefaultError,
     TData = TQueryFnData,
     TQueryData = TQueryFnData,
     TQueryKey extends QueryKey = QueryKey,

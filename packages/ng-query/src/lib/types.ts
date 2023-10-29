@@ -3,5 +3,6 @@ import { Observable } from 'rxjs';
 
 export type ObservableQueryFn<
   TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey
-> = (context: QueryFunctionContext<TQueryKey>) => Observable<TQueryFnData>;
+  TQueryKey extends QueryKey = QueryKey,
+  TPageParam = never
+> = (context: QueryFunctionContext<TQueryKey, TPageParam>) => Observable<TQueryFnData>;

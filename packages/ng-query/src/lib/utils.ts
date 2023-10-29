@@ -1,27 +1,28 @@
 import {
   QueryClient,
   QueryFunctionContext,
+  QueryKey,
   QueryObserver,
   QueryObserverResult,
   QueryOptions,
 } from '@tanstack/query-core';
-import { take, tap } from 'rxjs';
-import { baseQuery } from './base-query';
-import { ObservableQueryFn } from './types';
+import {take, tap} from 'rxjs';
+import {baseQuery} from './base-query';
+import {ObservableQueryFn} from './types';
 
-export function fromQueryFn<TQueryFnData>(
-  originalQueryFn: ObservableQueryFn<TQueryFnData>,
+export function fromQueryFn<TQueryFnData, TQueryKey extends QueryKey = QueryKey, TPageParam = never>(
+  originalQueryFn: ObservableQueryFn<TQueryFnData, TQueryKey>,
   client: QueryClient,
-  queryKey: unknown[]
+  queryKey: TQueryKey | undefined
 ) {
-  function queryFn$(queryFnArgs: QueryFunctionContext) {
+  function queryFn$(queryFnArgs: QueryFunctionContext<TQueryKey, TPageParam>) {
     return new Promise<TQueryFnData>((res, rej) => {
       const subscription = originalQueryFn(queryFnArgs)
         .pipe(
           take(1),
           tap({
             unsubscribe: () => {
-              client.cancelQueries(queryKey);
+              client.cancelQueries({queryKey});
             },
           })
         )
@@ -49,7 +50,7 @@ export function buildQuery<TQueryFnData>(
   options.queryFn &&= fromQueryFn(
     originalQueryFn,
     client,
-    options.queryKey as unknown[]
+    options.queryKey
   );
 
   return baseQuery(client, Observer, options);
