@@ -8,7 +8,7 @@ import {QueryClientService} from './query-client';
 export class IsFetchingService {
   private instance = inject(QueryClientService);
 
-  use(filters: QueryFilters): Observable<number> {
+  use(filters?: QueryFilters): Observable<number> {
     return new Observable<number>((obs) => {
       obs.next(this.instance.isFetching(filters));
       this.instance.getQueryCache().subscribe(
