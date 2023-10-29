@@ -83,7 +83,6 @@
     "@angular/platform-browser": "16.2.4",
     "@angular/platform-browser-dynamic": "16.2.4",
     "@angular/router": "16.2.4",
-    "@ngneat/subscribe": "^3.0.2",
     "@tanstack/react-query": "^5.4.3",
     "@tanstack/react-query-devtools": "^5.4.3",
     "cors": "^2.8.5",
