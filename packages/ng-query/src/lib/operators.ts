@@ -48,7 +48,7 @@ export function mapResultsData<T extends QueryObserverResult[], R>(
     } as QueryObserverResult<R>;
 
     if (mappedResult.isSuccess) {
-      data = mapFn(result.map((r) => r.data) as ReturnTypes<T>);
+      mappedResult.data = mapFn(result.map((r) => r.data) as ReturnTypes<T>);
     }
 
     return mappedResult;
