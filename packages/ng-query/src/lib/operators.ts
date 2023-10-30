@@ -39,17 +39,20 @@ export function mapResultsData<T extends QueryObserverResult[], R>(
     map((result) => {
       let data;
 
-      if (result.every((r) => r.isSuccess)) {
-        data = mapFn(result.map((r) => r.data) as ReturnTypes<T>);
-      }
-
-      return {
+      const mappedResult = {
         isLoading: someRequestsStatusOf(result, 'loading'),
         isSuccess: allRequestsStatusOf(result, 'success'),
+        isFetching: result.some((r) => r.isFetching),
         isError: someRequestsStatusOf(result, 'error'),
         error: result.find((r) => r.isError)?.error,
         data,
       } as any;
+
+      if (mappedResult.isSuccess) {
+        data = mapFn(result.map((r) => r.data) as ReturnTypes<T>);
+      }
+
+      return mappedResult;
     })
   );
 }
