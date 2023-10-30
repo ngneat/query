@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [1.0.2](https://github-personal/ngneat/query/compare/ng-query-1.0.1...ng-query-1.0.2) (2023-10-30)
+
+
+### Bug Fixes
+
+* **query:** 🐞 remove redundant pipe ([82cf7c7](https://github-personal/ngneat/query/commit/82cf7c70588d3b10399cfe81fdb356d719a1a3f7))
+
+
+
 ## [1.0.1](https://github-personal/ngneat/query/compare/ng-query-1.0.0...ng-query-1.0.1) (2023-10-30)
 
 
