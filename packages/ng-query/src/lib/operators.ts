@@ -18,14 +18,14 @@ import { allRequestsStatusOf, someRequestsStatusOf } from './utils';
 export function mapResultData<T extends QueryObserverResult, R>(
   mapFn: (data: NonNullable<T['data']>) => R
 ): OperatorFunction<T, QueryObserverResult<R>> {
-  return pipe(
-    map((result) => {
-      return {
-        ...result,
-        data: result.isSuccess ? mapFn(result.data as any) : result.data,
-      } as any;
-    })
-  );
+  return map((result) => {
+    return {
+      ...result,
+      data: result.isSuccess
+        ? mapFn(result.data as NonNullable<T['data']>)
+        : result.data,
+    } as QueryObserverResult<R>;
+  });
 }
 
 type ReturnTypes<T extends QueryObserverResult[]> = {
@@ -35,26 +35,24 @@ type ReturnTypes<T extends QueryObserverResult[]> = {
 export function mapResultsData<T extends QueryObserverResult[], R>(
   mapFn: (data: ReturnTypes<T>) => R
 ): OperatorFunction<T, QueryObserverResult<R>> {
-  return pipe(
-    map((result) => {
-      let data;
+  return map((result) => {
+    let data;
 
-      const mappedResult = {
-        isLoading: someRequestsStatusOf(result, 'loading'),
-        isSuccess: allRequestsStatusOf(result, 'success'),
-        isFetching: result.some((r) => r.isFetching),
-        isError: someRequestsStatusOf(result, 'error'),
-        error: result.find((r) => r.isError)?.error,
-        data,
-      } as any;
+    const mappedResult = {
+      isLoading: someRequestsStatusOf(result, 'loading'),
+      isSuccess: allRequestsStatusOf(result, 'success'),
+      isFetching: result.some((r) => r.isFetching),
+      isError: someRequestsStatusOf(result, 'error'),
+      error: result.find((r) => r.isError)?.error,
+      data,
+    } as QueryObserverResult<R>;
 
-      if (mappedResult.isSuccess) {
-        data = mapFn(result.map((r) => r.data) as ReturnTypes<T>);
-      }
+    if (mappedResult.isSuccess) {
+      data = mapFn(result.map((r) => r.data) as ReturnTypes<T>);
+    }
 
-      return mappedResult;
-    })
-  );
+    return mappedResult;
+  });
 }
 
 export type ObservableQueryResult<T> = Observable<QueryObserverResult<T>>;
@@ -89,7 +87,7 @@ export function tapSuccess<T extends QueryObserverResult>(
 ) {
   return tap<T>((result) => {
     if (result.isSuccess) {
-      cb(result.data as any);
+      cb(result.data as NonNullable<T['data']>);
     }
   });
 }
@@ -99,7 +97,7 @@ export function tapError<T extends QueryObserverResult>(
 ) {
   return tap<T>((result) => {
     if (result.isError) {
-      cb(result.error as any);
+      cb(result.error as NonNullable<T['error']>);
     }
   });
 }
