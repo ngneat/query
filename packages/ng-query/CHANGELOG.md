@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [1.0.3](https://github-personal/ngneat/query/compare/ng-query-1.0.2...ng-query-1.0.3) (2023-10-30)
+
+
+### Bug Fixes
+
+* **query:** 🐞 assign data ([a10f4a0](https://github-personal/ngneat/query/commit/a10f4a057fd1e5a11ed08a3581048e7ad57b42eb))
+
+
+
 ## [1.0.2](https://github-personal/ngneat/query/compare/ng-query-1.0.1...ng-query-1.0.2) (2023-10-30)
 
 
