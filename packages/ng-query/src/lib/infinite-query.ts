@@ -1,54 +1,16 @@
 import { inject, Injectable, InjectionToken } from '@angular/core';
 import {
   DefaultError,
-  InfiniteData,
   InfiniteQueryObserver,
-  InfiniteQueryObserverOptions,
-  InfiniteQueryObserverResult,
   QueryKey,
-  QueryObserver,
+  QueryObserver, QueryOptions
 } from '@tanstack/query-core';
-import { Observable, Unsubscribable } from 'rxjs';
 import { QueryClientService } from './query-client';
-import { ObservableQueryFn } from './types';
+import {
+  NgInfiniteQueryObserverOptions,
+  NgInfiniteQueryObserverReturnType,
+} from './types';
 import { buildQuery } from './utils';
-
-type NgQueryObserverOptions<
-  TQueryFnData = unknown,
-  TError = DefaultError,
-  TData = TQueryFnData,
-  TQueryData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey,
-  TPageParam = unknown
-> = Omit<
-  InfiniteQueryObserverOptions<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryData,
-    TQueryKey,
-    TPageParam
-  >,
-  'queryFn'
-> & {
-  queryFn: ObservableQueryFn<TQueryFnData, TQueryKey, TPageParam>;
-};
-
-type NgInfiniteQueryObserverReturnType<
-  TQueryFnData = unknown,
-  TError = DefaultError,
-  TData = TQueryFnData,
-  TQueryData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey,
-  TPageParam = unknown
-> = Unsubscribable & {
-  result$: Observable<
-    InfiniteQueryObserverResult<InfiniteData<TQueryData, TPageParam>, TError>
-  >;
-} & Omit<
-    InfiniteQueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
-    'subscribe'
-  >;
 
 @Injectable({ providedIn: 'root' })
 export class InfiniteQueryService {
@@ -61,7 +23,7 @@ export class InfiniteQueryService {
     TQueryKey extends QueryKey = QueryKey,
     TPageParam = unknown
   >(
-    options: NgQueryObserverOptions<
+    options: NgInfiniteQueryObserverOptions<
       TQueryFnData,
       TError,
       TData,
@@ -73,7 +35,7 @@ export class InfiniteQueryService {
     return buildQuery(
       this.instance,
       InfiniteQueryObserver as typeof QueryObserver,
-      options as any
+      options as unknown as QueryOptions
     ) as unknown as NgInfiniteQueryObserverReturnType<TData, TError>;
   }
 }

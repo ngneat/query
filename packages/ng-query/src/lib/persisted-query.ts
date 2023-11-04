@@ -1,12 +1,12 @@
 import { inject, Injectable, InjectionToken } from '@angular/core';
 import { DefaultError, QueryKey, QueryOptions } from '@tanstack/query-core';
-import {
-  NgQueryObserverOptions,
-  NgQueryObserverReturnType,
-  UseQuery,
-} from './query';
+import { UseQuery } from './query';
 import { QueryClientService } from './query-client';
-import { ObservableQueryFn } from './types';
+import {
+  NgBaseQueryOptions,
+  NgQueryObserverUndefinedReturnType,
+  ObservableQueryFn,
+} from './types';
 import { fromQueryFn } from './utils';
 
 export function queryOptions<
@@ -16,7 +16,7 @@ export function queryOptions<
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
 >(
-  options: NgQueryObserverOptions<
+  options: NgBaseQueryOptions<
     TQueryFnData,
     TError,
     TData,
@@ -43,7 +43,7 @@ export class PersistedQueryService {
     queryObserverOptionsFn: (
       key: TQueryKey,
       params?: Params
-    ) => NgQueryObserverOptions<
+    ) => NgBaseQueryOptions<
       TQueryFnData,
       TError,
       TData,
@@ -51,7 +51,7 @@ export class PersistedQueryService {
       TQueryKey
     >
   ) {
-    let observer: NgQueryObserverReturnType<
+    let observer: NgQueryObserverUndefinedReturnType<
       TQueryFnData,
       TError,
       TData,
@@ -61,7 +61,7 @@ export class PersistedQueryService {
     return (key: TQueryKey, params?: Params) => {
       const mergedOptions = {
         ...queryObserverOptionsFn(key, params),
-        keepPreviousData: true,
+        placeholderData: true,
       } as unknown as QueryOptions<TQueryFnData, TError, TData, TQueryKey>;
 
       if (!observer) {
