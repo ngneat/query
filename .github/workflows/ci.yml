@@ -29,10 +29,10 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm i --legacy-peer-deps
+        run: npm i
 
       - name: Run Build
         run: npm run build:all
 
-      - name: Run unit tests
+      - name: Run tests
         run: npm run test:all

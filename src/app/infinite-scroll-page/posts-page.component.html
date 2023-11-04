@@ -1,0 +1,64 @@
+<h1>Infinite Loading</h1>
+
+<ng-container *ngIf="posts$ | async as result">
+  <p *ngIf="result.isPending">Loading...</p>
+
+  <span *ngIf="result.isError">Error: {{ result.error.message }}</span>
+
+  <div>
+    <button
+      (click)="result.fetchPreviousPage()"
+      [disabled]="!result.hasPreviousPage || result.isFetchingPreviousPage"
+    >
+      {{
+        result.isFetchingPreviousPage
+          ? 'Loading more...'
+          : result.hasPreviousPage
+          ? 'Load Older'
+          : 'Nothing more to load'
+      }}
+    </button>
+  </div>
+
+  <ng-container *ngIf="result.isSuccess">
+    <ng-container *ngFor="let page of result.data.pages">
+      <div *ngFor="let post of page.data">
+        <p
+          [ngStyle]="{
+            border: '1px solid gray',
+            borderRadius: '5px',
+            padding: '10rem 1rem',
+            background: getBackground(post.id)
+          }"
+        >
+          {{ post.name }}
+        </p>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <div>
+    <button
+      queryInView
+      (inView)="result.fetchNextPage()"
+      (click)="result.fetchNextPage()"
+      [disabled]="!result.hasNextPage || result.isFetchingNextPage"
+    >
+      {{
+        result.isFetchingNextPage
+          ? 'Loading more...'
+          : result.hasNextPage
+          ? 'Load Newer'
+          : 'Nothing more to load'
+      }}
+    </button>
+  </div>
+
+  <div>
+    {{
+      result.isFetching && !result.isFetchingNextPage
+        ? 'Background Updating...'
+        : ''
+    }}
+  </div>
+</ng-container>

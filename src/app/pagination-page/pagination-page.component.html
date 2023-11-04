@@ -1,0 +1,38 @@
+<p>
+  In this example, each page of data remains visible as the next page is
+  fetched. The buttons and capability to proceed to the next page are also
+  supressed until the next page cursor is known. Each page is cached as a normal
+  query too, so when going to previous pages, you'll see them instantaneously
+  while they are also refetched invisibly in the background.
+</p>
+
+<ng-container *ngIf="projects$ | async as projects">
+  <p *ngIf="projects.isPending">Loading...</p>
+
+  <ul class="list-group" *ngIf="projects.isSuccess">
+    <li
+      class="list-group-item"
+      *ngFor="let project of projects.data.projects; trackBy: trackBy"
+    >
+      {{ project.name }}
+    </li>
+  </ul>
+
+  <div class="flex items-center">
+    <button
+      (click)="prevPage()"
+      [disabled]="page === 0"
+      *ngIf="page$ | async as page"
+    >
+      Previous Page
+    </button>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="projects.isPlaceholderData || !projects.data?.hasMore"
+    >
+      Next Page
+    </button>
+    {{ projects.isFetching ? 'Loading...' : '' }}
+  </div>
+</ng-container>

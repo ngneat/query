@@ -377,19 +377,18 @@ export class TodosPageComponent {
         };
       })
     );
-    
+
     // Map the result `data` of multiple queries
-    combineLatest([
-      this.todosService.getTodos(),
-      this.todosService.getTodos(),
-    ]).pipe(
-      mapResultsData(([todos, todos2]) => {
-        return {
-          todos: todos.data.todos.filter(predicate),
-          todos2: todos2.data.todos.filter(predicate),
-        };
-      })
-    ).subscribe(console.log); // { isLoading: boolean, isSuccess: boolean, isError: boolean, error: unknown, data: { todos: [], todos2: [] } }
+    combineLatest([this.todosService.getTodos(), this.todosService.getTodos()])
+      .pipe(
+        mapResultsData(([todos, todos2]) => {
+          return {
+            todos: todos.data.todos.filter(predicate),
+            todos2: todos2.data.todos.filter(predicate),
+          };
+        })
+      )
+      .subscribe(console.log); // { isLoading: boolean, isSuccess: boolean, isError: boolean, error: unknown, data: { todos: [], todos2: [] } }
 
     // process error or success result directly
     this.todosService
