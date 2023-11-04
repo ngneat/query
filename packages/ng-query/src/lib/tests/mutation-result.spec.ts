@@ -15,7 +15,7 @@ describe('use mutation result', () => {
     expect(result).toMatchObject({
       data: null,
       isError: false,
-      isLoading: false,
+      isPending: false,
       isSuccess: false,
       error: null,
     });
@@ -31,7 +31,7 @@ describe('use mutation result', () => {
     expect(result).toMatchObject({
       data: null,
       isError: false,
-      isLoading: true,
+      isPending: true,
       isSuccess: false,
       error: null,
     });
@@ -48,7 +48,7 @@ describe('use mutation result', () => {
     expect(result).toMatchObject({
       data: 'data',
       isError: false,
-      isLoading: false,
+      isPending: false,
       isSuccess: true,
       error: null,
     });
@@ -67,7 +67,7 @@ describe('use mutation result', () => {
     expect(result).toMatchObject({
       data: null,
       isError: true,
-      isLoading: false,
+      isPending: false,
       isSuccess: false,
       error: 'error',
     });

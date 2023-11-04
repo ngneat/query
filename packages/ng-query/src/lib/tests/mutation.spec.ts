@@ -20,7 +20,7 @@ describe('useMutation', () => {
 
     expect(mutation.getCurrentResult()).toMatchObject({
       isIdle: true,
-      isLoading: false,
+      isPending: false,
       isError: false,
       isSuccess: false,
     });
@@ -38,7 +38,7 @@ describe('useMutation', () => {
 
     expect(result).toMatchObject({
       isIdle: false,
-      isLoading: true,
+      isPending: true,
       isError: false,
       isSuccess: false,
       data: undefined,
@@ -60,7 +60,7 @@ describe('useMutation', () => {
 
     expect(result).toMatchObject({
       isIdle: false,
-      isLoading: false,
+      isPending: false,
       isError: true,
       isSuccess: false,
       data: undefined,
@@ -81,7 +81,7 @@ describe('useMutation', () => {
 
     expect(result).toMatchObject({
       isIdle: false,
-      isLoading: false,
+      isPending: false,
       isError: false,
       isSuccess: true,
       data: 'Mock data',
@@ -101,7 +101,7 @@ describe('useMutation', () => {
 
     expect(result).toMatchObject({
       isIdle: true,
-      isLoading: false,
+      isPending: false,
       isError: false,
       isSuccess: false,
       data: undefined,

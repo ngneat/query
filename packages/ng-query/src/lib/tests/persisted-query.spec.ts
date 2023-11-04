@@ -19,7 +19,7 @@ describe('usePersistedQuery', () => {
     const fetch = usePersistedQuery(persistedFetcher);
 
     const query = fetch(['key1', 0]);
-    expect(query.options.keepPreviousData).toBe(true);
+    expect(query.options.placeholderData).toBe(true);
   });
 
   it('should preserve old results while fetching again', async () => {

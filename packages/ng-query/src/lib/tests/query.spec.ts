@@ -25,7 +25,11 @@ describe('useQuery', () => {
   });
 
   it('should properly execute query', () => {
-    useQuery(['key0'], simpleFetcher, { staleTime: 1000 });
+    useQuery({
+      queryKey: ['key0'],
+      queryFn: simpleFetcher,
+      staleTime: 1000
+    });
     expect(baseQuery).toBeCalledWith(client, QueryObserver, {
       staleTime: 1000,
       queryKey: ['key0'],
@@ -33,31 +37,17 @@ describe('useQuery', () => {
     });
   });
 
-  it('should return loading status initially', () => {
-    const query = useQuery(['key1'], simpleFetcher);
+  it('should return pending status initially', () => {
+    const query = useQuery({
+      queryKey: ['key1'],
+      queryFn: simpleFetcher
+    });
 
     expect(query.getCurrentResult()).toMatchObject({
-      status: 'loading',
-      isLoading: true,
+      status: 'pending',
+      isPending: true,
       isFetching: true,
       isStale: true,
-    });
-  });
-
-  it('should resolve to success: useQuery(key, dataFn)', async () => {
-    const query = useQuery(['key2'], fetcher('result2'));
-
-    const observerSpy = subscribeSpyTo(query.result$);
-    await flushPromises();
-    const [loading, success] = observerSpy.getValues();
-    expect(loading.status).toBe('loading');
-    expect(success).toMatchObject({
-      status: 'success',
-      data: 'result2',
-      isLoading: false,
-      isFetching: false,
-      isFetched: true,
-      isSuccess: true,
     });
   });
 
@@ -71,31 +61,11 @@ describe('useQuery', () => {
     const observerSpy = subscribeSpyTo(query.result$);
     await flushPromises();
     const [loading, success] = observerSpy.getValues();
-    expect(loading.status).toBe('loading');
+    expect(loading.status).toBe('pending');
     expect(success).toMatchObject({
       status: 'success',
       data: 'result31',
-      isLoading: false,
-      isFetching: false,
-      isFetched: true,
-      isSuccess: true,
-    });
-  });
-
-  it('should resolve to success: useQuery(key,optionsObj)', async () => {
-    const query = useQuery(['key32'], {
-      queryFn: fetcher('result32'),
-      enabled: true,
-    });
-
-    const observerSpy = subscribeSpyTo(query.result$);
-    await flushPromises();
-    const [loading, success] = observerSpy.getValues();
-    expect(loading.status).toBe('loading');
-    expect(success).toMatchObject({
-      status: 'success',
-      data: 'result32',
-      isLoading: false,
+      isPending: false,
       isFetching: false,
       isFetched: true,
       isSuccess: true,
@@ -105,7 +75,11 @@ describe('useQuery', () => {
   it('should reject if queryFn errors out', async () => {
     const spy = jest.spyOn(console, 'error');
     spy.mockImplementation(jest.fn());
-    const query = useQuery(['key4'], errorMutator, { retry: false });
+    const query = useQuery({
+      queryKey: ['key4'],
+      queryFn: errorMutator,
+      retry: false
+    });
 
     const observerSpy = subscribeSpyTo(query.result$);
     await flushPromises();
@@ -115,26 +89,12 @@ describe('useQuery', () => {
       status: 'error',
       data: undefined,
       error: Error('some error'),
-      isLoading: false,
+      isPending: false,
       isFetching: false,
       isFetched: true,
       isError: true,
       failureCount: 1,
     });
     spy.mockRestore();
-  });
-
-  it('should call onSuccess callback', async () => {
-    const onSuccess = jest.fn();
-
-    const query = useQuery(['key6'], simpleFetcher, {
-      onSuccess,
-    });
-
-    subscribeSpyTo(query.result$);
-
-    await flushPromises(100);
-
-    expect(onSuccess).toBeCalledTimes(1);
   });
 });

@@ -24,8 +24,8 @@ describe('isFetching', () => {
     const spy = subscribeSpyTo(isFetching);
     expect(spy.getLastValue()).toBe(0);
 
-    subscribeSpyTo(useQuery(['key1'], delayFetcher(100)).result$);
-    subscribeSpyTo(useQuery(['key2'], delayFetcher(100)).result$);
+    subscribeSpyTo(useQuery({queryKey: ['key1'], queryFn: delayFetcher(100)}).result$);
+    subscribeSpyTo(useQuery({queryKey: ['key2'], queryFn: delayFetcher(100)}).result$);
 
     await flushPromises();
 
