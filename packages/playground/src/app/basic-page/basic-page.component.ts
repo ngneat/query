@@ -19,7 +19,7 @@ import {TodosService} from '../todos.service';
         class="btn btn-info mt-2"
         *ngIf="addTodoMutation.result$ | async as addTodoMutation"
       >
-        Add todo built in impl {{ addTodoMutation.isLoading ? 'Loading' : '' }}
+        Add todo built in impl {{ addTodoMutation.isPending ? 'Loading' : '' }}
       </button>
 
       <button
