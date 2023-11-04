@@ -1,21 +1,36 @@
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { createRoot } from 'react-dom/client';
-import { createElement } from 'react';
-import { QueryClient } from '@tanstack/query-core';
+import {
+  onlineManager as QueryCoreOnlineManager,
+  QueryClient,
+} from '@tanstack/query-core';
+import { DestroyRef } from '@angular/core';
+import {
+  TanstackQueryDevtools,
+  TanstackQueryDevtoolsConfig,
+} from '@tanstack/query-devtools';
 
-export function ngQueryDevtools({ queryClient }: { queryClient: QueryClient }) {
-  const reactRootEle = document.createElement('div');
-  reactRootEle.setAttribute('id', 'query-devtools');
+export function ngQueryDevtools({
+  queryClient,
+  destroyRef,
+  queryFlavor = '@ngneat/query',
+  version = '5',
+  onlineManager = QueryCoreOnlineManager,
+  initialIsOpen = false,
+  position = 'bottom',
+  buttonPosition = 'bottom-right',
+}: {
+  queryClient: QueryClient;
+  destroyRef: DestroyRef;
+} & Partial<Omit<TanstackQueryDevtoolsConfig, 'client'>>) {
+  const devtools: TanstackQueryDevtools = new TanstackQueryDevtools({
+    client: queryClient,
+    queryFlavor,
+    version,
+    onlineManager,
+    initialIsOpen,
+    position,
+    buttonPosition,
+  });
 
-  document.body.appendChild(reactRootEle);
-
-  const root = createRoot(reactRootEle);
-  const element = createElement(
-    QueryClientProvider,
-    { client: queryClient as any },
-    createElement(ReactQueryDevtools, { initialIsOpen: false })
-  );
-
-  root.render(element);
+  destroyRef.onDestroy(() => devtools.unmount());
+  devtools.mount(document.body);
 }
