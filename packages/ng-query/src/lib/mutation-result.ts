@@ -4,7 +4,7 @@ import { DefaultError } from '@tanstack/query-core';
 class MutationResult<Response = unknown, Error = DefaultError> {
   data: Response | null = null;
   isError = false;
-  isLoading = false;
+  isPending = false;
   isSuccess = false;
   error: Error | null = null;
 
@@ -46,7 +46,7 @@ export function useMutationResult<Response, Error = DefaultError>(
           subscribe() {
             store.next(
               new MutationResult({
-                isLoading: true,
+                isPending: true,
               })
             );
           },
