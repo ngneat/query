@@ -1,8 +1,8 @@
 import {HttpClient} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
 import {UseQuery} from '@ngneat/query';
-import {NgQueryObserverOptions} from 'packages/ng-query/src/lib/query';
 import {Observable, OperatorFunction} from 'rxjs';
+import {NgBaseQueryOptions} from '../../../ng-query/src/lib/types';
 
 export interface Post {
   userId: number;
@@ -13,7 +13,7 @@ export interface Post {
 
 type UseQueryOptionsPosts =
   | (Omit<
-  NgQueryObserverOptions<Post[], Error, Post[], Post[], string[]>,
+  NgBaseQueryOptions<Post[], Error, Post[], Post[], string[]>,
   'queryFn' | 'queryKey' | 'initialData'
 > & {
   initialData?: (() => undefined) | undefined
@@ -22,7 +22,7 @@ type UseQueryOptionsPosts =
 
 type UseQueryOptionsPost =
   | (Omit<
-  NgQueryObserverOptions<Post, Error, Post, Post, string[]>,
+  NgBaseQueryOptions<Post, Error, Post, Post, string[]>,
   'queryFn' | 'queryKey' | 'initialData'
 > & {
   initialData?: (() => undefined) | undefined
