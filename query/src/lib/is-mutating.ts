@@ -3,31 +3,43 @@ import {
   notifyManager
 } from '@tanstack/query-core';
 import { injectQueryClient } from './query-client';
-import { inject, Injectable, InjectionToken } from '@angular/core';
+import { DestroyRef, inject, Injectable, InjectionToken } from '@angular/core';
 import { distinctUntilChanged, Observable } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({ providedIn: 'root' })
-export class IsMutatingService {
+export class IsMutating {
   private queryClient = injectQueryClient();
+  private destroyRef = inject(DestroyRef);
 
   use(filters?: MutationFilters) {
-    return new Observable<number>((observer) => {
+    const result$ = new Observable<number>((observer) => {
       observer.next(this.queryClient.isMutating(filters));
-      this.queryClient.getMutationCache().subscribe(
+      const disposeSubscription = this.queryClient.getMutationCache().subscribe(
         notifyManager.batchCalls(() => {
           observer.next(this.queryClient.isMutating(filters));
         })
       );
-    }).pipe(distinctUntilChanged());
+
+      return () => disposeSubscription();
+    }).pipe(
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    );
+
+    return {
+      result$,
+      toSignal: () => toSignal(result$),
+    }
   }
 }
 
-const UseIsMutating = new InjectionToken<IsMutatingService['use']>(
+const UseIsMutating = new InjectionToken<IsMutating['use']>(
   'UseIsFetching',
   {
     providedIn: 'root',
     factory() {
-      const isMutating = new IsMutatingService();
+      const isMutating = new IsMutating();
       return isMutating.use.bind(isMutating);
     },
   }
