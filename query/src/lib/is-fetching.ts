@@ -30,9 +30,6 @@ const UseIsFetching = new InjectionToken<IsFetchingService['use']>(
   }
 );
 
-export function injectIsFetching(toSignal: boolean = false) {
+export function injectIsFetching() {
   return inject(UseIsFetching);
 }
-
-const isFetching = injectIsFetching();
-isFetching()
