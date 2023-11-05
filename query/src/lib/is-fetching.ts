@@ -1,13 +1,12 @@
-import { QueryFilters, notifyManager } from '@tanstack/query-core';
+import { notifyManager, type QueryFilters } from '@tanstack/query-core';
 import { injectQueryClient } from './query-client';
-import { DestroyRef, inject, Injectable, InjectionToken } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import { distinctUntilChanged, Observable } from 'rxjs';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({ providedIn: 'root' })
 export class IsFetching {
   private queryClient = injectQueryClient();
-  private destroyRef = inject(DestroyRef);
 
   use(filters?: QueryFilters) {
     const result$ = new Observable<number>((observer) => {
@@ -19,10 +18,7 @@ export class IsFetching {
       );
 
       return () => disposeSubscription();
-    }).pipe(
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef)
-    );
+    }).pipe(distinctUntilChanged());
 
     return {
       result$,
@@ -31,16 +27,13 @@ export class IsFetching {
   }
 }
 
-const UseIsFetching = new InjectionToken<IsFetching['use']>(
-  'UseIsFetching',
-  {
-    providedIn: 'root',
-    factory() {
-      const isFetching = new IsFetching();
-      return isFetching.use.bind(isFetching);
-    },
-  }
-);
+const UseIsFetching = new InjectionToken<IsFetching['use']>('UseIsFetching', {
+  providedIn: 'root',
+  factory() {
+    const isFetching = new IsFetching();
+    return isFetching.use.bind(isFetching);
+  },
+});
 
 export function injectIsFetching() {
   return inject(UseIsFetching);
