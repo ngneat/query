@@ -1,13 +1,13 @@
-import { inject, InjectionToken } from '@angular/core';
+import { inject, Injectable, InjectionToken, Signal } from '@angular/core';
 import { injectQueryClient } from './query-client';
 import {
   DefaultError,
   MutationObserver,
-  type MutationObserverOptions,
-  type MutationObserverResult,
+  MutationObserverOptions,
+  MutationObserverResult,
   notifyManager,
 } from '@tanstack/query-core';
-import { firstValueFrom, isObservable, Observable } from 'rxjs';
+import { firstValueFrom, isObservable, Observable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 type CreateMutationOptions<
@@ -22,6 +22,27 @@ type CreateMutationOptions<
   mutationFn: (variables: TVariables) => Promise<TData> | Observable<TData>;
 };
 
+type MutationResult<
+  TData = unknown,
+  TError = DefaultError,
+  TVariables = void,
+  TContext = unknown
+> = {
+  mutate: MutationObserver<TData, TError, TVariables, TContext>['mutate'];
+  reset: MutationObserver<TData, TError, TVariables, TContext>['reset'];
+  setOptions: MutationObserver<
+    TData,
+    TError,
+    TVariables,
+    TContext
+  >['setOptions'];
+  result$: Observable<
+    MutationObserverResult<TData, TError, TVariables, TContext>
+  >;
+  toSignal: () => Signal<MutationObserverResult<TData, TError, TVariables, TContext> | undefined>
+};
+
+@Injectable({ providedIn: 'root' })
 class Mutation {
   private instance = injectQueryClient();
 
@@ -30,7 +51,9 @@ class Mutation {
     TError = DefaultError,
     TVariables = unknown,
     TContext = unknown
-  >(options: CreateMutationOptions<TData, TError, TVariables, TContext>) {
+  >(
+    options: CreateMutationOptions<TData, TError, TVariables, TContext>
+  ): MutationResult<TData, TError, TVariables, TContext> {
     const mutationObserver = new MutationObserver<
       TData,
       TError,
@@ -60,9 +83,17 @@ class Mutation {
       );
 
       return () => disposeSubscription();
-    });
+    }).pipe(
+      shareReplay({
+        bufferSize: 1,
+        refCount: true,
+      })
+    );
 
     return {
+      mutate: mutationObserver.mutate.bind(mutationObserver),
+      reset: mutationObserver.reset.bind(mutationObserver),
+      setOptions: mutationObserver.setOptions.bind(mutationObserver),
       result$,
       toSignal: () => toSignal(result$),
     };
