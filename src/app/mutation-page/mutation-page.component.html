@@ -1,0 +1,48 @@
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 720px; margin: auto">
+
+  <h1 style="text-align: center;">To see the mutation in action open the tanstack devtools and change to the mutation tab.</h1>
+
+  <h3 style="text-align: center;">Currently active 'addTodo' Mutations: {{ addTodoMutationsActive() }}</h3>
+
+  <div style="display: flex; flex-direction: row; gap: 8px; ">
+    <fieldset style="flex: 1 0 auto; display: flex; flex-direction: column; gap: 8px;" id="signals">
+      <legend>Signals</legend>
+
+      <input id="signalTodo" placeholder="Input a new todo here..." [(ngModel)]="newTitle" style="margin-top: 16px;">
+      <button (click)="onAddTodo(newTitle)">Add Todo</button>
+      <button (click)="onAddTodoWithError(newTitle)">Add Todo with Error</button>
+      <button (click)="onResetMutation()">Reset Mutation</button>
+
+      <ng-container *ngIf="addTodoSignalResult() as addTodo">
+        <p *ngIf="addTodo.isPending">loading...</p>
+        <p *ngIf="addTodo.isIdle">Idling</p>
+        <div *ngIf="addTodo.isError" style="word-break: break-all;">
+          <p>Could not add the Todo</p>
+        </div>
+        <p *ngIf="addTodo.isSuccess">
+          {{ addTodo.data.title }}
+        </p>
+      </ng-container>
+    </fieldset>
+
+    <fieldset style="flex: 1 0 auto; display: flex; flex-direction: column; gap: 8px;">
+      <legend>Observable</legend>
+
+      <input id="observableTodo" placeholder="Input a new todo here..." [(ngModel)]="newTitle" style="margin-top: 16px;">
+      <button (click)="onAddTodo(newTitle)">Add Todo</button>
+      <button (click)="onAddTodoWithError(newTitle)">Add Todo with Error</button>
+      <button (click)="onResetMutation()">Reset Mutation</button>
+
+      <ng-container *ngIf="addTodoObservableResult | async as addTodo">
+        <p *ngIf="addTodo.isPending">loading...</p>
+        <p *ngIf="addTodo.isIdle">Idling</p>
+        <div *ngIf="addTodo.isError" style="word-break: break-all;">
+          <p>Could not add the Todo</p>
+        </div>
+        <p *ngIf="addTodo.isSuccess">
+          {{ addTodo.data.title }}
+        </p>
+      </ng-container>
+    </fieldset>
+  </div>
+</div>
