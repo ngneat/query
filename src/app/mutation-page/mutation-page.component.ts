@@ -1,16 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { injectIsMutating, injectMutation } from '@ngneat/query';
-import { HttpClient } from '@angular/common/http';
+import { injectIsMutating } from '@ngneat/query';
+
 import { FormsModule } from '@angular/forms';
 import { TodosService } from '../services/todos.service';
-
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-}
-
 @Component({
   selector: 'query-mutation-page',
   standalone: true,
@@ -25,9 +18,8 @@ export class MutationPageComponent {
 
   public addTodoMutationsActive = this.useIsMutating().toSignal();
 
-
   public addTodo = this.todoService.addTodo();
-  public addTodoSignalResult = this.addTodo.toSignal();
+  public addTodoSignalResult = this.addTodo.result;
   public newTodo = '';
 
   public onAddTodo(title: string) {

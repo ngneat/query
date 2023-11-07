@@ -10,6 +10,7 @@ import {
 import { Observable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Result } from './types';
+import { assertInInjectionContext } from '@angular/core';
 
 export type CreateBaseQueryOptions<
   TQueryFnData = unknown,
@@ -60,11 +61,9 @@ export function createBaseQuery<
   >(client, defaultedOptions);
 
   const result$ = new Observable((observer) => {
-    const mergedOptions = client.defaultQueryOptions({
-      ...options,
-      // The query key can be changed, so we need to rebuild it each time
-      ...queryObserver.options,
-    });
+    const mergedOptions = client.defaultQueryOptions(
+      client.defaultQueryOptions(options)
+    );
 
     observer.next(queryObserver.getOptimisticResult(mergedOptions));
 
@@ -89,6 +88,18 @@ export function createBaseQuery<
   return {
     result$,
     setOptions: queryObserver.setOptions.bind(queryObserver),
-    toSignal: () => toSignal(result$),
+    __cached__: undefined,
+    // @experimental signal support
+    get result() {
+      assertInInjectionContext(function queryResultSignal() {
+        // noop
+      });
+
+      if (!this.__cached__) {
+        this.__cached__ = toSignal(this.result$);
+      }
+
+      return this.__cached__;
+    },
   };
 }

@@ -1,12 +1,16 @@
-<ng-container *ngIf="todos$ | async as todos">
+<ng-container *ngIf="todosResult.result$ | async as todos">
   <p *ngIf="todos.isPending">loading</p>
   <p *ngIf="todos.isSuccess">
     {{ todos.data[0].title }}
   </p>
+  <p *ngIf="todos.isError">Error</p>
 </ng-container>
 
-<h1>Singals</h1>
-<p *ngIf="todos().isLoading">loading</p>
-<p *ngIf="todos().isSuccess">
-  {{ todos().data?.[0]?.title }}
-</p>
+<h1>Signals</h1>
+<ng-container *ngIf="todos() as result">
+  <p *ngIf="result.isLoading">loading</p>
+  <p *ngIf="result.isSuccess">
+    {{ result.data[0].title }}
+  </p>
+  <p *ngIf="result.isError">Error</p>
+</ng-container>

@@ -5,14 +5,16 @@ export function toPromise<T>({
   signal,
 }: {
   source: Observable<T>;
-  signal: AbortSignal;
+  signal?: AbortSignal;
 }): Promise<T> {
   const cancel = new Subject<void>();
 
-  signal.addEventListener('abort', () => {
-    cancel.next();
-    cancel.complete();
-  });
+  if (signal) {
+    signal.addEventListener('abort', () => {
+      cancel.next();
+      cancel.complete();
+    });
+  }
 
-  return firstValueFrom(source.pipe(takeUntil(cancel)));
+  return firstValueFrom(source.pipe(signal ? takeUntil(cancel) : (s) => s));
 }

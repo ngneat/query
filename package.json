@@ -9,6 +9,7 @@
     "build:devtools": "nx build devtools",
     "build:all": "nx run-many --target=build",
     "test:all": "nx run-many --target=test",
+    "lint:all": "nx run-many --target=lint",
     "start": "nx serve",
     "format": "nx format:write --all",
     "update": "nx migrate latest",

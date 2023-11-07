@@ -7,8 +7,9 @@ import {
   MutationObserverResult,
   notifyManager,
 } from '@tanstack/query-core';
-import { firstValueFrom, isObservable, Observable, shareReplay } from 'rxjs';
+import { isObservable, Observable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { toPromise } from './utils';
 
 type CreateMutationOptions<
   TData = unknown,
@@ -40,9 +41,7 @@ type MutationResult<
   result$: Observable<
     MutationObserverResult<TData, TError, TVariables, TContext>
   >;
-  toSignal: () => Signal<
-    MutationObserverResult<TData, TError, TVariables, TContext>
-  >;
+  result: Signal<MutationObserverResult<TData, TError, TVariables, TContext>>;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -65,10 +64,12 @@ class Mutation {
     >(this.instance, {
       ...options,
       mutationFn: (variables: TVariables): Promise<TData> => {
-        const result: Promise<TData> | Observable<TData> =
+        const source: Promise<TData> | Observable<TData> =
           options.mutationFn(variables);
-        if (isObservable(result)) return firstValueFrom(result);
-        return result;
+
+        if (isObservable(source)) return toPromise({ source });
+
+        return source;
       },
     });
 
@@ -94,17 +95,26 @@ class Mutation {
     );
 
     const mutate = (variables: TVariables) => {
-      mutationObserver.mutate(variables).catch(() => {});
+      mutationObserver.mutate(variables).catch(() => {
+        // noop
+      });
     };
 
     return {
       mutate,
-      mutateAsync: mutationObserver.mutate.bind(mutationObserver),
       reset: mutationObserver.reset.bind(mutationObserver),
       setOptions: mutationObserver.setOptions.bind(mutationObserver),
       result$,
-      toSignal: () => toSignal(result$, { requireSync: true }),
-    };
+      __cached__: undefined,
+      // @experimental signal support
+      get result() {
+        if (!this.__cached__) {
+          this.__cached__ = toSignal(this.result$);
+        }
+
+        return this.__cached__;
+      },
+    } as any;
   }
 }
 

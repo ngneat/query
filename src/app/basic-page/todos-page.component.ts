@@ -11,6 +11,6 @@ import { TodosService } from '../services/todos.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodosPageComponent {
-  todos$ = inject(TodosService).getTodos().result$;
-  todos = inject(TodosService).getTodos().toSignal();
+  todosResult = inject(TodosService).getTodos();
+  todos = this.todosResult.result;
 }
