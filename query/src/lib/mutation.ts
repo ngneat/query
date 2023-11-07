@@ -28,7 +28,8 @@ type MutationResult<
   TVariables = void,
   TContext = unknown
 > = {
-  mutate: MutationObserver<TData, TError, TVariables, TContext>['mutate'];
+  mutate: (variables: TVariables) => void;
+  mutateAsync: MutationObserver<TData, TError, TVariables, TContext>['mutate'];
   reset: MutationObserver<TData, TError, TVariables, TContext>['reset'];
   setOptions: MutationObserver<
     TData,
@@ -39,7 +40,9 @@ type MutationResult<
   result$: Observable<
     MutationObserverResult<TData, TError, TVariables, TContext>
   >;
-  toSignal: () => Signal<MutationObserverResult<TData, TError, TVariables, TContext> | undefined>
+  toSignal: () => Signal<
+    MutationObserverResult<TData, TError, TVariables, TContext>
+  >;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -90,12 +93,17 @@ class Mutation {
       })
     );
 
+    const mutate = (variables: TVariables) => {
+      mutationObserver.mutate(variables).catch(() => {});
+    };
+
     return {
-      mutate: mutationObserver.mutate.bind(mutationObserver),
+      mutate,
+      mutateAsync: mutationObserver.mutate.bind(mutationObserver),
       reset: mutationObserver.reset.bind(mutationObserver),
       setOptions: mutationObserver.setOptions.bind(mutationObserver),
       result$,
-      toSignal: () => toSignal(result$),
+      toSignal: () => toSignal(result$, { requireSync: true }),
     };
   }
 }
