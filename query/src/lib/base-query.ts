@@ -5,6 +5,7 @@ import {
   QueryObserver,
   QueryObserverOptions,
   QueryObserverResult,
+  WithRequired,
 } from '@tanstack/query-core';
 import { Observable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -16,7 +17,10 @@ export type CreateBaseQueryOptions<
   TData = TQueryFnData,
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
-> = QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>;
+> = WithRequired<
+  QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
+  'queryKey'
+>;
 
 export type CreateBaseQueryResult<
   TData = unknown,

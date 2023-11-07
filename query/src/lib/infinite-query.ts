@@ -9,6 +9,7 @@ import {
   InfiniteQueryObserver,
   InfiniteQueryObserverOptions,
   InfiniteQueryObserverResult,
+  WithRequired,
 } from '@tanstack/query-core';
 import { createBaseQuery } from './base-query';
 import { Result } from './types';
@@ -20,13 +21,16 @@ type CreateInfiniteQueryOptions<
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = unknown
-> = InfiniteQueryObserverOptions<
-  TQueryFnData,
-  TError,
-  TData,
-  TQueryData,
-  TQueryKey,
-  TPageParam
+> = WithRequired<
+  InfiniteQueryObserverOptions<
+    TQueryFnData,
+    TError,
+    TData,
+    TQueryData,
+    TQueryKey,
+    TPageParam
+  >,
+  'queryKey'
 >;
 
 type CreateInfiniteQueryResult<TData = unknown, TError = DefaultError> = Result<
