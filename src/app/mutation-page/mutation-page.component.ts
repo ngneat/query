@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { injectIsMutating, injectMutation } from '@ngneat/query';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { TodosService } from '../services/todos.service';
 
 interface Todo {
   id: number;
@@ -20,25 +21,14 @@ interface Todo {
 })
 export class MutationPageComponent {
   private useIsMutating = injectIsMutating();
-  private useMutation = injectMutation();
-  private httpClient = inject(HttpClient);
+  private todoService = inject(TodosService);
 
-  public addTodoMutationsActive = this.useIsMutating({mutationKey: ['addTodo']}).toSignal();
+  public addTodoMutationsActive = this.useIsMutating().toSignal();
 
-  public addTodo = this.useMutation({
-    mutationFn: ({title, showError}: {title: string, showError: boolean}) => {
-      const url = showError ? 'https://jsonplaceholder.typicode.com/error/404' : 'https://jsonplaceholder.typicode.com/todos';
-      return this.httpClient.post<Todo>(url, {
-        title,
-      });
-    },
-    mutationKey: ['addTodo'],
-  });
 
-  newTitle = '';
-
+  public addTodo = this.todoService.addTodo();
   public addTodoSignalResult = this.addTodo.toSignal();
-  public addTodoObservableResult = this.addTodo.result$;
+  public newTodo = '';
 
   public onAddTodo(title: string) {
     this.addTodo.mutate({ title, showError: false });
