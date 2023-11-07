@@ -1,11 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import {
-  injectQuery,
-  injectQueryClient,
-  queryOptions,
-  toPromise,
-} from '@ngneat/query';
+import { injectMutation, injectQuery, queryOptions, toPromise } from '@ngneat/query';
 
 interface Todo {
   id: number;
@@ -15,8 +10,8 @@ interface Todo {
 @Injectable({ providedIn: 'root' })
 export class TodosService {
   private query = injectQuery();
+  private useMutation = injectMutation();
   private http = inject(HttpClient);
-  private client = injectQueryClient();
 
   todosQuery = queryOptions({
     queryKey: ['todos'] as const,
@@ -39,6 +34,17 @@ export class TodosService {
 
         return toPromise({ source, signal });
       },
+    });
+  }
+
+  addTodo() {
+    return this.useMutation({
+      mutationFn: ({title, showError}: {title: string, showError: boolean}) => {
+        const url = showError ? 'https://jsonplaceholder.typicode.com/error/404' : 'https://jsonplaceholder.typicode.com/todos';
+        return this.http.post<Todo>(url, {
+          title,
+        });
+      }
     });
   }
 }

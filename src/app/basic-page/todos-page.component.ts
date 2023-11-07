@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TodosService } from './todos.service';
+import { TodosService } from '../services/todos.service';
 
 @Component({
   selector: 'query-todos-page',
