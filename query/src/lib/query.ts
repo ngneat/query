@@ -1,4 +1,9 @@
-import { inject, Injectable, InjectionToken } from '@angular/core';
+import {
+  assertInInjectionContext,
+  inject,
+  Injectable,
+  InjectionToken,
+} from '@angular/core';
 import { injectQueryClient } from './query-client';
 
 import {
@@ -110,5 +115,7 @@ const UseQuery = new InjectionToken<Query['use']>('UseQuery', {
 });
 
 export function injectQuery() {
+  assertInInjectionContext(injectQuery);
+
   return inject(UseQuery);
 }

@@ -1,6 +1,11 @@
 import { type MutationFilters, notifyManager } from '@tanstack/query-core';
 import { injectQueryClient } from './query-client';
-import { inject, Injectable, InjectionToken } from '@angular/core';
+import {
+  assertInInjectionContext,
+  inject,
+  Injectable,
+  InjectionToken,
+} from '@angular/core';
 import { distinctUntilChanged, Observable } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -36,5 +41,7 @@ const UseIsMutating = new InjectionToken<IsMutating['use']>('UseIsFetching', {
 });
 
 export function injectIsMutating() {
+  assertInInjectionContext(injectIsMutating);
+
   return inject(UseIsMutating);
 }

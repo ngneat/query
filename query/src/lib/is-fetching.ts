@@ -1,6 +1,11 @@
 import { notifyManager, type QueryFilters } from '@tanstack/query-core';
 import { injectQueryClient } from './query-client';
-import { inject, Injectable, InjectionToken } from '@angular/core';
+import {
+  assertInInjectionContext,
+  inject,
+  Injectable,
+  InjectionToken,
+} from '@angular/core';
 import { distinctUntilChanged, Observable } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -36,5 +41,6 @@ const UseIsFetching = new InjectionToken<IsFetching['use']>('UseIsFetching', {
 });
 
 export function injectIsFetching() {
+  assertInInjectionContext(injectIsFetching);
   return inject(UseIsFetching);
 }

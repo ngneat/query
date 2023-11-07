@@ -1,4 +1,9 @@
-import { inject, Injectable, InjectionToken } from '@angular/core';
+import {
+  assertInInjectionContext,
+  inject,
+  Injectable,
+  InjectionToken,
+} from '@angular/core';
 import { injectQueryClient } from './query-client';
 
 import {
@@ -75,5 +80,7 @@ const UseInfiniteQuery = new InjectionToken<InfiniteQuery['use']>('UseQuery', {
 });
 
 export function injectInfiniteQuery() {
+  assertInInjectionContext(injectInfiniteQuery);
+
   return inject(UseInfiniteQuery);
 }
