@@ -10,7 +10,7 @@ import {
 import { Observable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Result } from './types';
-import { assertInInjectionContext } from '@angular/core';
+import { Signal, assertInInjectionContext } from '@angular/core';
 
 export type CreateBaseQueryOptions<
   TQueryFnData = unknown,
@@ -85,21 +85,22 @@ export function createBaseQuery<
     })
   );
 
+  let cachedSignal: undefined | Signal<any>;
+
   return {
     result$,
     setOptions: queryObserver.setOptions.bind(queryObserver),
-    __cached__: undefined,
     // @experimental signal support
     get result() {
       assertInInjectionContext(function queryResultSignal() {
         // noop
       });
 
-      if (!this.__cached__) {
-        this.__cached__ = toSignal(this.result$);
+      if (!cachedSignal) {
+        cachedSignal = toSignal(this.result$, { requireSync: true });
       }
 
-      return this.__cached__;
+      return cachedSignal;
     },
   };
 }

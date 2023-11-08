@@ -30,7 +30,6 @@ type MutationResult<
   TContext = unknown
 > = {
   mutate: (variables: TVariables) => void;
-  mutateAsync: MutationObserver<TData, TError, TVariables, TContext>['mutate'];
   reset: MutationObserver<TData, TError, TVariables, TContext>['reset'];
   setOptions: MutationObserver<
     TData,
@@ -100,21 +99,22 @@ class Mutation {
       });
     };
 
+    let cachedSignal: undefined | Signal<any>;
+
     return {
       mutate,
       reset: mutationObserver.reset.bind(mutationObserver),
       setOptions: mutationObserver.setOptions.bind(mutationObserver),
       result$,
-      __cached__: undefined,
       // @experimental signal support
       get result() {
-        if (!this.__cached__) {
-          this.__cached__ = toSignal(this.result$);
+        if (!cachedSignal) {
+          cachedSignal = toSignal(this.result$, { requireSync: true });
         }
 
-        return this.__cached__;
+        return cachedSignal;
       },
-    } as any;
+    };
   }
 }
 
