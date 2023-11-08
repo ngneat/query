@@ -19,7 +19,8 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
 ✅ &nbsp;Request Cancellation  
 ✅ &nbsp;Prefetching  
 ✅ &nbsp;Offline Support  
-✅ &nbsp;Data Selectors
+✅ &nbsp;Data Selectors  
+✅ &nbsp;SSR Support
 
 <hr />
 
@@ -55,9 +56,14 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
 
 ## Installation
 
+npm
 ```
-npm i @ngneat/query
-yarn add @ngneat/query
+npm i -S @ngneat/query
+```
+
+Yarn
+```
+yarn add --save @ngneat/query
 ```
 
 ## Queries
@@ -67,11 +73,11 @@ yarn add @ngneat/query
 Inject the `QueryClientService` provider to get access to the query client [instance](https://tanstack.com/query/v4/docs/reference/QueryClient):
 
 ```ts
-import { QueryClientService } from '@ngneat/query';
+import { injectQueryClient } from '@ngneat/query';
 
 @Injectable({ providedIn: 'root' })
 export class TodosService {
-  private queryClient = inject(QueryClientService);
+  private queryClient = injectQueryClient();
 }
 ```
 
@@ -331,7 +337,7 @@ You can provide the `QUERY_CLIENT_OPTIONS` provider to set the global [options](
 ```ts
 import { provideQueryClientOptions } from '@ngneat/query';
 
-{
+bootstrapApplication(AppComponent, {
   providers: [
     provideQueryClientOptions({
       defaultOptions: {
@@ -340,72 +346,99 @@ import { provideQueryClientOptions } from '@ngneat/query';
         },
       },
     }),
-  ];
-}
+  ]
+});
 ```
 
-## Operators
+## RxJS Operators
+
+### filterSuccess()
+
+The `filterSuccess` operator is a shortcut for `filter((result) => result.isSuccess)`. 
+It's useful when you want to filter only successful results.
+
+#### Example 
 
 ```ts
-import {
-  filterError,
-  filterSuccess,
-  selectResult,
-  mapResultData,
-  mapResultsData,
-  tapSuccess,
-  tapError,
-  startWithQueryResult,
-} from '@ngneat/query';
+this.todosService.getTodos().result$.pipe(filterSuccess());
+```
 
-export class TodosPageComponent {
-  public todos: Array<Todo>;
-  todosService = inject(TodosService);
+### filterError()
 
-  ngOnInit() {
-    this.todosService.getTodos().result$.pipe(filterError());
-    this.todosService.getTodos().result$.pipe(filterSuccess());
-    this.todosService
-      .getTodos()
-      .result$.pipe(selectResult((result) => result.data.foo));
+The `filterError` operator is a shortcut for `filter((result) => result.status === 'error')`.
+It's useful when you want to filter only error results.
 
-    // Map the result `data`
-    this.todosService.getTodos().pipe(
-      mapResultData((data) => {
-        return {
-          todos: data.todos.filter(predicate),
-        };
-      })
-    );
+#### Example
 
-    // Map the result `data` of multiple queries
-    combineLatest([this.todosService.getTodos(), this.todosService.getTodos()])
-      .pipe(
-        mapResultsData(([todos, todos2]) => {
-          return {
-            todos: todos.data.todos.filter(predicate),
-            todos2: todos2.data.todos.filter(predicate),
-          };
-        })
-      )
-      .subscribe(console.log); // { isLoading: boolean, isSuccess: boolean, isError: boolean, error: unknown, data: { todos: [], todos2: [] } }
+```ts
+this.todosService.getTodos().result$.pipe(filterError()); 
+```
 
-    // process error or success result directly
-    this.todosService
-      .getTodos()
-      .result$.pipe(
-        tapSuccess((data) => {
-          // get result data directly if success
-          this.todos = data;
-        }),
-        tapError((error) => {
-          // do what you want with error (display modal, toast, etc)
-          alert(error.message);
-        })
-      )
-      .subscribe();
-  }
-}
+### tapSuccess(callback: (data) => void)
+
+The `tapSuccess` operator is a shortcut for `tap((result) => result.isSuccess && callback(result.data))`. 
+It's useful when you want to run a side effect only when the result is successful.
+
+#### Example
+
+```ts
+this.todosService.getTodos().result$.pipe(tapSuccess((data) => console.log(data)));
+```
+
+### tapError(callback: (error) => void)
+
+The `tapError` operator is a shortcut for `tap((result) => result.isError && callback(result.error))`.
+It's useful when you want to run a side effect only when the result is successful.
+
+#### Example
+
+```ts
+this.todosService.getTodos().result$.pipe(tapError((error) => console.log(error)));
+```
+
+### mapResultData(mapFn)
+
+The `mapResultData` operator like the name implies maps the `data` property of the `result` object.
+> **Note:** The data will only be mapped if the result is **successful** and otherwise just returned as is on **any other** state.
+
+#### Example
+
+```ts
+this.todosService.getTodos().pipe(
+  mapResultData((data) => {
+    return {
+      todos: data.todos.filter(predicate),
+    };
+  })
+);
+```
+
+### intersectResults(mapFn: (combinedQueries) => any)
+
+The `intersectResults` operator is used to merge multiple queries into one.
+It will return a new base query result that will merge the results of all the queries.
+
+> **Note:** The data will only be mapped if the result is **successful** and otherwise just returned as is on **any other** state.
+
+#### Example
+
+```ts
+const query = combineLatest({
+  todos: todos.result$,
+  posts: posts.result$,
+}).pipe(
+  intersectResults(({ todos, posts }) => {
+    return { ... }
+  })
+)
+
+// --- or ---
+
+const query = combineLatest([todos.result$, posts.result$]).pipe(
+  intersectResults(([todos, posts]) => {
+    return { ... }
+  })
+)
 ```
 
 ## Utils
@@ -449,25 +482,11 @@ MutationService.use(...)
 Install the `@ngneat/query-devtools` package. Lazy load and use it only in `development` environment:
 
 ```ts
-import { ENVIRONMENT_INITIALIZER } from '@angular/core';
-import { environment } from './environments/environment';
-
-import { QueryClientService } from '@ngneat/query';
+import { provideQueryDevTools } from '@ngneat/query';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    environment.production
-      ? []
-      : {
-          provide: ENVIRONMENT_INITIALIZER,
-          multi: true,
-          useValue() {
-            const queryClient = inject(QueryClientService);
-            import('@ngneat/query-devtools').then((m) => {
-              m.ngQueryDevtools({ queryClient });
-            });
-          },
-        },
+    provideQueryDevTools(),
   ],
 });
 ```
