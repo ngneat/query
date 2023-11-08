@@ -89,7 +89,15 @@ export function createBaseQuery<
 
   return {
     result$,
-    setOptions: queryObserver.setOptions.bind(queryObserver),
+    updateOptions(options: QueryObserver['setOptions']) {
+      queryObserver.setOptions(
+        {
+          ...defaultedOptions,
+          ...options,
+        },
+        { listeners: false }
+      );
+    },
     // @experimental signal support
     get result() {
       assertInInjectionContext(function queryResultSignal() {

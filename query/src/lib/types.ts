@@ -7,5 +7,5 @@ export type ObservableQueryResult<T> = Observable<QueryObserverResult<T>>;
 export type Result<T> = {
   result$: Observable<T>;
   result: Signal<T>;
-  setOptions: QueryObserver['setOptions'];
+  updateOptions: QueryObserver['setOptions'];
 };
