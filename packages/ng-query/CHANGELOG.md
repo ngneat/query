@@ -2,6 +2,16 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [1.0.3](https://github-personal/ngneat/query/compare/ng-query-1.0.2...ng-query-1.0.3) (2023-11-09)
+
+
+### Bug Fixes
+
+* **query:** 🐞 assign data ([a10f4a0](https://github-personal/ngneat/query/commit/a10f4a057fd1e5a11ed08a3581048e7ad57b42eb))
+* **query:** 🐞 use booleans instead of status ([039816d](https://github-personal/ngneat/query/commit/039816ddc6b8b3f008ef292f7ec2c3ec3a18ad12))
+
+
+
 ## [1.0.3](https://github-personal/ngneat/query/compare/ng-query-1.0.2...ng-query-1.0.3) (2023-10-30)
 
 
