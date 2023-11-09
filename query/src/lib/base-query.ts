@@ -49,34 +49,38 @@ export function createBaseQuery<
     TQueryKey
   >;
 }): any {
+  let queryObserver:
+    | QueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>
+    | undefined;
+
   const defaultedOptions = client.defaultQueryOptions(options);
   defaultedOptions._optimisticResults = 'optimistic';
 
-  const queryObserver = new Observer<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryData,
-    TQueryKey
-  >(client, defaultedOptions);
-
   const result$ = new Observable((observer) => {
-    const mergedOptions = client.defaultQueryOptions(
-      client.defaultQueryOptions(options)
-    );
+    // Lazily create the observer when the first subscription is received
+    if (!queryObserver) {
+      queryObserver = new Observer<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryData,
+        TQueryKey
+      >(client, defaultedOptions);
+    }
 
-    observer.next(queryObserver.getOptimisticResult(mergedOptions));
+    observer.next(queryObserver.getOptimisticResult(defaultedOptions));
 
     const queryObserverDispose = queryObserver.subscribe((result) => {
       observer.next(
-        !defaultedOptions.notifyOnChangeProps
-          ? queryObserver.trackResult(result)
-          : result
+        defaultedOptions.notifyOnChangeProps
+          ? result
+          : queryObserver?.trackResult(result)
       );
     });
 
     return () => {
       queryObserverDispose();
+      queryObserver = undefined;
     };
   }).pipe(
     shareReplay({
@@ -90,7 +94,7 @@ export function createBaseQuery<
   return {
     result$,
     updateOptions(options: QueryObserver['setOptions']) {
-      queryObserver.setOptions(
+      queryObserver?.setOptions(
         {
           ...defaultedOptions,
           ...options,

@@ -1,5 +1,5 @@
 <ng-container *ngIf="todosResult.result$ | async as todos">
-  <p *ngIf="todos.isPending">loading</p>
+  <p *ngIf="todos.isPending">Loading</p>
   <p *ngIf="todos.isSuccess">
     {{ todos.data[0].title }}
   </p>
@@ -8,9 +8,18 @@
 
 <h1>Signals</h1>
 <ng-container *ngIf="todos() as result">
-  <p *ngIf="result.isLoading">loading</p>
+  <p *ngIf="result.isLoading">Loading</p>
   <p *ngIf="result.isSuccess">
     {{ result.data[0].title }}
   </p>
   <p *ngIf="result.isError">Error</p>
+</ng-container>
+
+<h1>Signals Intersection</h1>
+<ng-container *ngIf="intersection() as intersectionResult">
+  <p *ngIf="intersectionResult.isLoading">Loading intersection</p>
+  <p *ngIf="intersectionResult.isSuccess">
+    {{ intersectionResult.data }}
+  </p>
+  <p *ngIf="intersectionResult.isError">Error intersection</p>
 </ng-container>

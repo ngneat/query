@@ -83,7 +83,7 @@ type DataTypes<
 
 type UnifiedTypes<T> = T extends Array<QueryObserverBaseResult<any>>
   ? DataTypes<T>
-  : T extends Record<string, QueryObserverResult<any>>
+  : T extends Record<string, QueryObserverBaseResult<any>>
   ? DataTypes<T>
   : never;
 
@@ -98,19 +98,19 @@ type UnifiedTypes<T> = T extends Array<QueryObserverBaseResult<any>>
  *   todos: todos.result$,
  *   posts: posts.result$,
  * }).pipe(
- *   intersectResults(({ todos, posts }) => {
+ *   intersectResults$(({ todos, posts }) => {
  *     return { ... }
  *   })
  * )
  * @example
  *
  * const query = combineLatest([todos.result$, posts.result$]).pipe(
- *   intersectResults(([todos, posts]) => {
+ *   intersectResults$(([todos, posts]) => {
  *     return { ... }
  *   })
  * )
  */
-export function intersectResults<
+export function intersectResults$<
   T extends
     | Array<QueryObserverResult<any>>
     | Record<string, QueryObserverResult<any>>,
@@ -119,7 +119,8 @@ export function intersectResults<
   mapFn: (values: UnifiedTypes<T>) => R
 ): OperatorFunction<T, QueryObserverResult<R> & { all: T }> {
   return map((values) => {
-    const toArray = Array.isArray(values) ? values : Object.values(values);
+    const isArray = Array.isArray(values);
+    const toArray = isArray ? values : Object.values(values);
 
     const mappedResult = {
       all: values,
@@ -133,7 +134,7 @@ export function intersectResults<
     } as unknown as QueryObserverResult<R> & { all: T };
 
     if (mappedResult.isSuccess) {
-      if (Array.isArray(values)) {
+      if (isArray) {
         mappedResult.data = mapFn(
           toArray.map((r) => r.data) as UnifiedTypes<T>
         );

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TodosService } from '../services/todos.service';
+import { intersectResults } from '@ngneat/query';
 
 @Component({
   selector: 'query-todos-page',
@@ -11,6 +12,18 @@ import { TodosService } from '../services/todos.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodosPageComponent {
-  todosResult = inject(TodosService).getTodos();
+  private todosService = inject(TodosService);
+
+  todosResult = this.todosService.getTodos();
   todos = this.todosResult.result;
+
+  intersection = intersectResults(
+    [
+      this.todosService.getTodo('1').result,
+      this.todosService.getTodo('2').result,
+    ],
+    ([todoOne, todoTwo]) => {
+      return todoOne.title + todoTwo.title;
+    }
+  );
 }

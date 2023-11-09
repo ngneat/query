@@ -26,6 +26,19 @@ export class TodosService {
     });
   }
 
+  getTodo(id: string) {
+    return this.query({
+      queryKey: ['todos', id] as const,
+      queryFn: ({ signal }) => {
+        const source = this.http.get<Todo>(
+          `https://jsonplaceholder.typicode.com/todos/${id}`
+        );
+
+        return toPromise({ source, signal });
+      },
+    });
+  }
+
   addTodo() {
     return this.useMutation({
       mutationFn: ({
