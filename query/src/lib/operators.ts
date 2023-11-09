@@ -58,7 +58,7 @@ export function tapError<T extends QueryObserverResult>(
   });
 }
 
-export function takeUntilFinalize<T extends QueryObserverResult>() {
+export function takeUntilResultFinalize<T extends QueryObserverResult>() {
   return takeWhile((res: T) => res.isFetching, true);
 }
 
