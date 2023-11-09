@@ -13,7 +13,6 @@ import {
   startWith,
   tap,
 } from 'rxjs';
-import { allRequestsStatusOf, someRequestsStatusOf } from './utils';
 
 export function mapResultData<T extends QueryObserverResult, R>(
   mapFn: (data: NonNullable<T['data']>) => R
@@ -37,10 +36,10 @@ export function mapResultsData<T extends QueryObserverResult[], R>(
 ): OperatorFunction<T, QueryObserverResult<R>> {
   return map((result) => {
     const mappedResult = {
-      isLoading: someRequestsStatusOf(result, 'loading'),
-      isSuccess: allRequestsStatusOf(result, 'success'),
+      isLoading: result.some((r) => r.isLoading),
+      isSuccess: result.every((r) => r.isSuccess),
       isFetching: result.some((r) => r.isFetching),
-      isError: someRequestsStatusOf(result, 'error'),
+      isError: result.some((r) => r.isError),
       error: result.find((r) => r.isError)?.error,
       data: undefined,
     } as QueryObserverResult<R>;
