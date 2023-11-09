@@ -4,7 +4,7 @@ import {
   QueryObserverResult,
   QueryObserverSuccessResult,
 } from '@tanstack/query-core';
-import { filter, map, OperatorFunction, startWith, tap } from 'rxjs';
+import { filter, map, OperatorFunction, startWith, takeWhile, tap } from 'rxjs';
 
 export function mapResultData<T extends QueryObserverResult, R>(
   mapFn: (data: NonNullable<T['data']>) => R
@@ -56,6 +56,10 @@ export function tapError<T extends QueryObserverResult>(
       cb(result.error as NonNullable<T['error']>);
     }
   });
+}
+
+export function takeUntilFinalize<T extends QueryObserverResult>() {
+  return takeWhile((res: T) => res.isFetching, true);
 }
 
 export function startWithQueryResult<T>(): OperatorFunction<
