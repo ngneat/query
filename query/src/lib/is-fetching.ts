@@ -11,14 +11,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({ providedIn: 'root' })
 export class IsFetching {
-  private queryClient = injectQueryClient();
+  #queryClient = injectQueryClient();
 
   use(filters?: QueryFilters) {
     const result$ = new Observable<number>((observer) => {
-      observer.next(this.queryClient.isFetching(filters));
-      const disposeSubscription = this.queryClient.getQueryCache().subscribe(
+      observer.next(this.#queryClient.isFetching(filters));
+      const disposeSubscription = this.#queryClient.getQueryCache().subscribe(
         notifyManager.batchCalls(() => {
-          observer.next(this.queryClient.isFetching(filters));
+          observer.next(this.#queryClient.isFetching(filters));
         })
       );
 

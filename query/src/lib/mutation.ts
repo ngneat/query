@@ -45,7 +45,7 @@ type MutationResult<
 
 @Injectable({ providedIn: 'root' })
 class Mutation {
-  private instance = injectQueryClient();
+  #instance = injectQueryClient();
 
   use<
     TData = unknown,
@@ -60,7 +60,7 @@ class Mutation {
       TError,
       TVariables,
       TContext
-    >(this.instance, {
+    >(this.#instance, {
       ...options,
       mutationFn: (variables: TVariables): Promise<TData> => {
         const source: Promise<TData> | Observable<TData> =

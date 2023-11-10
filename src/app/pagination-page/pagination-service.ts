@@ -9,11 +9,11 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class PaginationService {
-  private query = injectQuery();
-  private client = injectQueryClient();
+  #query = injectQuery();
+  #client = injectQueryClient();
 
   getProjects(page: number) {
-    return this.query({
+    return this.#query({
       queryKey: ['projects', page],
       queryFn: ({ signal }) => {
         const source = fetchProjects(page);
@@ -26,7 +26,7 @@ export class PaginationService {
   }
 
   prefetch(page: number) {
-    return this.client.prefetchQuery({
+    return this.#client.prefetchQuery({
       queryKey: ['projects', page],
       queryFn: ({ signal }) => {
         const source = fetchProjects(page);

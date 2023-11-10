@@ -19,7 +19,7 @@ export function mapResultData<T extends QueryObserverResult, R>(
   });
 }
 
-export function filterSuccess<T>(): OperatorFunction<
+export function filterSuccessResult<T>(): OperatorFunction<
   QueryObserverResult<T>,
   QueryObserverSuccessResult<T>
 > {
@@ -28,7 +28,7 @@ export function filterSuccess<T>(): OperatorFunction<
   );
 }
 
-export function filterError<T, E>(): OperatorFunction<
+export function filterErrorResult<T, E>(): OperatorFunction<
   QueryObserverResult<T, E>,
   QueryObserverLoadingErrorResult<T, E>
 > {
@@ -38,7 +38,7 @@ export function filterError<T, E>(): OperatorFunction<
   );
 }
 
-export function tapSuccess<T extends QueryObserverResult>(
+export function tapSuccessResult<T extends QueryObserverResult>(
   cb: (data: NonNullable<T['data']>) => void
 ) {
   return tap<T>((result) => {
@@ -48,7 +48,7 @@ export function tapSuccess<T extends QueryObserverResult>(
   });
 }
 
-export function tapError<T extends QueryObserverResult>(
+export function tapErrorResult<T extends QueryObserverResult>(
   cb: (error: NonNullable<T['error']>) => void
 ) {
   return tap<T>((result) => {
@@ -58,8 +58,34 @@ export function tapError<T extends QueryObserverResult>(
   });
 }
 
+/**
+ * An operator that takes values emitted by the source observable
+ * until the `isFetching` property on the result is false.
+ * It is intended to be used in scenarios where an observable stream should be listened to
+ * until the result has finished fetching (e.g success or error).
+ */
 export function takeUntilResultFinalize<T extends QueryObserverResult>() {
   return takeWhile((res: T) => res.isFetching, true);
+}
+
+/**
+ * An operator that takes values emitted by the source observable
+ * until the `isSuccess` property on the result is true.
+ * It is intended to be used in scenarios where an observable stream should be listened to
+ * until a successful result is emitted.
+ */
+export function takeUntilResultSuccess<T extends QueryObserverResult>() {
+  return takeWhile((res: T) => !res.isSuccess, true);
+}
+
+/**
+ * An operator that takes values emitted by the source observable
+ * until the `isError` property on the result is true.
+ * It is intended to be used in scenarios where an observable stream should be listened to
+ * until an error result is emitted.
+ */
+export function takeUntilResultError<T extends QueryObserverResult>() {
+  return takeWhile((res: T) => !res.isError, true);
 }
 
 export function startWithQueryResult<T>(): OperatorFunction<

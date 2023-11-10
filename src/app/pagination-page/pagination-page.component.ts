@@ -12,8 +12,8 @@ import { PaginationService } from './pagination-service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginationPageComponent {
-  private page = new BehaviorSubject(0);
-  page$ = this.page.asObservable();
+  #page = new BehaviorSubject(0);
+  page$ = this.#page.asObservable();
   projectsService = inject(PaginationService);
 
   projects$ = this.page$.pipe(
@@ -27,11 +27,11 @@ export class PaginationPageComponent {
   );
 
   nextPage() {
-    this.page.next(this.page.getValue() + 1);
+    this.#page.next(this.#page.getValue() + 1);
   }
 
   prevPage() {
-    this.page.next(this.page.getValue() - 1);
+    this.#page.next(this.#page.getValue() - 1);
   }
 
   trackBy(_: number, project: { id: number }) {

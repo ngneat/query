@@ -44,7 +44,7 @@ type CreateInfiniteQueryResult<TData = unknown, TError = DefaultError> = Result<
 
 @Injectable({ providedIn: 'root' })
 class InfiniteQuery {
-  private instance = injectQueryClient();
+  #instance = injectQueryClient();
 
   use<
     TQueryFnData,
@@ -63,7 +63,7 @@ class InfiniteQuery {
     >
   ): CreateInfiniteQueryResult<TData, TError> {
     return createBaseQuery({
-      client: this.instance,
+      client: this.#instance,
       Observer: InfiniteQueryObserver as typeof QueryObserver,
       options,
     });

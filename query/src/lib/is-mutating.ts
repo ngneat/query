@@ -11,16 +11,18 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({ providedIn: 'root' })
 export class IsMutating {
-  private queryClient = injectQueryClient();
+  #queryClient = injectQueryClient();
 
   use(filters?: MutationFilters) {
     const result$ = new Observable<number>((observer) => {
-      observer.next(this.queryClient.isMutating(filters));
-      const disposeSubscription = this.queryClient.getMutationCache().subscribe(
-        notifyManager.batchCalls(() => {
-          observer.next(this.queryClient.isMutating(filters));
-        })
-      );
+      observer.next(this.#queryClient.isMutating(filters));
+      const disposeSubscription = this.#queryClient
+        .getMutationCache()
+        .subscribe(
+          notifyManager.batchCalls(() => {
+            observer.next(this.#queryClient.isMutating(filters));
+          })
+        );
 
       return () => disposeSubscription();
     }).pipe(distinctUntilChanged());

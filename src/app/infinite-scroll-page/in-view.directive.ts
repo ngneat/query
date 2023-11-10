@@ -15,11 +15,11 @@ import {
 export class InViewDirective implements AfterViewInit, OnDestroy {
   @Output() inView: EventEmitter<void> = new EventEmitter<void>();
 
-  private intersectionObserver?: IntersectionObserver;
-  private elementRef = inject(ElementRef);
+  #intersectionObserver?: IntersectionObserver;
+  elementRef = inject(ElementRef);
 
   ngAfterViewInit() {
-    this.intersectionObserver = new IntersectionObserver((entries) => {
+    this.#intersectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           this.inView.emit();
@@ -27,12 +27,12 @@ export class InViewDirective implements AfterViewInit, OnDestroy {
       });
     }, {});
 
-    this.intersectionObserver.observe(this.elementRef.nativeElement);
+    this.#intersectionObserver.observe(this.elementRef.nativeElement);
   }
 
   ngOnDestroy() {
-    if (this.intersectionObserver) {
-      this.intersectionObserver.disconnect();
+    if (this.#intersectionObserver) {
+      this.#intersectionObserver.disconnect();
     }
   }
 }

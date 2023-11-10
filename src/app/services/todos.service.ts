@@ -9,15 +9,15 @@ interface Todo {
 
 @Injectable({ providedIn: 'root' })
 export class TodosService {
-  private query = injectQuery();
-  private useMutation = injectMutation();
-  private http = inject(HttpClient);
+  #query = injectQuery();
+  #useMutation = injectMutation();
+  #http = inject(HttpClient);
 
   getTodos() {
-    return this.query({
+    return this.#query({
       queryKey: ['todos'] as const,
       queryFn: ({ signal }) => {
-        const source = this.http.get<Todo[]>(
+        const source = this.#http.get<Todo[]>(
           'https://jsonplaceholder.typicode.com/todos'
         );
 
@@ -27,10 +27,10 @@ export class TodosService {
   }
 
   getTodo(id: string) {
-    return this.query({
+    return this.#query({
       queryKey: ['todos', id] as const,
       queryFn: ({ signal }) => {
-        const source = this.http.get<Todo>(
+        const source = this.#http.get<Todo>(
           `https://jsonplaceholder.typicode.com/todos/${id}`
         );
 
@@ -40,7 +40,7 @@ export class TodosService {
   }
 
   addTodo() {
-    return this.useMutation({
+    return this.#useMutation({
       mutationFn: ({
         title,
         showError,
@@ -51,7 +51,7 @@ export class TodosService {
         const url = showError
           ? 'https://jsonplaceholder.typicode.com/error/404'
           : 'https://jsonplaceholder.typicode.com/todos';
-        return this.http.post<Todo>(url, {
+        return this.#http.post<Todo>(url, {
           title,
         });
       },

@@ -15,10 +15,10 @@ export interface Posts {
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {
-  private query = injectInfiniteQuery();
+  #query = injectInfiniteQuery();
 
   getPosts() {
-    return this.query({
+    return this.#query({
       queryKey: ['posts'],
       queryFn: ({ pageParam, signal }) => {
         return toPromise({

@@ -71,7 +71,7 @@ export type DefinedInitialDataOptions<
 
 @Injectable({ providedIn: 'root' })
 class Query {
-  private instance = injectQueryClient();
+  #instance = injectQueryClient();
 
   use<
     TQueryFnData = unknown,
@@ -98,7 +98,7 @@ class Query {
     TQueryKey extends QueryKey = QueryKey
   >(options: CreateQueryOptions<TQueryFnData, TError, TData, TQueryKey>) {
     return createBaseQuery({
-      client: this.instance,
+      client: this.#instance,
       Observer: QueryObserver,
       options,
     });

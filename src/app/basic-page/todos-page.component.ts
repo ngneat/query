@@ -12,15 +12,15 @@ import { intersectResults } from '@ngneat/query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodosPageComponent {
-  private todosService = inject(TodosService);
+  #todosService = inject(TodosService);
 
-  todosResult = this.todosService.getTodos();
+  todosResult = this.#todosService.getTodos();
   todos = this.todosResult.result;
 
   intersection = intersectResults(
     [
-      this.todosService.getTodo('1').result,
-      this.todosService.getTodo('2').result,
+      this.#todosService.getTodo('1').result,
+      this.#todosService.getTodo('2').result,
     ],
     ([todoOne, todoTwo]) => {
       return todoOne.title + todoTwo.title;

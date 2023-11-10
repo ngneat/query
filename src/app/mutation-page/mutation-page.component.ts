@@ -13,12 +13,12 @@ import { TodosService } from '../services/todos.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MutationPageComponent {
-  private useIsMutating = injectIsMutating();
-  private todoService = inject(TodosService);
+  #useIsMutating = injectIsMutating();
+  #todoService = inject(TodosService);
 
-  public addTodoMutationsActive = this.useIsMutating().toSignal();
+  public addTodoMutationsActive = this.#useIsMutating().toSignal();
 
-  public addTodo = this.todoService.addTodo();
+  public addTodo = this.#todoService.addTodo();
   public addTodoSignalResult = this.addTodo.result;
   public newTodo = '';
 
