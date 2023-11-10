@@ -2,7 +2,7 @@
   "name": "@ngneat/query-devtools",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/core": "^16.2.0",
+    "@angular/core": ">=16.0.0 <18.0.0",
     "@tanstack/query-devtools": "5.4.2"
   },
   "dependencies": {

@@ -44,10 +44,11 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "query-playground:build:production"
+          "buildTarget": "query-playground:build:production"
         },
         "development": {
-          "browserTarget": "query-playground:build:development"
+          "port": 4300,
+          "buildTarget": "query-playground:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -55,7 +56,7 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "query-playground:build"
+        "buildTarget": "query-playground:build"
       }
     },
     "lint": {
@@ -69,14 +70,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectName}"],
       "options": {
-        "jestConfig": "jest.config.app.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
+        "jestConfig": "jest.config.app.ts"
       }
     }
   }
