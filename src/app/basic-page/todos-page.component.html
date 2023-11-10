@@ -1,25 +1,27 @@
-<ng-container *ngIf="todosResult.result$ | async as todos">
-  <p *ngIf="todos.isPending">Loading</p>
-  <p *ngIf="todos.isSuccess">
-    {{ todos.data[0].title }}
-  </p>
-  <p *ngIf="todos.isError">Error</p>
-</ng-container>
+<h1>Observable</h1>
+@if(todosResult.result$ | async; as result) { @if(result.isLoading) {
+<p>Loading</p>
+} @if(result.isSuccess) {
+<p>{{ result.data[0].title }}</p>
+} @if(result.isError) {
+<p>Error</p>
+} }
 
 <h1>Signals</h1>
-<ng-container *ngIf="todos() as result">
-  <p *ngIf="result.isLoading">Loading</p>
-  <p *ngIf="result.isSuccess">
-    {{ result.data[0].title }}
-  </p>
-  <p *ngIf="result.isError">Error</p>
-</ng-container>
+
+@if(todos(); as result) { @if(result.isLoading) {
+<p>Loading</p>
+} @if(result.isSuccess) {
+<p>{{ result.data[0].title }}</p>
+} @if(result.isError) {
+<p>Error</p>
+} }
 
 <h1>Signals Intersection</h1>
-<ng-container *ngIf="intersection() as intersectionResult">
-  <p *ngIf="intersectionResult.isLoading">Loading intersection</p>
-  <p *ngIf="intersectionResult.isSuccess">
-    {{ intersectionResult.data }}
-  </p>
-  <p *ngIf="intersectionResult.isError">Error intersection</p>
-</ng-container>
+@if(intersection(); as intersectionResult) { @if(intersectionResult.isLoading) {
+<p>Loading</p>
+} @if(intersectionResult.isSuccess) {
+<p>{{ intersectionResult.data }}</p>
+} @if(intersectionResult.isError) {
+<p>Error</p>
+} }
