@@ -186,13 +186,14 @@ The most basic mutation consists of either a `mutationFn` or `mutationKey`, if o
 the query client will look for a mutation with the same `mutationKey` or take the default mutation function provided
 by the `provideQueryClientOptions()` provider.
 
-### Example {#mutation-example}
+### Example <a name="mutation-example"></a>
 
 > **Note:** It's generally recommended to keep shared functions, like this is one, though not required, in a shared service
 
 To get started with a basic mutation, first create a service like this:
 
-```ts { #mutation-service }
+<a id="mutation-service"></a>
+```ts
 @Injectable({ providedIn: 'root' })
 export class TodosService {
   #useMutation = injectMutation();
@@ -210,7 +211,8 @@ The `variables` in the `mutationFn` callback are the variables that will be pass
 
 Now create your component in which you want to use your newly created service:
 
-```ts { #observable-mutation-component }
+<a id="observable-mutation-component"></a>
+```ts
 @Component({
   template: `
     <input #ref />
@@ -241,7 +243,8 @@ export class TodosComponent {
 
 If you prefer a signal based approach, then you can use the `result` getter function on `addTodo`.
 
-```ts { #signal-mutation-component }
+<a id="signal-mutation-component"></a>
+```ts
 @Component({
   template: `
     <input #ref />
