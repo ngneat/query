@@ -132,7 +132,7 @@ export function createBaseQuery<
         cachedSignal = toSignal(this.result$, {
           requireSync: true,
           // R3Injector isn't good here because it will cause a leak
-          // We only need the NodeInjector to be destroyed when the component is destroyed
+          // We only need the NodeInjector as we want the subscription to be destroyed when the component is destroyed
           // We check it's a NodeInjector by checking if it has a _tNode property
           // Otherwise we just pass undefined and it'll use the current injector
           injector: (injector as any)['_tNode'] ? injector : undefined,

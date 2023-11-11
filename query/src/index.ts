@@ -8,6 +8,6 @@ export { injectInfiniteQuery } from './lib/infinite-query';
 export { toPromise } from './lib/utils';
 export * from './lib/operators';
 export * from '@tanstack/query-core';
-export { ObservableQueryResult } from './lib/types';
+export { ObservableQueryResult, SignalQueryResult } from './lib/types';
 export { queryOptions } from './lib/query-options';
 export { intersectResults } from './lib/signals';

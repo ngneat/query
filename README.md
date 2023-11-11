@@ -4,6 +4,7 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
 
 ## Features
 
+✅ &nbsp;Observable & Signal Support  
 ✅ &nbsp;Backend agnostic  
 ✅ &nbsp;Dedicated Devtools  
 ✅ &nbsp;Auto Caching  
@@ -32,50 +33,15 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![spectator](https://img.shields.io/badge/tested%20with-spectator-2196F3.svg?style=flat-square)](https://github.com/ngneat/spectator)
 
-## Table of Contents
-
-- [Features](#features)
-- [Table of Contents](#table-of-contents)
-- [Installation](#installation)
-- [Queries](#queries)
-- [Query Client](#query-client)
-  - [Query](#query)
-  - [Infinite Query](#infinite-query)
-  - [Persisted Query](#persisted-query)
-- [Mutation](#mutation)
-  - [Example](#example-mutation-example)
-    - [Service](#mutation-service)
-    - [Observable Component](#observable-mutation-component)
-    - [Signal Component](#signal-mutation-component)
-- [Query Global Options](#query-global-options)
-- [Operators](#rxjs-operators)
-- [Is Fetching](#isfetching)
-- [Is Mutating](#ismutating)
-- [Use Constructor DI](#use-constructor-di)
-- [Devtools](#devtools)
-- [SSR](#ssr)
-- [Created By](#created-by)
-- [Contributors ✨](#contributors-)
-
 ## Installation
 
-npm
-
 ```
-npm i -S @ngneat/query
+npm i @ngneat/query
 ```
-
-Yarn
-
-```
-yarn add --save @ngneat/query
-```
-
-## Queries
 
 ## Query Client
 
-Inject the `QueryClient` [instance](https://tanstack.com/query/v4/docs/reference/QueryClient) through the `injectQueryClient()`
+Inject the `QueryClient` [instance](https://tanstack.com/query/v5/docs/reference/QueryClient) through the `injectQueryClient()`
 function.
 
 ```ts
@@ -83,128 +49,151 @@ import { injectQueryClient } from '@ngneat/query';
 
 @Injectable({ providedIn: 'root' })
 export class TodosService {
-  private queryClient = injectQueryClient();
+  #queryClient = injectQueryClient();
 }
 ```
+
+> The function should run inside an injection context
 
 ### Query
 
-Inject the `UseQuery` in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/queries) hook, except the query function should return an `observable`.
+Use the `injectQuery` function. Using this function is similar to the [official](https://tanstack.com/query/v5/docs/guides/queries) function.
 
 ```ts
-import { UseQuery } from '@ngneat/query';
+import { injectQuery, toPromise } from '@ngneat/query';
 
 @Injectable({ providedIn: 'root' })
 export class TodosService {
-  private http = inject(HttpClient);
-  private useQuery = inject(UseQuery);
+  #http = inject(HttpClient);
+  #query = injectQuery();
 
   getTodos() {
-    return this.useQuery(['todos'], () => {
-      return this.http.get<Todo[]>(
-        'https://jsonplaceholder.typicode.com/todos'
-      );
-    });
-  }
+    return query({
+      queryKey: ['todos'] as const,
+      queryFn: ({ signal }) => {
+        const source = this.http.get<Todo[]>(
+          'https://jsonplaceholder.typicode.com/todos'
+        );
 
-  getTodo(id: number) {
-    return this.useQuery(['todo', id], () => {
-      return this.http.get<Todo>(
-        `https://jsonplaceholder.typicode.com/todos/${id}`
-      );
+        return toPromise({ source, signal });
+      },
     });
   }
 }
 ```
 
-Use it in your component:
+> The function should run inside an injection context
+
+Utilize the `toPromise` helper function to transform the observable into a promise. You can also optionally pass a `signal` parameter if you need cancellation behavior.
+
+#### Component Usage - Observable
+
+To get an observable use the `result$` property:
 
 ```ts
-import { SubscribeModule } from '@ngneat/subscribe';
-
 @Component({
   standalone: true,
-  imports: [NgIf, NgForOf, SpinnerComponent, SubscribeModule],
   template: `
-    <ng-container *subscribe="todos$ as todos">
-      <ng-query-spinner *ngIf="todos.isLoading"></ng-query-spinner>
-
-      <p *ngIf="todos.isError">Error...</p>
-
-      <ul *ngIf="todos.isSuccess">
-        <li *ngFor="let todo of todos.data">
-          {{ todo.title }}
-        </li>
-      </ul>
-    </ng-container>
+    @if(todosResult.result$ | async; as result) { @if(result.isLoading) {
+    <p>Loading</p>
+    } @if(result.isSuccess) {
+    <p>{{ result.data[0].title }}</p>
+    } @if(result.isError) {
+    <p>Error</p>
+    } }
   `,
 })
 export class TodosPageComponent {
-  todos$ = inject(TodosService).getTodos().result$;
+  todos = inject(TodosService).getTodos();
 }
 ```
 
-Note that using the `*subscribe` [directive](https://github.com/ngneat/subscribe) is optional. Subscriptions can be made using any method you choose.
+#### Component Usage - Signal
+
+To get an observable use the `result` property:
+
+```ts
+@Component({
+  standalone: true,
+  template: `
+    @if(todos(); as result) { @if(result.isLoading) {
+    <p>Loading</p>
+    } @if(result.isSuccess) {
+    <p>{{ result.data[0].title }}</p>
+    } @if(result.isError) {
+    <p>Error</p>
+    } }
+  `,
+})
+export class TodosPageComponent {
+  todos = inject(TodosService).getTodos();
+}
+```
+
+## Typing Query Options
+
+If you inline query options into `query`, you'll get automatic type inference. However, you might want to extract the query options into a separate function to share them between `query` and e.g. `prefetchQuery`. In that case, you'd lose type inference. To get it back, you can use `queryOptions` helper:
+
+```ts
+import { queryOptions } from '@ngneat/query';
+
+function groupOptions() {
+  return queryOptions({
+    queryKey: ['groups'] as const,
+    queryFn: fetchGroups,
+    staleTime: 5 * 1000,
+  });
+}
+```
 
 ### Infinite Query
 
-Inject the `UseInfiniteQuery` provider in your service. Using the hook is similar to the [official](https://tanstack.com/query/v4/docs/guides/infinite-queries) hook, except the query function should return an `observable`.
+Use the `injectInfiniteQuery` function. Using this function is similar to the [official](https://tanstack.com/query/v5/docs/guides/infinite-queries) function.
 
 ```ts
-import { UseInfiniteQuery } from '@ngneat/query';
+import { injectInfiniteQuery, toPromise } from '@ngneat/query';
 
 @Injectable({ providedIn: 'root' })
-export class ProjectsService {
-  private useInfiniteQuery = inject(UseInfiniteQuery);
+export class PostsService {
+  #query = injectInfiniteQuery();
 
-  getProjects() {
-    return this.useInfiniteQuery(
-      ['projects'],
-      ({ pageParam = 0 }) => {
-        return getProjects(pageParam);
+  getPosts() {
+    return this.#query({
+      queryKey: ['posts'],
+      queryFn: ({ pageParam, signal }) => {
+        return toPromise({
+          source: getProjects(pageParam),
+          signal,
+        });
       },
-      {
-        getNextPageParam(projects) {
-          return projects.nextId;
-        },
-        getPreviousPageParam(projects) {
-          return projects.previousId;
-        },
-      }
-    );
+      initialPageParam: 0,
+      getPreviousPageParam: (firstPage) => firstPage.previousId,
+      getNextPageParam: (lastPage) => lastPage.nextId,
+    });
   }
 }
 ```
 
-Checkout the complete [example](https://github.com/ngneat/query/blob/main/packages/playground/src/app/infinite-query-page/infinite-query-page.component.ts) in our playground.
+> The function should run inside an injection context
 
 ## Mutation
 
-In contrast to queries which are generally used for retrieving data, mutations are commonly
-used for creating, updating, or deleting data or executing server-side effects.
-
-To facilitate this, `@ngneat/query` has an injectable which achieves that.  
-The most basic mutation consists of either a `mutationFn` or `mutationKey`, if only the latter was provided,
-the query client will look for a mutation with the same `mutationKey` or take the default mutation function provided
-by the `provideQueryClientOptions()` provider.
-
-### Example <a name="mutation-example"></a>
-
-> **Note:** It's generally recommended to keep shared functions, like this is one, though not required, in a shared service
-
-To get started with a basic mutation, first create a service like this:
-
-<a id="mutation-service"></a>
+Unlike queries, mutations are typically used to create/update/delete data or perform server side-effects. For this purpose, The library exports the `injectMutation`` function.
 
 ```ts
+import { injectMutation } from '@ngneat/query';
+
 @Injectable({ providedIn: 'root' })
 export class TodosService {
-  #useMutation = injectMutation();
+  #mutation = injectMutation();
   #httpClient = inject(HttpClient);
 
   addTodo() {
-    return this.#useMutation({
-      mutationFn: ({ title }) => this.http.post<Todo>('...', { title }),
+    return this.#mutation({
+      mutationFn: ({ title }) =>
+        this.http.post<Todo>(`https://jsonplaceholder.typicode.com/todos`, {
+          title,
+        }),
     });
   }
 }
@@ -213,8 +202,6 @@ export class TodosService {
 The `variables` in the `mutationFn` callback are the variables that will be passed to the `mutate({ title: 'Example' })` function later.
 
 Now create your component in which you want to use your newly created service:
-
-<a id="observable-mutation-component"></a>
 
 ```ts
 @Component({
@@ -232,8 +219,7 @@ Now create your component in which you want to use your newly created service:
   `,
 })
 export class TodosComponent {
-  #todosService = inject(TodosService);
-  addTodo = this.#todoService.addTodo();
+  addTodo = inject(TodosService).addTodo();
 
   onAddTodo({ title }) {
     this.addTodo.mutate({ title });
@@ -242,8 +228,6 @@ export class TodosComponent {
 ```
 
 If you prefer a signal based approach, then you can use the `result` getter function on `addTodo`.
-
-<a id="signal-mutation-component"></a>
 
 ```ts
 @Component({
@@ -261,8 +245,7 @@ If you prefer a signal based approach, then you can use the `result` getter func
   `,
 })
 export class TodosComponent {
-  #todosService = inject(TodosService);
-  addTodo = this.#todoService.addTodo();
+  addTodo = inject(TodosService).addTodo();
 
   onAddTodo({ title }) {
     this.addTodo.mutate({ title });
@@ -270,12 +253,11 @@ export class TodosComponent {
 }
 ```
 
-A more in depth [Example](https://github.com/ngneat/query/blob/next/src/app/mutation-page/) can be found on our playground.
+A more in depth [example](https://github.com/ngneat/query/blob/next/src/app/mutation-page/) can be found on our playground.
 
 ## Query Global Options
 
-You can inject a default config for the underlying `@tanstack/query` instance by adding `provideQueryClientOptions({})` in an `EnvironmentInjectorContext`
-or `ComponentInjectorContext`.
+You can inject a default config for the underlying `@tanstack/query` instance by using the `provideQueryClientOptions({})` function.
 
 ```ts
 import { provideQueryClientOptions } from '@ngneat/query';
@@ -293,66 +275,94 @@ bootstrapApplication(AppComponent, {
 });
 ```
 
+## Signal Utils
+
+### intersectResults
+
+The `intersectResults` function is used to merge multiple **_signal_** queries into one.
+It will return a new base query result that will merge the results of all the queries.
+
+> **Note:** The data will only be mapped if the result is **successful** and otherwise just returned as is on **any other** state.
+
+```ts
+import { intersectResults } from '@ngneat/query';
+
+@Component({
+  standalone: true,
+  template: `
+    <h1>Signals Intersection</h1>
+    @if(intersection(); as intersectionResult) {
+    @if(intersectionResult.isLoading) {
+    <p>Loading</p>
+    } @if(intersectionResult.isSuccess) {
+    <p>{{ intersectionResult.data }}</p>
+    } @if(intersectionResult.isError) {
+    <p>Error</p>
+    } }
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TodosPageComponent {
+  #todosService = inject(TodosService);
+
+  intersection = intersectResults(
+    [
+      this.#todosService.getTodo('1').result,
+      this.#todosService.getTodo('2').result,
+    ],
+    ([todoOne, todoTwo]) => todoOne.title + todoTwo.title
+  );
+
+  intersectionAsObject = intersectResults(
+    {
+      todoOne: this.#todosService.getTodo('1').result,
+      todoTwo: this.#todosService.getTodo('2').result,
+    },
+    ({ todoOne, todoTwo }) => todoOne.title + todoTwo.title
+  );
+}
+```
+
 ## RxJS Operators
 
-### [filterSuccessResult()](https://github.com/ngneat/query/blob/6bb064afe53e6636b72f3556ee3ff304d727e94d/query/src/lib/operators.ts#L22)
+### filterSuccessResult
 
-The `filterSuccess` operator is a shortcut for `filter((result) => result.isSuccess)`.
-It's useful when you want to filter only successful results.
-
-#### Example
+The `filterSuccess` operator is useful when you want to filter only successful results:
 
 ```ts
 this.todosService.getTodos().result$.pipe(filterSuccess());
 ```
 
-### [filterErrorResult()](https://github.com/ngneat/query/blob/6bb064afe53e6636b72f3556ee3ff304d727e94d/query/src/lib/operators.ts#L31)
+### filterErrorResult
 
-The `filterError` operator is a shortcut for `filter((result) => result.status === 'error')`.
-It's useful when you want to filter only error results.
-
-#### Example
+The `filterError` operator is useful when you want to filter only error results:
 
 ```ts
 this.todosService.getTodos().result$.pipe(filterError());
 ```
 
-### [tapSuccessResult(callback: (data) => void)](https://github.com/ngneat/query/blob/6bb064afe53e6636b72f3556ee3ff304d727e94d/query/src/lib/operators.ts#L41)
+### tapSuccessResult
 
-The `tapSuccess` operator is a shortcut for `tap((result) => result.isSuccess && callback(result.data))`.
-It's useful when you want to run a side effect only when the result is successful.
-
-#### Example
+The `tapSuccess` operator is useful when you want to run a side effect only when the result is successful:
 
 ```ts
-this.todosService
-  .getTodos()
-  .result$.pipe(tapSuccess((data) => console.log(data)));
+this.todosService.getTodos().result$.pipe(tapSuccess(console.log));
 ```
 
-### [tapErrorResult(callback: (error) => void)](https://github.com/ngneat/query/blob/6bb064afe53e6636b72f3556ee3ff304d727e94d/query/src/lib/operators.ts#L51)
+### tapErrorResult
 
-The `tapError` operator is a shortcut for `tap((result) => result.isError && callback(result.error))`.
-It's useful when you want to run a side effect only when the result is successful.
-
-#### Example
+The `tapErrorResult` operator is useful when you want to run a side effect only when the result is successful:
 
 ```ts
-this.todosService
-  .getTodos()
-  .result$.pipe(tapError((error) => console.log(error)));
+this.todosService.getTodos().result$.pipe(tapError(console.log));
 ```
 
-### [mapResultData(mapFn)](https://github.com/ngneat/query/blob/6bb064afe53e6636b72f3556ee3ff304d727e94d/query/src/lib/operators.ts#L9)
+### mapResultData
 
-The `mapResultData` operator like the name implies maps the `data` property of the `result` object.
-
-> **Note:** The data will only be mapped if the result is **successful** and otherwise just returned as is on **any other** state.
-
-#### Example
+The `mapResultData` operator maps the `data` property of the `result` object in case of a successful result.
 
 ```ts
-this.todosService.getTodos().pipe(
+this.todosService.getTodos().result$.pipe(
   mapResultData((data) => {
     return {
       todos: data.todos.filter(predicate),
@@ -361,62 +371,51 @@ this.todosService.getTodos().pipe(
 );
 ```
 
-### [takeUntilResultFinalize() ](https://github.com/ngneat/query/blob/6bb064afe53e6636b72f3556ee3ff304d727e94d/query/src/lib/operators.ts#L67)
+### takeUntilResultFinalize
 
 An operator that takes values emitted by the source observable until the `isFetching` property on the result is false.  
 It is intended to be used in scenarios where an observable stream should be listened to until the result has finished fetching (e.g success or error).
 
-#### Example
-
 ```ts
-this.todosService.getTodos().pipe(takeUntilResultFinalize());
+this.todosService.getTodos().result$.pipe(takeUntilResultFinalize());
 ```
 
-### [takeUntilResultSuccess()](https://github.com/ngneat/query/blob/6bb064afe53e6636b72f3556ee3ff304d727e94d/query/src/lib/operators.ts#L77)
+### takeUntilResultSuccess
 
 An operator that takes values emitted by the source observable until the `isSuccess` property on the result is true.  
 It is intended to be used in scenarios where an observable stream should be listened to until a successful result is emitted.
 
-#### Example
-
 ```ts
-this.todosService.getTodos().pipe(takeUntilResultSuccess());
+this.todosService.getTodos().result$.pipe(takeUntilResultSuccess());
 ```
 
-### [takeUntilResultError()](https://github.com/ngneat/query/blob/6bb064afe53e6636b72f3556ee3ff304d727e94d/query/src/lib/operators.ts#L87)
+### takeUntilResultError()
 
 An operator that takes values emitted by the source observable until the `isError` property on the result is true.  
 It is intended to be used in scenarios where an observable stream should be listened to until an error result is emitted.
 
-#### Example
-
 ```ts
-this.todosService.getTodos().pipe(takeUntilResultSuccess());
+this.todosService.getTodos().result$.pipe(takeUntilResultSuccess());
 ```
 
-### [startWithQueryResult()](https://github.com/ngneat/query/blob/6bb064afe53e6636b72f3556ee3ff304d727e94d/query/src/lib/operators.ts#L91)
+### startWithQueryResult
 
-Starts the observable stream with an standard query result that would also be returned upon creating a normal query.  
-This is a shortcut for: `startWith({isError: false, isLoading: true, isPending: true, isFetching: true, isSuccess: false, fetchStatus: 'fetching', status: 'pending' } as QueryObserverBaseResult<T>);`
-
-#### Example
+Starts the observable stream with an standard query result that would also be returned upon creating a normal query:
 
 ```ts
-this.todosService.getTodos().pipe(startWithQueryResult());
+this.todosService.getTodos().result$.pipe(
+  filterSuccess(),
+  switchMap(() => someSource),
+  startWithQueryResult()
+);
 ```
 
-### [intersectResults$<T, R>(mapFn: (combinedQueries) => QueryObserverResult<R> & { all: T })](https://github.com/ngneat/query/blob/6bb064afe53e6636b72f3556ee3ff304d727e94d/query/src/lib/operators.ts#L143)
+### intersectResults$
 
 The `intersectResults$` operator is used to merge multiple **_observable_** queries into one, this is usually done with a `combineLatest`.
 It will return a new base query result that will merge the results of all the queries.
 
-> **Note:** This Operator is not limited to `combineLatest`, any combinator operator that produces a object/array like shown below could be used instead.
-
 > **Note:** The data will only be mapped if the result is **successful** and otherwise just returned as is on **any other** state.
-
-#### Example
-
-##### Object
 
 ```ts
 const query = combineLatest({
@@ -425,21 +424,20 @@ const query = combineLatest({
 }).pipe(
   intersectResults$(({ todos, posts }) => { ... })
 )
-```
 
-##### Array
-
-```ts
 const query = combineLatest([todos.result$, posts.result$]).pipe(
   intersectResults$(([todos, posts]) => { ... })
 )
 ```
 
+## Type Utils
+
+- `ObservableQueryResult` - Alias for `Observable<QueryObserverResult<Data, Error>>`
+- `SignalQueryResult` - Alias for `Signal<QueryObserverResult<Data, Error>>`
+
 ## Is Fetching
 
-`isFetching` is an optional injectable that returns the number of the queries that your application is loading or fetching
-in the background (could be used for app-wide loading indicators). You can either get them as observable stream by
-calling `result$` or as signal by calling `toSignal()` on it, like shown below.
+`injectIsFetching` is a function that returns the number of the queries that your application is loading or fetching in the background (useful for app-wide loading indicators).
 
 ### Observable Example
 
@@ -447,13 +445,12 @@ calling `result$` or as signal by calling `toSignal()` on it, like shown below.
 import { injectIsFetching } from '@ngneat/query';
 
 class TodoComponent {
-  #useIsFetching = injectIsFetching();
+  #isFetching = injectIsFetching();
   // How many queries overall are currently fetching data?
-  public isFetching$ = this.#useIsFetching().result$;
+  public isFetching$ = this.isFetching().result$;
 
   // How many queries matching the todos prefix are currently fetching?
-  public isFetchingTodos$ = this.#useIsFetching({ queryKey: ['todos'] })
-    .result$;
+  public isFetchingTodos$ = this.#isFetching({ queryKey: ['todos'] }).result$;
 }
 ```
 
@@ -463,22 +460,20 @@ class TodoComponent {
 import { injectIsFetching } from '@ngneat/query';
 
 class TodoComponent {
-  #useIsFetching = injectIsFetching();
+  #isFetching = injectIsFetching();
   // How many queries overall are currently fetching data?
-  public isFetching = this.#useIsFetching().toSignal();
+  public isFetching = this.#isFetching().result;
 
   // How many queries matching the todos prefix are currently fetching?
-  public isFetchingTodos = this.#useIsFetching({
+  public isFetchingTodos = this.#isFetching({
     queryKey: ['todos'],
-  }).toSignal();
+  }).result;
 }
 ```
 
 ## Is Mutating
 
-`isMutating` is an optional injectable that returns the number of the mutations that your application is fetching
-in the background (could be used for app-wide loading indicators). You can either receive the result as observable
-through calling `result$` or as signal by calling `toSignal()` on it, like shown below.
+`injectIsMutating` is an optional hook that returns the number of mutations that your application is fetching (useful for app-wide loading indicators).
 
 ### Observable Example
 
@@ -486,30 +481,29 @@ through calling `result$` or as signal by calling `toSignal()` on it, like shown
 import { injectIsMutating } from '@ngneat/query';
 
 class TodoComponent {
-  #useIsMutating = injectIsMutating();
+  #isMutating = injectIsMutating();
   // How many queries overall are currently fetching data?
-  public isFetching$ = this.#useIsMutating().result$;
+  public isFetching$ = this.#isMutating().result$;
 
   // How many queries matching the todos prefix are currently fetching?
-  public isFetchingTodos$ = this.#useIsMutating({ queryKey: ['todos'] })
-    .result$;
+  public isFetchingTodos$ = this.#isMutating({ queryKey: ['todos'] }).result$;
 }
 ```
 
 ### Signal Example
 
 ```ts
-import { injectIsFetching } from '@ngneat/query';
+import { injectIsMutating } from '@ngneat/query';
 
 class TodoComponent {
-  #useIsMutating = injectIsMutating();
+  #isMutating = injectIsMutating();
   // How many queries overall are currently fetching data?
-  public isFetching = this.#useIsMutating().toSignal();
+  public isFetching = this.#isMutating().result;
 
   // How many queries matching the todos prefix are currently fetching?
-  public isFetchingTodos = this.#useIsMutating({
+  public isFetchingTodos = this.#isMutating({
     queryKey: ['todos'],
-  }).toSignal();
+  }).result;
 }
 ```
 
@@ -519,9 +513,10 @@ Install the `@ngneat/query-devtools` package. Lazy load and use it only in `deve
 
 ```ts
 import { provideQueryDevTools } from '@ngneat/query';
+import { environment } from 'src/environments/environment';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideQueryDevTools()],
+  providers: [environment.production ? [] : provideQueryDevTools()],
 });
 ```
 
@@ -539,6 +534,7 @@ async function handleRequest(req, res) {
   let html = await renderApplication(AppComponent, {
     providers: [provideQueryClient(queryClient)],
   });
+
   const queryState = JSON.stringify(dehydrate(queryClient));
   html = html.replace(
     '</body>',
@@ -581,5 +577,11 @@ bootstrapApplication(AppComponent, {
 </table>
 
 ## Contributors ✨
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/luii"><img src="https://avatars.githubusercontent.com/u/8077014?v=4" width="100px;" alt="Netanel Basal"/><br /><sub><b>Philipp Czarnetzki</b></sub></a><br /></td>
+    </tr>
+</table>
 
 Thank goes to all these wonderful [people who contributed](https://github.com/ngneat/query/graphs/contributors) ❤️

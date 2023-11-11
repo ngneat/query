@@ -22,7 +22,7 @@ export class PostsService {
       queryKey: ['posts'],
       queryFn: ({ pageParam, signal }) => {
         return toPromise({
-          source: getProjects(pageParam).pipe(),
+          source: getProjects(pageParam),
           signal,
         });
       },
