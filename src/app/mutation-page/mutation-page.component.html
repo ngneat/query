@@ -1,14 +1,34 @@
-<div style="display: flex; flex-direction: column; gap: 8px; max-width: 720px; margin: auto">
+<div
+  style="
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 720px;
+    margin: auto;
+  "
+>
+  <h1 style="text-align: center">
+    To see the mutation in action open the tanstack devtools and change to the
+    mutation tab.
+  </h1>
 
-  <h1 style="text-align: center;">To see the mutation in action open the tanstack devtools and change to the mutation tab.</h1>
+  <h3 style="text-align: center">
+    Currently active Mutations: {{ addTodoMutationsActive() }}
+  </h3>
 
-  <h3 style="text-align: center;">Currently active Mutations: {{ addTodoMutationsActive() }}</h3>
-
-  <div style="display: flex; flex-direction: row; gap: 8px; ">
-    <fieldset style="flex: 1 0 auto; display: flex; flex-direction: column; gap: 8px;" id="signals">
+  <div style="display: flex; flex-direction: row; gap: 8px">
+    <fieldset
+      style="flex: 1 0 auto; display: flex; flex-direction: column; gap: 8px"
+      id="signals"
+    >
       <legend>Signals</legend>
 
-      <input id="signalTodo" placeholder="Input a new todo here..." [(ngModel)]="newTodo" style="margin-top: 16px;">
+      <input
+        id="signalTodo"
+        placeholder="Input a new todo here..."
+        [(ngModel)]="newTodo"
+        style="margin-top: 16px"
+      />
       <button (click)="onAddTodo(newTodo)">Add Todo</button>
       <button (click)="onAddTodoWithError(newTodo)">Add Todo with Error</button>
       <button (click)="onResetMutation()">Reset Mutation</button>
@@ -25,10 +45,17 @@
       </ng-container>
     </fieldset>
 
-    <fieldset style="flex: 1 0 auto; display: flex; flex-direction: column; gap: 8px;">
+    <fieldset
+      style="flex: 1 0 auto; display: flex; flex-direction: column; gap: 8px"
+    >
       <legend>Observable</legend>
 
-      <input id="observableTodo" placeholder="Input a new todo here..." [(ngModel)]="newTodo" style="margin-top: 16px;">
+      <input
+        id="observableTodo"
+        placeholder="Input a new todo here..."
+        [(ngModel)]="newTodo"
+        style="margin-top: 16px"
+      />
       <button (click)="onAddTodo(newTodo)">Add Todo</button>
       <button (click)="onAddTodoWithError(newTodo)">Add Todo with Error</button>
       <button (click)="onResetMutation()">Reset Mutation</button>
@@ -36,7 +63,7 @@
       <ng-container *ngIf="addTodo.result$ | async as addTodo">
         <p *ngIf="addTodo.isPending">loading...</p>
         <p *ngIf="addTodo.isIdle">Idling</p>
-        <div *ngIf="addTodo.isError" style="word-break: break-all;">
+        <div *ngIf="addTodo.isError" style="word-break: break-all">
           <p>Could not add the Todo</p>
         </div>
         <p *ngIf="addTodo.isSuccess">

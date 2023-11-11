@@ -19,6 +19,6 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'mutation',
-    component: MutationPageComponent
-  }
+    component: MutationPageComponent,
+  },
 ];

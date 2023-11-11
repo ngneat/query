@@ -10,7 +10,12 @@ import {
 import { Observable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Result } from './types';
-import { Signal, assertInInjectionContext } from '@angular/core';
+import {
+  Injector,
+  Signal,
+  assertInInjectionContext,
+  runInInjectionContext,
+} from '@angular/core';
 
 export type CreateBaseQueryOptions<
   TQueryFnData = unknown,
@@ -21,7 +26,7 @@ export type CreateBaseQueryOptions<
 > = WithRequired<
   QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
   'queryKey'
->;
+> & { injector?: Injector };
 
 export type CreateBaseQueryResult<
   TData = unknown,
@@ -38,6 +43,7 @@ export function createBaseQuery<
   client,
   Observer,
   options,
+  injector,
 }: {
   client: QueryClient;
   Observer: typeof QueryObserver;
@@ -48,6 +54,7 @@ export function createBaseQuery<
     TQueryData,
     TQueryKey
   >;
+  injector: Injector;
 }): any {
   let queryObserver:
     | QueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>
@@ -55,6 +62,19 @@ export function createBaseQuery<
 
   const defaultedOptions = client.defaultQueryOptions(options);
   defaultedOptions._optimisticResults = 'optimistic';
+
+  const originalQueryFn = defaultedOptions.queryFn;
+
+  if (originalQueryFn) {
+    defaultedOptions.queryFn = function (options: any) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const _this = this;
+
+      return runInInjectionContext(injector, () => {
+        return originalQueryFn.call(_this, options);
+      });
+    };
+  }
 
   const result$ = new Observable((observer) => {
     // Lazily create the observer when the first subscription is received
@@ -109,7 +129,14 @@ export function createBaseQuery<
       });
 
       if (!cachedSignal) {
-        cachedSignal = toSignal(this.result$, { requireSync: true });
+        cachedSignal = toSignal(this.result$, {
+          requireSync: true,
+          // R3Injector isn't good here because it will cause a leak
+          // We only need the NodeInjector to be destroyed when the component is destroyed
+          // We check it's a NodeInjector by checking if it has a _tNode property
+          // Otherwise we just pass undefined and it'll use the current injector
+          injector: (injector as any)['_tNode'] ? injector : undefined,
+        });
       }
 
       return cachedSignal;

@@ -3,6 +3,8 @@ import {
   inject,
   Injectable,
   InjectionToken,
+  Injector,
+  runInInjectionContext,
 } from '@angular/core';
 import { injectQueryClient } from './query-client';
 
@@ -72,6 +74,7 @@ export type DefinedInitialDataOptions<
 @Injectable({ providedIn: 'root' })
 class Query {
   #instance = injectQueryClient();
+  #injector = inject(Injector);
 
   use<
     TQueryFnData = unknown,
@@ -99,6 +102,7 @@ class Query {
   >(options: CreateQueryOptions<TQueryFnData, TError, TData, TQueryKey>) {
     return createBaseQuery({
       client: this.#instance,
+      injector: options.injector ?? this.#injector,
       Observer: QueryObserver,
       options,
     });
@@ -114,7 +118,13 @@ const UseQuery = new InjectionToken<Query['use']>('UseQuery', {
   },
 });
 
-export function injectQuery() {
+export function injectQuery(options?: { injector?: Injector }) {
+  if (options?.injector) {
+    return runInInjectionContext(options.injector, () => {
+      return inject(UseQuery);
+    });
+  }
+
   assertInInjectionContext(injectQuery);
 
   return inject(UseQuery);

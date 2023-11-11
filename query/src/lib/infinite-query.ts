@@ -3,6 +3,8 @@ import {
   inject,
   Injectable,
   InjectionToken,
+  Injector,
+  runInInjectionContext,
 } from '@angular/core';
 import { injectQueryClient } from './query-client';
 
@@ -36,7 +38,7 @@ type CreateInfiniteQueryOptions<
     TPageParam
   >,
   'queryKey'
->;
+> & { injector?: Injector };
 
 type CreateInfiniteQueryResult<TData = unknown, TError = DefaultError> = Result<
   InfiniteQueryObserverResult<TData, TError>
@@ -45,6 +47,7 @@ type CreateInfiniteQueryResult<TData = unknown, TError = DefaultError> = Result<
 @Injectable({ providedIn: 'root' })
 class InfiniteQuery {
   #instance = injectQueryClient();
+  #injector = inject(Injector);
 
   use<
     TQueryFnData,
@@ -64,6 +67,7 @@ class InfiniteQuery {
   ): CreateInfiniteQueryResult<TData, TError> {
     return createBaseQuery({
       client: this.#instance,
+      injector: options.injector ?? this.#injector,
       Observer: InfiniteQueryObserver as typeof QueryObserver,
       options,
     });
@@ -79,7 +83,13 @@ const UseInfiniteQuery = new InjectionToken<InfiniteQuery['use']>('UseQuery', {
   },
 });
 
-export function injectInfiniteQuery() {
+export function injectInfiniteQuery(options?: { injector?: Injector }) {
+  if (options?.injector) {
+    return runInInjectionContext(options.injector, () => {
+      return inject(UseInfiniteQuery);
+    });
+  }
+
   assertInInjectionContext(injectInfiniteQuery);
 
   return inject(UseInfiniteQuery);
