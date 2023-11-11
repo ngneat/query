@@ -110,7 +110,7 @@ export class TodosPageComponent {
 
 #### Component Usage - Signal
 
-To get an observable use the `result` property:
+To get a signal use the `result` property:
 
 ```ts
 @Component({
@@ -199,7 +199,7 @@ export class TodosService {
 }
 ```
 
-The `variables` in the `mutationFn` callback are the variables that will be passed to the `mutate({ title: 'Example' })` function later.
+The `variables` in the `mutationFn` callback are the variables that will be passed to the `mutate` function later.
 
 Now create your component in which you want to use your newly created service:
 
@@ -329,33 +329,25 @@ export class TodosPageComponent {
 
 The `filterSuccess` operator is useful when you want to filter only successful results:
 
-```ts
-this.todosService.getTodos().result$.pipe(filterSuccess());
-```
+`todosService.getTodos().result$.pipe(filterSuccess())`
 
 ### filterErrorResult
 
 The `filterError` operator is useful when you want to filter only error results:
 
-```ts
-this.todosService.getTodos().result$.pipe(filterError());
-```
+`todosService.getTodos().result$.pipe(filterError())`
 
 ### tapSuccessResult
 
 The `tapSuccess` operator is useful when you want to run a side effect only when the result is successful:
 
-```ts
-this.todosService.getTodos().result$.pipe(tapSuccess(console.log));
-```
+`todosService.getTodos().result$.pipe(tapSuccess(console.log))`
 
 ### tapErrorResult
 
 The `tapErrorResult` operator is useful when you want to run a side effect only when the result is successful:
 
-```ts
-this.todosService.getTodos().result$.pipe(tapError(console.log));
-```
+`todosService.getTodos().result$.pipe(tapError(console.log))`
 
 ### mapResultData
 
@@ -376,27 +368,21 @@ this.todosService.getTodos().result$.pipe(
 An operator that takes values emitted by the source observable until the `isFetching` property on the result is false.  
 It is intended to be used in scenarios where an observable stream should be listened to until the result has finished fetching (e.g success or error).
 
-```ts
-this.todosService.getTodos().result$.pipe(takeUntilResultFinalize());
-```
+`todosService.getTodos().result$.pipe(takeUntilResultFinalize())`
 
 ### takeUntilResultSuccess
 
 An operator that takes values emitted by the source observable until the `isSuccess` property on the result is true.  
 It is intended to be used in scenarios where an observable stream should be listened to until a successful result is emitted.
 
-```ts
-this.todosService.getTodos().result$.pipe(takeUntilResultSuccess());
-```
+`todosService.getTodos().result$.pipe(takeUntilResultSuccess())`
 
 ### takeUntilResultError()
 
 An operator that takes values emitted by the source observable until the `isError` property on the result is true.  
 It is intended to be used in scenarios where an observable stream should be listened to until an error result is emitted.
 
-```ts
-this.todosService.getTodos().result$.pipe(takeUntilResultSuccess());
-```
+`todosService.getTodos().result$.pipe(takeUntilResultSuccess())`
 
 ### startWithQueryResult
 
