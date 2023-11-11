@@ -1,8 +1,36 @@
-<a routerLink="basic">Basic</a>
-<a routerLink="infinite-scroll">Infinite Scroll</a>
-<a routerLink="pagination">Pagination</a>
-<a routerLink="mutation">mutation</a>
+<nav class="navbar is-white">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="https://github.com/ngneat/query/">
+      <img src="./assets/ngneat.png" style="margin-right: 8px;">
+      <h1>&#64;ngneat/query Playground</h1>
+    </a>
 
-<main>
-  <router-outlet></router-outlet>
-</main>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="columns is-5 is-variable">
+    <div class="column is-3">
+      <aside class="menu box">
+        <p class="menu-label">Examples</p>
+        <ul class="menu-list">
+          <li><a routerLinkActive="is-active-example" routerLink="basic">Basic</a></li>
+          <li><a routerLinkActive="is-active-example" routerLink="infinite-scroll">Infinite Scroll</a></li>
+          <li><a routerLinkActive="is-active-example" routerLink="pagination">Pagination</a></li>
+          <li><a routerLinkActive="is-active-example" routerLink="mutation">Mutation</a></li>
+        </ul>
+      </aside>
+    </div>
+    <main class="column is-9">
+      <div class="box">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>
+

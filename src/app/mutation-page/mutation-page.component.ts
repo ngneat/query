@@ -4,10 +4,12 @@ import { injectIsMutating } from '@ngneat/query';
 
 import { FormsModule } from '@angular/forms';
 import { TodosService } from '../services/todos.service';
+import { TabsComponent } from '../ui/query-tabs/tabs.component';
+import { TabComponent } from '../ui/query-tab/tab.component';
 @Component({
   selector: 'query-mutation-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TabsComponent, TabComponent],
   templateUrl: './mutation-page.component.html',
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,

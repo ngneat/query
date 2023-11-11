@@ -1,1 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+  background-color: #F2F6FA;
+}
+
+.container .columns {
+  margin: 3rem 0;
+}
+
+.is-active-example {
+    background-color: #b93eff !important;
+    color: #fff !important;
+}
+
+.is-active-example:hover {
+    background-color: #AE08E4 !important;
+    color: #fff !important;
+}
+
+.is-primary-button {
+  background-color: #AE08E4 !important;
+  color: #fff !important;
+}
