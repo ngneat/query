@@ -6,7 +6,7 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TodosService, getTodos } from '../services/todos.service';
+import { TodosService } from '../services/todos.service';
 import { intersectResults } from '@ngneat/query';
 
 @Component({
@@ -17,7 +17,7 @@ import { intersectResults } from '@ngneat/query';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodosPageComponent implements OnInit {
+export class TodosPageComponent {
   #todosService = inject(TodosService);
   #injector = inject(Injector);
 
@@ -33,8 +33,4 @@ export class TodosPageComponent implements OnInit {
       return todoOne.title + todoTwo.title;
     }
   );
-
-  ngOnInit() {
-    getTodos({ injector: this.#injector }).result$.subscribe();
-  }
 }
