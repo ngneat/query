@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, makeEnvironmentProviders } from '@angular/core';
 import { QueryClientConfig } from '@tanstack/query-core';
 
 export const QUERY_CLIENT_OPTIONS = new InjectionToken<QueryClientConfig>(
@@ -12,8 +12,10 @@ export const QUERY_CLIENT_OPTIONS = new InjectionToken<QueryClientConfig>(
 );
 
 export function provideQueryClientOptions(options: QueryClientConfig) {
-  return {
-    provide: QUERY_CLIENT_OPTIONS,
-    useValue: options,
-  };
+  return makeEnvironmentProviders([
+    {
+      provide: QUERY_CLIENT_OPTIONS,
+      useValue: options,
+    },
+  ]);
 }
