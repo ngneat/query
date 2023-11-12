@@ -23,7 +23,7 @@ jobs:
       - name: Install and Build
         run: |
           npm i 
-          npx nx build playground -- --base-href /query/
+          npx nx build query-playground -- --base-href /query/
       - name: Duplicated index.html
         run: |
           cp dist/packages/query-playground/index.html dist/packages/query-playground/404.html
