@@ -1,6 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector, inject } from '@angular/core';
-import { injectMutation, injectQuery, toPromise } from '@ngneat/query';
+import {
+  injectMutation,
+  injectQuery,
+  injectQueryClient,
+  queryOptions,
+  toPromise,
+} from '@ngneat/query';
 
 interface Todo {
   id: number;
@@ -28,17 +34,36 @@ export class TodosService {
   #query = injectQuery();
   #mutation = injectMutation();
   #http = inject(HttpClient);
+  #client = injectQueryClient();
+
+  #getTodosOptions = queryOptions({
+    queryKey: ['todos'] as const,
+    queryFn: ({ signal }) => {
+      const source = this.#http.get<Todo[]>(
+        'https://jsonplaceholder.typicode.com/todos'
+      );
+
+      return toPromise({ source, signal });
+    },
+  });
 
   getTodos() {
-    return this.#query({
-      queryKey: ['todos'] as const,
-      queryFn: ({ signal }) => {
-        const source = this.#http.get<Todo[]>(
-          'https://jsonplaceholder.typicode.com/todos'
-        );
+    return this.#query(this.#getTodosOptions);
+  }
 
-        return toPromise({ source, signal });
-      },
+  getCachedTodo(id: number) {
+    const todos = this.#client.getQueryData(this.#getTodosOptions.queryKey);
+
+    if (todos) {
+      return todos.find((todo) => todo.id === id);
+    }
+
+    return null;
+  }
+
+  invalidateTodos() {
+    this.#client.invalidateQueries({
+      queryKey: this.#getTodosOptions.queryKey,
     });
   }
 

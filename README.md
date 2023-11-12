@@ -146,6 +146,32 @@ function groupOptions() {
 }
 ```
 
+Further, the `queryKey` returned from `queryOptions` knows about the `queryFn` associated with it, and we can leverage that type information to make functions like `queryClient.getQueryData` aware of those types as well:
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class GroupsService {
+  #client = injectQueryClient();
+
+  groupOptions = queryOptions({
+    queryKey: ['groups'] as const,
+    queryFn: ({ signal }) => {
+      return toPromise({
+        source: this.http.get(url),
+        signal,
+      });
+    },
+    staleTime: 5 * 1000,
+  });
+
+  getCachedGroup() {
+    const data = this.#client.getQueryData(this.groupOptions.queryKey);
+    //     ^? const data: Group[] | undefined
+    return data;
+  }
+}
+```
+
 ### Infinite Query
 
 Use the `injectInfiniteQuery` function. Using this function is similar to the [official](https://tanstack.com/query/v5/docs/guides/infinite-queries) function.
@@ -552,6 +578,49 @@ bootstrapApplication(AppComponent, {
     provideQueryClient(queryClient),
   ],
 });
+```
+
+## Injection Context
+
+The `queryFn` run inside an injection context so we can do the following if we want:
+
+```ts
+import { injectQuery } from '@ngneat/query';
+
+export function getTodos() {
+  const query = injectQuery();
+
+  return query({
+    queryKey: ['todos'] as const,
+    queryFn: ({ signal }) => {
+      const source = inject(HttpClient).get<Todo[]>(
+        'https://jsonplaceholder.typicode.com/todos'
+      );
+
+      return toPromise({ source, signal });
+    },
+  });
+}
+```
+
+We can also pass a custom injector:
+
+```ts
+export function getTodos({ injector }: { injector: Injector }) {
+  const query = injectQuery({ injector });
+
+  return query({
+    queryKey: ['todos'] as const,
+    injector,
+    queryFn: ({ signal }) => {
+      const source = inject(HttpClient).get<Todo[]>(
+        'https://jsonplaceholder.typicode.com/todos'
+      );
+
+      return toPromise({ source, signal });
+    },
+  });
+}
 ```
 
 ## Created By

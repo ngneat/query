@@ -4,12 +4,10 @@ import {
   QueryKey,
   QueryObserver,
   QueryObserverOptions,
-  QueryObserverResult,
   WithRequired,
 } from '@tanstack/query-core';
 import { Observable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Result } from './types';
 import {
   Injector,
   Signal,
@@ -17,21 +15,21 @@ import {
   runInInjectionContext,
 } from '@angular/core';
 
-export type CreateBaseQueryOptions<
+export interface Options {
+  injector?: Injector;
+}
+
+export interface CreateBaseQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
-> = WithRequired<
-  QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
-  'queryKey'
-> & { injector?: Injector };
-
-export type CreateBaseQueryResult<
-  TData = unknown,
-  TError = DefaultError
-> = Result<QueryObserverResult<TData, TError>>;
+> extends WithRequired<
+      QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
+      'queryKey'
+    >,
+    Options {}
 
 export function createBaseQuery<
   TQueryFnData,
