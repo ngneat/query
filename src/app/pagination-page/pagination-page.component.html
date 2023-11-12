@@ -38,7 +38,9 @@
       Previous
     </button>
     <div class="pagination-list">
-      <p>{{ projects.isFetching ? 'Loading...' : '' }}</p>
+      @if (projects.isFetching) {
+        <span class="bulma-loader-mixin"></span>
+      }
     </div>
     <button
       class="pagination-next button"

@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "bulma";
 
 body {
   background-color: #F2F6FA;
@@ -21,4 +22,8 @@ body {
 .is-primary-button {
   background-color: #AE08E4 !important;
   color: #fff !important;
+}
+
+.bulma-loader-mixin {
+  @include loader;
 }
