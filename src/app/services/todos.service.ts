@@ -21,7 +21,7 @@ export function getTodos({ injector }: { injector: Injector }) {
     injector,
     queryFn: ({ signal }) => {
       const source = inject(HttpClient).get<Todo[]>(
-        'https://jsonplaceholder.typicode.com/todos'
+        'https://jsonplaceholder.typicode.com/todos',
       );
 
       return toPromise({ source, signal });
@@ -40,7 +40,7 @@ export class TodosService {
     queryKey: ['todos'] as const,
     queryFn: ({ signal }) => {
       const source = this.#http.get<Todo[]>(
-        'https://jsonplaceholder.typicode.com/todos'
+        'https://jsonplaceholder.typicode.com/todos',
       );
 
       return toPromise({ source, signal });
@@ -72,7 +72,7 @@ export class TodosService {
       queryKey: ['todos', id] as const,
       queryFn: ({ signal }) => {
         const source = this.#http.get<Todo>(
-          `https://jsonplaceholder.typicode.com/todos/${id}`
+          `https://jsonplaceholder.typicode.com/todos/${id}`,
         );
 
         return toPromise({ source, signal });
@@ -82,7 +82,7 @@ export class TodosService {
 
   addTodo() {
     return this.#mutation({
-      onSuccess: () => this.#client.invalidateQueries({queryKey: ['todos']}),
+      onSuccess: () => this.#client.invalidateQueries({ queryKey: ['todos'] }),
       mutationFn: ({
         title,
         showError,

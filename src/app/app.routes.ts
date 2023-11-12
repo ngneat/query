@@ -7,6 +7,11 @@ import { IntersectingPageComponent } from './intersecting-page/intersecting-page
 
 export const appRoutes: Route[] = [
   {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'basic',
+  },
+  {
     path: 'basic',
     component: TodosPageComponent,
   },

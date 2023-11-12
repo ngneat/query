@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TodosService } from '../services/todos.service';
 import { TabsComponent } from '../ui/query-tabs/tabs.component';
@@ -17,4 +22,16 @@ export class TodosPageComponent {
 
   todosResult = this.#todosService.getTodos();
   todos = this.todosResult.result;
+  private injector = inject(Injector);
+
+  // ngOnInit() {
+  //   const todos = getTodos({ injector: this.injector }).result;
+
+  //   effect(
+  //     () => {
+  //       console.log(todos());
+  //     },
+  //     { injector: this.injector },
+  //   );
+  // }
 }

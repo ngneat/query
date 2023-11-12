@@ -24,7 +24,7 @@ export interface CreateBaseQueryOptions<
   TError = DefaultError,
   TData = TQueryFnData,
   TQueryData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey
+  TQueryKey extends QueryKey = QueryKey,
 > extends WithRequired<
       QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
       'queryKey'
@@ -36,7 +36,7 @@ export function createBaseQuery<
   TError,
   TData,
   TQueryData,
-  TQueryKey extends QueryKey
+  TQueryKey extends QueryKey,
 >({
   client,
   Observer,
@@ -92,7 +92,7 @@ export function createBaseQuery<
       observer.next(
         defaultedOptions.notifyOnChangeProps
           ? result
-          : queryObserver?.trackResult(result)
+          : queryObserver?.trackResult(result),
       );
     });
 
@@ -104,10 +104,11 @@ export function createBaseQuery<
     shareReplay({
       bufferSize: 1,
       refCount: true,
-    })
+    }),
   );
 
   let cachedSignal: undefined | Signal<any>;
+  const isNodeInjector = injector && (injector as any)['_tNode'];
 
   return {
     result$,
@@ -117,23 +118,25 @@ export function createBaseQuery<
           ...defaultedOptions,
           ...options,
         },
-        { listeners: false }
+        { listeners: false },
       );
     },
     // @experimental signal support
     get result() {
-      assertInInjectionContext(function queryResultSignal() {
-        // noop
-      });
+      !isNodeInjector &&
+        assertInInjectionContext(function queryResultSignal() {
+          // noop
+        });
 
       if (!cachedSignal) {
         cachedSignal = toSignal(this.result$, {
           requireSync: true,
           // R3Injector isn't good here because it will cause a leak
           // We only need the NodeInjector as we want the subscription to be destroyed when the component is destroyed
-          // We check it's a NodeInjector by checking if it has a _tNode property
+          // We check that it's a NodeInjector by checking if it has a _tNode property
           // Otherwise we just pass undefined and it'll use the current injector
-          injector: (injector as any)['_tNode'] ? injector : undefined,
+          // and not the R3Injector that we pass in the service
+          injector: isNodeInjector ? injector : undefined,
         });
       }
 

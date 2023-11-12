@@ -2,7 +2,6 @@ import {
   assertInInjectionContext,
   inject,
   Injectable,
-  InjectionToken,
   Injector,
   runInInjectionContext,
 } from '@angular/core';
@@ -27,7 +26,7 @@ interface CreateInfiniteQueryOptions<
   TData = TQueryFnData,
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
-  TPageParam = unknown
+  TPageParam = unknown,
 > extends WithRequired<
       InfiniteQueryObserverOptions<
         TQueryFnData,
@@ -51,7 +50,7 @@ class InfiniteQuery {
     TError = DefaultError,
     TData = InfiniteData<TQueryFnData>,
     TQueryKey extends QueryKey = QueryKey,
-    TPageParam = unknown
+    TPageParam = unknown,
   >(
     options: CreateInfiniteQueryOptions<
       TQueryFnData,
@@ -60,7 +59,7 @@ class InfiniteQuery {
       TQueryFnData,
       TQueryKey,
       TPageParam
-    >
+    >,
   ): Result<InfiniteQueryObserverResult<TData, TError>> {
     return createBaseQuery({
       client: this.#instance,
@@ -71,23 +70,18 @@ class InfiniteQuery {
   }
 }
 
-const UseInfiniteQuery = new InjectionToken<InfiniteQuery['use']>('UseQuery', {
-  providedIn: 'root',
-  factory() {
-    const query = new InfiniteQuery();
-
-    return query.use.bind(query);
-  },
-});
-
 export function injectInfiniteQuery(options?: { injector?: Injector }) {
   if (options?.injector) {
     return runInInjectionContext(options.injector, () => {
-      return inject(UseInfiniteQuery);
+      const query = inject(InfiniteQuery);
+
+      return query.use.bind(query);
     });
   }
 
   assertInInjectionContext(injectInfiniteQuery);
 
-  return inject(UseInfiniteQuery);
+  const query = inject(InfiniteQuery);
+
+  return query.use.bind(query);
 }

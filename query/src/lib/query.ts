@@ -2,7 +2,6 @@ import {
   assertInInjectionContext,
   inject,
   Injectable,
-  InjectionToken,
   Injector,
   runInInjectionContext,
 } from '@angular/core';
@@ -31,25 +30,30 @@ class Query {
     TQueryFnData = unknown,
     TError = DefaultError,
     TData = TQueryFnData,
-    TQueryKey extends QueryKey = QueryKey
+    TQueryKey extends QueryKey = QueryKey,
   >(
-    options: UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey>
+    options: UndefinedInitialDataOptions<
+      TQueryFnData,
+      TError,
+      TData,
+      TQueryKey
+    >,
   ): Result<QueryObserverResult<TData, TError>>;
 
   use<
     TQueryFnData = unknown,
     TError = DefaultError,
     TData = TQueryFnData,
-    TQueryKey extends QueryKey = QueryKey
+    TQueryKey extends QueryKey = QueryKey,
   >(
-    options: DefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey>
+    options: DefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey>,
   ): Result<DefinedQueryObserverResult<TData, TError>>;
 
   use<
     TQueryFnData,
     TError = DefaultError,
     TData = TQueryFnData,
-    TQueryKey extends QueryKey = QueryKey
+    TQueryKey extends QueryKey = QueryKey,
   >(
     options: CreateBaseQueryOptions<
       TQueryFnData,
@@ -57,7 +61,7 @@ class Query {
       TData,
       TQueryFnData,
       TQueryKey
-    >
+    >,
   ) {
     return createBaseQuery({
       client: this.#instance,
@@ -68,23 +72,32 @@ class Query {
   }
 }
 
-const UseQuery = new InjectionToken<Query['use']>('UseQuery', {
-  providedIn: 'root',
-  factory() {
-    const query = new Query();
-
-    return query.use.bind(query);
-  },
-});
-
+/**
+ *
+ * Optionally pass an injector that will be used than the current one.
+ * Can be useful if you want to use it in ngOnInit hook for example.
+ *
+ * @example
+ *
+ * injector = inject(Injector);
+ *
+ * ngOnInit() {
+ *  const todos = getTodos({ injector: this.injector }).result;
+ * }
+ *
+ */
 export function injectQuery(options?: { injector?: Injector }) {
   if (options?.injector) {
     return runInInjectionContext(options.injector, () => {
-      return inject(UseQuery);
+      const query = inject(Query);
+
+      return query.use.bind(query);
     });
   }
 
   assertInInjectionContext(injectQuery);
 
-  return inject(UseQuery);
+  const query = inject(Query);
+
+  return query.use.bind(query);
 }
