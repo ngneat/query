@@ -1,38 +1,51 @@
-<p>
-  In this example, each page of data remains visible as the next page is
-  fetched. The buttons and capability to proceed to the next page are also
-  supressed until the next page cursor is known. Each page is cached as a normal
-  query too, so when going to previous pages, you'll see them instantaneously
-  while they are also refetched invisibly in the background.
-</p>
+<div class="content">
+  <h1>Pagination Example</h1>
+  <p>
+    In this example, each page of data remains visible as the next page is
+    fetched. The buttons and capability to proceed to the next page are also
+    supressed until the next page cursor is known. Each page is cached as a normal
+    query too, so when going to previous pages, you'll see them instantaneously
+    while they are also refetched invisibly in the background.
+  </p>
 
-<ng-container *ngIf="projects$ | async as projects">
-  <p *ngIf="projects.isPending">Loading...</p>
+  <p>
+    To see the result changing, open the <b>devtools</b> in the <b>bottom-right</b> corner, from there you can
+    trigger a refetch of the query, invalidate it or even trigger the loading and error state.
+    Feel free to play around with it.
+  </p>
+</div>
 
-  <ul class="list-group" *ngIf="projects.isSuccess">
-    <li
-      class="list-group-item"
-      *ngFor="let project of projects.data.projects; trackBy: trackBy"
-    >
-      {{ project.name }}
-    </li>
-  </ul>
+@if (projects$ | async;as projects) {
+  @if (projects.isSuccess) {
+    <table class="table is-fullwidth">
+      <tbody>
+        @for (project of projects.data.projects;track project.id) {
+          <tr>
+            <td>{{ project.id }}</td>
+            <td>{{ project.name }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 
-  <div class="flex items-center">
+  <nav class="pagination" role="navigation" aria-label="pagination">
     <button
+      class="pagination-previous button"
       (click)="prevPage()"
-      [disabled]="page === 0"
-      *ngIf="page$ | async as page"
+      [disabled]="(page$ | async) === 0"
     >
-      Previous Page
+      Previous
     </button>
-
+    <div class="pagination-list">
+      <p>{{ projects.isFetching ? 'Loading...' : '' }}</p>
+    </div>
     <button
+      class="pagination-next button"
       (click)="nextPage()"
       [disabled]="projects.isPlaceholderData || !projects.data?.hasMore"
     >
-      Next Page
+      Next page
     </button>
-    {{ projects.isFetching ? 'Loading...' : '' }}
-  </div>
-</ng-container>
+  </nav>
+}

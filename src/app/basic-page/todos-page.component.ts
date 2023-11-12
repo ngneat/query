@@ -1,35 +1,20 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Injector,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TodosService } from '../services/todos.service';
-import { intersectResults } from '@ngneat/query';
+import { TabsComponent } from '../ui/query-tabs/tabs.component';
+import { TabComponent } from '../ui/query-tab/tab.component';
 
 @Component({
   selector: 'query-todos-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TabsComponent, TabComponent],
   templateUrl: './todos-page.component.html',
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodosPageComponent {
   #todosService = inject(TodosService);
-  #injector = inject(Injector);
 
   todosResult = this.#todosService.getTodos();
   todos = this.todosResult.result;
-
-  intersection = intersectResults(
-    [
-      this.#todosService.getTodo('1').result,
-      this.#todosService.getTodo('2').result,
-    ],
-    ([todoOne, todoTwo]) => {
-      return todoOne.title + todoTwo.title;
-    }
-  );
 }

@@ -3,6 +3,7 @@ import { TodosPageComponent } from './basic-page/todos-page.component';
 import { PostsPageComponent } from './infinite-scroll-page/posts-page.component';
 import { PaginationPageComponent } from './pagination-page/pagination-page.component';
 import { MutationPageComponent } from './mutation-page/mutation-page.component';
+import { IntersectingPageComponent } from './intersecting-page/intersecting-page.component';
 
 export const appRoutes: Route[] = [
   {
@@ -12,6 +13,10 @@ export const appRoutes: Route[] = [
   {
     path: 'infinite-scroll',
     component: PostsPageComponent,
+  },
+  {
+    path: 'intersecting',
+    component: IntersectingPageComponent,
   },
   {
     path: 'pagination',

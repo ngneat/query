@@ -26,13 +26,16 @@ export class MutationPageComponent {
 
   public onAddTodo(title: string) {
     this.addTodo.mutate({ title, showError: false });
+    this.newTodo = '';
   }
 
   public onAddTodoWithError(title: string) {
     this.addTodo.mutate({ title, showError: true });
+    this.newTodo = '';
   }
 
   public onResetMutation() {
     this.addTodo.reset();
+    this.newTodo = '';
   }
 }
