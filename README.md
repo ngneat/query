@@ -25,13 +25,12 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
 
 <hr />
 
-[![Build Status](https://github.com/ngneat/query/actions/workflows/ci.yml/badge.svg)]()
+[![@ngneat/query](https://github.com/ngneat/query/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ngneat/query/actions/workflows/ci.yml)
 [![commitizen](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)]()
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)]()
 [![coc-badge](https://img.shields.io/badge/codeof-conduct-ff69b4.svg?style=flat-square)]()
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e5079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![spectator](https://img.shields.io/badge/tested%20with-spectator-2196F3.svg?style=flat-square)](https://github.com/ngneat/spectator)
 
 ## Installation
 
