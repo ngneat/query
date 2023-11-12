@@ -38,6 +38,8 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
 npm i @ngneat/query
 ```
 
+[Stackblitz Example](https://stackblitz.com/edit/stackblitz-starters-bsrgez?file=src%2Fmain.ts)
+
 ## Query Client
 
 Inject the `QueryClient` [instance](https://tanstack.com/query/v5/docs/reference/QueryClient) through the `injectQueryClient()`
