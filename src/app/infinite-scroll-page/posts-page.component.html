@@ -16,7 +16,11 @@
 
 @if (posts$ | async;as result) {
 
-  <span *ngIf="result.isError">Error: {{ result.error.message }}</span>
+  @if (result.isError) {
+    <div class="notification is-danger">
+      Error: {{ result.error.message }}
+    </div>
+  }
 
   <div class="pagination">
     <div class="pagination-list">
