@@ -31,10 +31,10 @@ export function getTodos({ injector }: { injector: Injector }) {
 
 @Injectable({ providedIn: 'root' })
 export class TodosService {
+  #client = injectQueryClient();
   #query = injectQuery();
   #mutation = injectMutation();
   #http = inject(HttpClient);
-  #client = injectQueryClient();
 
   #getTodosOptions = queryOptions({
     queryKey: ['todos'] as const,
@@ -82,6 +82,7 @@ export class TodosService {
 
   addTodo() {
     return this.#mutation({
+      onSuccess: () => this.#client.invalidateQueries({queryKey: ['todos']}),
       mutationFn: ({
         title,
         showError,

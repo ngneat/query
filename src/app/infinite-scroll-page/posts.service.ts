@@ -47,8 +47,8 @@ function getProjects(c: number) {
         };
       });
 
-    const nextId = cursor < 10 ? data[data.length - 1].id + 1 : null;
-    const previousId = cursor > -10 ? data[0].id - pageSize : null;
+    const nextId = cursor < 20 ? data[data.length - 1].id + 1 : null;
+    const previousId = cursor > -20 ? data[0].id - pageSize : null;
 
     setTimeout(() => {
       observer.next({ data, nextId, previousId });

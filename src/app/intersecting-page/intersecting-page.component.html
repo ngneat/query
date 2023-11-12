@@ -1,0 +1,44 @@
+<div class="content">
+  <h1>Parallel Queries Example</h1>
+  <p>
+    This example uses the <code>intersectResults(mapFn)</code> method (for
+    Signals) and <code>intersectResults$(mapFn)</code> operator (for RxJS
+    Streams) to merge the results of two queries.
+  </p>
+
+  <p>
+    The two queries <code>getTodo(1)</code> and <code>getTodo(2)</code> will be
+    merged together and the result of each query will be concatenated into a
+    single string.
+  </p>
+
+  <p>
+    To see the result changing, open the <b>devtools</b> in the <b>bottom-right</b> corner, from there you can
+    trigger a refetch of the query, invalidate it or even trigger the loading and error state.
+    Feel free to play around with it.
+  </p>
+
+  <h3>Signal Result</h3>
+
+  <blockquote>
+    @if(intersection(); as intersectionResult) { @if(intersectionResult.isLoading) {
+      <p>Loading</p>
+    } @if(intersectionResult.isSuccess) {
+      <p>{{ intersectionResult.data }}</p>
+    } @if(intersectionResult.isError) {
+      <p>Error</p>
+    } }
+  </blockquote>
+
+  <h3>Observable Result</h3>
+
+  <blockquote>
+    @if(intersection$ | async; as intersectionResult) { @if(intersectionResult.isLoading) {
+      <p>Loading</p>
+    } @if(intersectionResult.isSuccess) {
+      <p>{{ intersectionResult.data }}</p>
+    } @if(intersectionResult.isError) {
+      <p>Error</p>
+    } }
+  </blockquote>
+</div>

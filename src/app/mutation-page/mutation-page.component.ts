@@ -4,10 +4,12 @@ import { injectIsMutating } from '@ngneat/query';
 
 import { FormsModule } from '@angular/forms';
 import { TodosService } from '../services/todos.service';
+import { TabsComponent } from '../ui/query-tabs/tabs.component';
+import { TabComponent } from '../ui/query-tab/tab.component';
 @Component({
   selector: 'query-mutation-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TabsComponent, TabComponent],
   templateUrl: './mutation-page.component.html',
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,13 +26,16 @@ export class MutationPageComponent {
 
   public onAddTodo(title: string) {
     this.addTodo.mutate({ title, showError: false });
+    this.newTodo = '';
   }
 
   public onAddTodoWithError(title: string) {
     this.addTodo.mutate({ title, showError: true });
+    this.newTodo = '';
   }
 
   public onResetMutation() {
     this.addTodo.reset();
+    this.newTodo = '';
   }
 }
