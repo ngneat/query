@@ -24,6 +24,6 @@ body {
   color: #fff !important;
 }
 
-.bulma-loader-mixin {
+.loader {
   @include loader;
 }

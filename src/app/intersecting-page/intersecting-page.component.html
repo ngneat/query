@@ -22,7 +22,7 @@
 
   <blockquote>
     @if(intersection(); as intersectionResult) { @if(intersectionResult.isLoading) {
-      <span class="bulma-loader-mixin"></span>
+      <span class="loader"></span>
     } @if(intersectionResult.isSuccess) {
       <p>{{ intersectionResult.data }}</p>
     } @if(intersectionResult.isError) {
@@ -34,7 +34,7 @@
 
   <blockquote>
     @if(intersection$ | async; as intersectionResult) { @if(intersectionResult.isLoading) {
-      <span class="bulma-loader-mixin"></span>
+      <span class="loader"></span>
     } @if(intersectionResult.isSuccess) {
       <p>{{ intersectionResult.data }}</p>
     } @if(intersectionResult.isError) {

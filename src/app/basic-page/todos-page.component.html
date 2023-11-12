@@ -12,7 +12,7 @@
   <h3>Signal Result</h3>
   <blockquote>
     @if (todos();as result) { @if (result.isLoading) {
-      <span class="bulma-loader-mixin"></span>
+      <span class="loader"></span>
     } @if (result.isSuccess) {
       <p>{{ result.data[0].title }}</p>
     } @if (result.isError) {
@@ -24,7 +24,7 @@
 
   <blockquote>
     @if (todosResult.result$ | async;as result) { @if (result.isLoading) {
-      <span class="bulma-loader-mixin"></span>
+      <span class="loader"></span>
     } @if (result.isSuccess) {
       <p>{{ result.data[0].title }}</p>
     } @if (result.isError) {
