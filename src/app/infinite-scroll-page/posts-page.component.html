@@ -15,17 +15,18 @@
 </div>
 
 @if (posts$ | async;as result) {
-  <p *ngIf="result.isPending">Loading...</p>
 
-  <span *ngIf="result.isError">Error: {{ result.error.message }}</span>
+  @if (result.isError) {
+    <div class="notification is-danger">
+      Error: {{ result.error.message }}
+    </div>
+  }
 
   <div class="pagination">
     <div class="pagination-list">
-      {{
-        result.isFetching && !result.isFetchingNextPage
-          ? 'Background Updating...'
-          : ''
-      }}
+      @if ((result.isFetching && !result.isFetchingNextPage) || result.isPending) {
+        <span class="loader"></span>
+      }
     </div>
     <button
       class="pagination-previous button is-primary"
@@ -34,13 +35,7 @@
       (click)="result.fetchPreviousPage()"
       [disabled]="!result.hasPreviousPage || result.isFetchingPreviousPage"
     >
-      {{
-        result.isFetchingPreviousPage
-          ? 'Loading more...'
-          : result.hasPreviousPage
-            ? 'Load Older'
-            : 'Nothing more to load'
-      }}
+      Load Older
     </button>
   </div>
 
@@ -75,11 +70,9 @@
 
   <div class="pagination">
     <div class="pagination-list">
-      {{
-        result.isFetching && !result.isFetchingNextPage
-          ? 'Background Updating...'
-          : ''
-      }}
+      @if ((result.isFetching && !result.isFetchingNextPage) || result.isPending) {
+        <span class="loader"></span>
+      }
     </div>
     <button
       queryInView
@@ -89,13 +82,7 @@
       (click)="result.fetchNextPage()"
       [disabled]="!result.hasNextPage || result.isFetchingNextPage"
     >
-      {{
-        result.isFetchingNextPage
-          ? 'Loading more...'
-          : result.hasNextPage
-            ? 'Load Newer'
-            : 'Nothing more to load'
-      }}
+      Load Newer
     </button>
   </div>
 }
