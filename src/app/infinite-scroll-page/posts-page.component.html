@@ -1,0 +1,88 @@
+<div class="content">
+
+  <h1>Infinite Loading Example</h1>
+
+  <p>
+    In this example, as soon as the viewport gets to the end of the page it emits a event to pull in more data
+    from the server. This is done by using the <code>queryInView</code> directive.
+  </p>
+
+  <p>
+    To see the result changing, open the <b>devtools</b> in the <b>bottom-right</b> corner, from there you can
+    trigger a refetch of the query, invalidate it or even trigger the loading and error state.
+    Feel free to play around with it.
+  </p>
+</div>
+
+@if (posts$ | async;as result) {
+
+  @if (result.isError) {
+    <div class="notification is-danger">
+      Error: {{ result.error.message }}
+    </div>
+  }
+
+  <div class="pagination">
+    <div class="pagination-list">
+      @if ((result.isFetching && !result.isFetchingNextPage) || result.isPending) {
+        <span class="loader"></span>
+      }
+    </div>
+    <button
+      class="pagination-previous button is-primary"
+      style="margin: 0 auto;"
+      [class.is-loading]="result.isFetchingPreviousPage"
+      (click)="result.fetchPreviousPage()"
+      [disabled]="!result.hasPreviousPage || result.isFetchingPreviousPage"
+    >
+      Load Older
+    </button>
+  </div>
+
+  <div style="margin-bottom: 3rem;">
+    @if (result.isSuccess) {
+      @for (page of result.data.pages;track $index) {
+        @for (post of page.data;track $index) {
+          <div class="card" style="margin-top: 3rem">
+            <div class="card-content">
+              <div class="media">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <p class="title is-4">{{ post.name  }}</p>
+                  <p class="subtitle is-6"></p>
+                </div>
+              </div>
+
+              <div class="content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Phasellus nec iaculis mauris.
+              </div>
+            </div>
+          </div>
+        }
+      }
+    }
+  </div>
+
+  <div class="pagination">
+    <div class="pagination-list">
+      @if ((result.isFetching && !result.isFetchingNextPage) || result.isPending) {
+        <span class="loader"></span>
+      }
+    </div>
+    <button
+      queryInView
+      class="button is-primary pagination-next"
+      [class.is-loading]="result.isFetchingNextPage"
+      (inView)="result.fetchNextPage()"
+      (click)="result.fetchNextPage()"
+      [disabled]="!result.hasNextPage || result.isFetchingNextPage"
+    >
+      Load Newer
+    </button>
+  </div>
+}

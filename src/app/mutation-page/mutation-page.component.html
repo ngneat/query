@@ -1,0 +1,83 @@
+<div class="content">
+  <h1>Mutation Example</h1>
+
+  <p>This example shows how to use the Mutations API</p>
+  <p>
+    To get a better understanding on what happens, open the <b>devtools</b> in the bottom-right corner and switch
+    to the mutation tab from there.</p>
+  <p>
+    Both API's work the same way, the only difference being that the <b>Observable API</b>
+    is using the <b>RxJS</b> under the hood and the <b>Signal API</b> converts it to a signal based API.
+  </p>
+
+  <h4>Is Mutating: {{ addTodoMutationsActive() }}</h4>
+</div>
+
+<query-tabs>
+  <query-tab title="Signal API">
+    @if (addTodoSignalResult();as addTodo) {
+      <div class="block" style="margin: 4rem 0 2rem 0;">
+        <div class="field is-grouped is-horizontal">
+          <div class="control is-expanded">
+            <input class="input" placeholder="Todo title" id="signalTodo" type="text" [(ngModel)]="newTodo">
+          </div>
+          <div class="control">
+            <button
+              class="button is-primary-button"
+              (click)="onAddTodo(newTodo)"
+              [class.is-loading]="addTodo.isPending"
+              [disabled]="addTodo.isPending"
+            >
+              Add Todo
+            </button>
+          </div>
+          <div class="control">
+            <button class="button is-danger" (click)="onAddTodoWithError(newTodo)">Show Error</button>
+          </div>
+          <div class="control">
+            <button class="button is-black" (click)="onResetMutation()">Reset Mutation</button>
+          </div>
+        </div>
+      </div>
+      <div class="block content box">
+        <h4>Mutation Signal Output</h4>
+        <code style="background-color: initial; max-height: 300px; overflow: hidden; overflow-y: auto; display: block">
+          <pre>{{ addTodo | json }}</pre>
+        </code>
+      </div>
+    }
+  </query-tab>
+  <query-tab title="Observable API">
+    @if (addTodo.result$ | async;as addTodo) {
+      <div class="block" style="margin: 4rem 0 2rem 0;">
+        <div class="field is-grouped is-horizontal">
+          <div class="control is-expanded">
+            <input class="input" placeholder="Todo title" type="text" [(ngModel)]="newTodo">
+          </div>
+          <div class="control">
+            <button
+              class="button is-primary-button"
+              (click)="onAddTodo(newTodo)"
+              [class.is-loading]="addTodo.isPending"
+              [disabled]="addTodo.isPending"
+            >
+              Add Todo
+            </button>
+          </div>
+          <div class="control">
+            <button class="button is-danger" (click)="onAddTodoWithError(newTodo)">Show Error</button>
+          </div>
+          <div class="control">
+            <button class="button is-black" (click)="onResetMutation()">Reset Mutation</button>
+          </div>
+        </div>
+      </div>
+      <div class="block content box">
+        <h4>Mutation Observable Output</h4>
+        <code style="background-color: initial; max-height: 300px; overflow: hidden; overflow-y: auto; display: block">
+          <pre>{{ addTodo | json }}</pre>
+        </code>
+      </div>
+    }
+  </query-tab>
+</query-tabs>
