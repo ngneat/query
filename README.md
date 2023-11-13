@@ -525,13 +525,15 @@ class TodoComponent {
 Install the `@ngneat/query-devtools` package. Lazy load and use it only in `development` environment:
 
 ```ts
-import { provideQueryDevTools } from '@ngneat/query';
+import { provideQueryDevTools } from '@ngneat/query-devtools';
 import { environment } from 'src/environments/environment';
 
 bootstrapApplication(AppComponent, {
-  providers: [environment.production ? [] : provideQueryDevTools()],
+  providers: [environment.production ? [] : provideQueryDevTools(options)],
 });
 ```
+
+See all the avilable options [here](https://tanstack.com/query/v5/docs/react/devtools#options).
 
 ## SSR
 
