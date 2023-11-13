@@ -69,7 +69,7 @@ export class TodosService {
   #query = injectQuery();
 
   getTodos() {
-    return query({
+    return this.#query({
       queryKey: ['todos'] as const,
       queryFn: ({ signal }) => {
         const source = this.http.get<Todo[]>(
