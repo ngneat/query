@@ -95,7 +95,7 @@ To get an observable use the `result$` property:
 @Component({
   standalone: true,
   template: `
-    @if(todosResult.result$ | async; as result) { @if(result.isLoading) {
+    @if(todos.result$ | async; as result) { @if(result.isLoading) {
     <p>Loading</p>
     } @if(result.isSuccess) {
     <p>{{ result.data[0].title }}</p>
