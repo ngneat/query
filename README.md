@@ -127,7 +127,7 @@ To get a signal use the `result` property:
   `,
 })
 export class TodosPageComponent {
-  todos = inject(TodosService).getTodos();
+  todos = inject(TodosService).getTodos().result
 }
 ```
 
