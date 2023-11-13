@@ -3,11 +3,13 @@
 # 2.0.0-beta.0
 
 ### Features
+
 - Update to tanstack v5
 - Introduce signal API
 - Add additional operators
 
 ### Breaking Changes
+
 - Angular v16 is required
 - Persisted Query Removed
 - Mutation Result Removed

@@ -7,7 +7,7 @@ import {
 import { filter, map, OperatorFunction, startWith, takeWhile, tap } from 'rxjs';
 
 export function mapResultData<T extends QueryObserverResult, R>(
-  mapFn: (data: NonNullable<T['data']>) => R
+  mapFn: (data: NonNullable<T['data']>) => R,
 ): OperatorFunction<T, QueryObserverResult<R>> {
   return map((result) => {
     return {
@@ -24,7 +24,7 @@ export function filterSuccessResult<T>(): OperatorFunction<
   QueryObserverSuccessResult<T>
 > {
   return filter(
-    (result): result is QueryObserverSuccessResult<T> => result.isSuccess
+    (result): result is QueryObserverSuccessResult<T> => result.isSuccess,
   );
 }
 
@@ -34,12 +34,12 @@ export function filterErrorResult<T, E>(): OperatorFunction<
 > {
   return filter(
     (result): result is QueryObserverLoadingErrorResult<T, E> =>
-      result.status === 'error'
+      result.status === 'error',
   );
 }
 
 export function tapSuccessResult<T extends QueryObserverResult>(
-  cb: (data: NonNullable<T['data']>) => void
+  cb: (data: NonNullable<T['data']>) => void,
 ) {
   return tap<T>((result) => {
     if (result.isSuccess) {
@@ -49,7 +49,7 @@ export function tapSuccessResult<T extends QueryObserverResult>(
 }
 
 export function tapErrorResult<T extends QueryObserverResult>(
-  cb: (error: NonNullable<T['error']>) => void
+  cb: (error: NonNullable<T['error']>) => void,
 ) {
   return tap<T>((result) => {
     if (result.isError) {
@@ -106,7 +106,7 @@ export function startWithQueryResult<T>(): OperatorFunction<
 type DataTypes<
   T extends
     | QueryObserverBaseResult[]
-    | Record<string, QueryObserverBaseResult<any>>
+    | Record<string, QueryObserverBaseResult<any>>,
 > = {
   [P in keyof T]: T[P] extends QueryObserverBaseResult<infer R> ? R : never;
 };
@@ -114,8 +114,8 @@ type DataTypes<
 type UnifiedTypes<T> = T extends Array<QueryObserverBaseResult<any>>
   ? DataTypes<T>
   : T extends Record<string, QueryObserverBaseResult<any>>
-  ? DataTypes<T>
-  : never;
+    ? DataTypes<T>
+    : never;
 
 /**
  *
@@ -144,9 +144,9 @@ export function intersectResults$<
   T extends
     | Array<QueryObserverResult<any>>
     | Record<string, QueryObserverResult<any>>,
-  R
+  R,
 >(
-  mapFn: (values: UnifiedTypes<T>) => R
+  mapFn: (values: UnifiedTypes<T>) => R,
 ): OperatorFunction<T, QueryObserverResult<R> & { all: T }> {
   return map((values) => {
     const isArray = Array.isArray(values);
@@ -166,7 +166,7 @@ export function intersectResults$<
     if (mappedResult.isSuccess) {
       if (isArray) {
         mappedResult.data = mapFn(
-          toArray.map((r) => r.data) as UnifiedTypes<T>
+          toArray.map((r) => r.data) as UnifiedTypes<T>,
         );
       } else {
         const data = Object.entries(values).reduce((acc, [key, value]) => {

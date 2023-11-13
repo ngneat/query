@@ -16,4 +16,3 @@ bootstrapApplication(AppComponent, {
 ```
 
 See all the avilable options [here](https://tanstack.com/query/v5/docs/react/devtools#options).
-

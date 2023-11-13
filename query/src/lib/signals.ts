@@ -7,7 +7,7 @@ import {
 type DataTypes<
   T extends
     | Array<Signal<QueryObserverBaseResult>>
-    | Record<string, Signal<QueryObserverBaseResult<any>>>
+    | Record<string, Signal<QueryObserverBaseResult<any>>>,
 > = {
   [P in keyof T]: T[P] extends Signal<QueryObserverBaseResult<infer R>>
     ? R
@@ -17,8 +17,8 @@ type DataTypes<
 type UnifiedTypes<T> = T extends Array<Signal<QueryObserverBaseResult<any>>>
   ? DataTypes<T>
   : T extends Record<string, Signal<QueryObserverBaseResult<any>>>
-  ? DataTypes<T>
-  : never;
+    ? DataTypes<T>
+    : never;
 
 /**
  *
@@ -54,10 +54,10 @@ export function intersectResults<
   T extends
     | Array<Signal<QueryObserverResult<any>>>
     | Record<string, Signal<QueryObserverResult<any>>>,
-  R
+  R,
 >(
   signals: T,
-  mapFn: (values: UnifiedTypes<T>) => R
+  mapFn: (values: UnifiedTypes<T>) => R,
 ): Signal<QueryObserverResult<R> & { all: T }> {
   return computed(() => {
     const isArray = Array.isArray(signals);
@@ -77,7 +77,7 @@ export function intersectResults<
     if (mappedResult.isSuccess) {
       if (isArray) {
         mappedResult.data = mapFn(
-          toArray.map((r) => r().data) as UnifiedTypes<T>
+          toArray.map((r) => r().data) as UnifiedTypes<T>,
         );
       } else {
         const data = Object.entries(signals).reduce((acc, [key, value]) => {

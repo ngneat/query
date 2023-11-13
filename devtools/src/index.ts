@@ -8,7 +8,7 @@ import { TanstackQueryDevtoolsConfig } from '@tanstack/query-devtools';
 import { injectQueryClient } from '@ngneat/query';
 
 export function provideQueryDevTools(
-  devToolOptions: Partial<Omit<TanstackQueryDevtoolsConfig, 'client'>> = {}
+  devToolOptions: Partial<Omit<TanstackQueryDevtoolsConfig, 'client'>> = {},
 ) {
   return makeEnvironmentProviders([
     {

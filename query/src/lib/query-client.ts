@@ -43,7 +43,7 @@ const QueryClientService = new InjectionToken<_QueryClient>(
 
       return inject(QueryClient);
     },
-  }
+  },
 );
 
 /** @public */

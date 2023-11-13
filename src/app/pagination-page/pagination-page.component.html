@@ -3,23 +3,24 @@
   <p>
     In this example, each page of data remains visible as the next page is
     fetched. The buttons and capability to proceed to the next page are also
-    supressed until the next page cursor is known. Each page is cached as a normal
-    query too, so when going to previous pages, you'll see them instantaneously
-    while they are also refetched invisibly in the background.
+    supressed until the next page cursor is known. Each page is cached as a
+    normal query too, so when going to previous pages, you'll see them
+    instantaneously while they are also refetched invisibly in the background.
   </p>
 
   <p>
-    To see the result changing, open the <b>devtools</b> in the <b>bottom-right</b> corner, from there you can
-    trigger a refetch of the query, invalidate it or even trigger the loading and error state.
-    Feel free to play around with it.
+    To see the result changing, open the <b>devtools</b> in the
+    <b>bottom-right</b> corner, from there you can trigger a refetch of the
+    query, invalidate it or even trigger the loading and error state. Feel free
+    to play around with it.
   </p>
 </div>
 
-@if (projects$ | async;as projects) {
+@if (projects$ | async; as projects) {
   @if (projects.isSuccess) {
     <table class="table is-fullwidth">
       <tbody>
-        @for (project of projects.data.projects;track project.id) {
+        @for (project of projects.data.projects; track project.id) {
           <tr>
             <td>{{ project.id }}</td>
             <td>{{ project.name }}</td>

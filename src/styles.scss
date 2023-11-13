@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-@import "bulma";
+@import 'bulma';
 
 body {
-  background-color: #F2F6FA;
+  background-color: #f2f6fa;
 }
 
 .container .columns {
@@ -10,17 +10,17 @@ body {
 }
 
 .is-active-example {
-    background-color: #b93eff !important;
-    color: #fff !important;
+  background-color: #b93eff !important;
+  color: #fff !important;
 }
 
 .is-active-example:hover {
-    background-color: #AE08E4 !important;
-    color: #fff !important;
+  background-color: #ae08e4 !important;
+  color: #fff !important;
 }
 
 .is-primary-button {
-  background-color: #AE08E4 !important;
+  background-color: #ae08e4 !important;
   color: #fff !important;
 }
 

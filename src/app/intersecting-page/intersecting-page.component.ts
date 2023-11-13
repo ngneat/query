@@ -25,7 +25,7 @@ export class IntersectingPageComponent {
     ],
     ([todoOne, todoTwo]) => {
       return todoOne.title + todoTwo.title;
-    }
+    },
   );
 
   intersection$ = combineLatest({
@@ -34,6 +34,6 @@ export class IntersectingPageComponent {
   }).pipe(
     intersectResults$(({ todoOne, todoTwo }) => {
       return todoOne.title + todoTwo.title;
-    })
+    }),
   );
 }

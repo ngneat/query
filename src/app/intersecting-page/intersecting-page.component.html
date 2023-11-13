@@ -13,32 +13,41 @@
   </p>
 
   <p>
-    To see the result changing, open the <b>devtools</b> in the <b>bottom-right</b> corner, from there you can
-    trigger a refetch of the query, invalidate it or even trigger the loading and error state.
-    Feel free to play around with it.
+    To see the result changing, open the <b>devtools</b> in the
+    <b>bottom-right</b> corner, from there you can trigger a refetch of the
+    query, invalidate it or even trigger the loading and error state. Feel free
+    to play around with it.
   </p>
 
   <h3>Signal Result</h3>
 
   <blockquote>
-    @if(intersection(); as intersectionResult) { @if(intersectionResult.isLoading) {
-      <span class="loader"></span>
-    } @if(intersectionResult.isSuccess) {
-      <p>{{ intersectionResult.data }}</p>
-    } @if(intersectionResult.isError) {
-      <p>Error</p>
-    } }
+    @if (intersection(); as intersectionResult) {
+      @if (intersectionResult.isLoading) {
+        <span class="loader"></span>
+      }
+      @if (intersectionResult.isSuccess) {
+        <p>{{ intersectionResult.data }}</p>
+      }
+      @if (intersectionResult.isError) {
+        <p>Error</p>
+      }
+    }
   </blockquote>
 
   <h3>Observable Result</h3>
 
   <blockquote>
-    @if(intersection$ | async; as intersectionResult) { @if(intersectionResult.isLoading) {
-      <span class="loader"></span>
-    } @if(intersectionResult.isSuccess) {
-      <p>{{ intersectionResult.data }}</p>
-    } @if(intersectionResult.isError) {
-      <p>Error</p>
-    } }
+    @if (intersection$ | async; as intersectionResult) {
+      @if (intersectionResult.isLoading) {
+        <span class="loader"></span>
+      }
+      @if (intersectionResult.isSuccess) {
+        <p>{{ intersectionResult.data }}</p>
+      }
+      @if (intersectionResult.isError) {
+        <p>Error</p>
+      }
+    }
   </blockquote>
 </div>

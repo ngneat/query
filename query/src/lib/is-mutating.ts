@@ -21,7 +21,7 @@ export class IsMutating {
         .subscribe(
           notifyManager.batchCalls(() => {
             observer.next(this.#queryClient.isMutating(filters));
-          })
+          }),
         );
 
       return () => disposeSubscription();

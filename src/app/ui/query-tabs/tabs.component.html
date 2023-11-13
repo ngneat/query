@@ -2,7 +2,9 @@
   @if (tabs) {
     <ul>
       @for (tab of tabs.toArray(); track 'title'; let idx = $index) {
-        <li (click)="selectTab(tab)" [class.is-active-tab]="tab.active"><a>{{ tab.title }}</a></li>
+        <li (click)="selectTab(tab)" [class.is-active-tab]="tab.active">
+          <a>{{ tab.title }}</a>
+        </li>
       }
     </ul>
   }

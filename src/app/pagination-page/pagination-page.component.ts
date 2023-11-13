@@ -23,9 +23,9 @@ export class PaginationPageComponent {
       return this.projectsService.getProjects(page).result$.pipe(
         tap((result) => {
           result.data?.hasMore && this.projectsService.prefetch(page + 1);
-        })
+        }),
       );
-    })
+    }),
   );
 
   nextPage() {

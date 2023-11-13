@@ -15,7 +15,7 @@ type CreateMutationOptions<
   TData = unknown,
   TError = DefaultError,
   TVariables = void,
-  TContext = unknown
+  TContext = unknown,
 > = Omit<
   MutationObserverOptions<TData, TError, TVariables, TContext>,
   'mutationFn'
@@ -27,7 +27,7 @@ type MutationResult<
   TData = unknown,
   TError = DefaultError,
   TVariables = void,
-  TContext = unknown
+  TContext = unknown,
 > = {
   mutate: (variables: TVariables) => void;
   reset: MutationObserver<TData, TError, TVariables, TContext>['reset'];
@@ -51,9 +51,9 @@ class Mutation {
     TData = unknown,
     TError = DefaultError,
     TVariables = unknown,
-    TContext = unknown
+    TContext = unknown,
   >(
-    options: CreateMutationOptions<TData, TError, TVariables, TContext>
+    options: CreateMutationOptions<TData, TError, TVariables, TContext>,
   ): MutationResult<TData, TError, TVariables, TContext> {
     const mutationObserver = new MutationObserver<
       TData,
@@ -80,9 +80,9 @@ class Mutation {
       const disposeSubscription = mutationObserver.subscribe(
         notifyManager.batchCalls(
           (
-            result: MutationObserverResult<TData, TError, TVariables, TContext>
-          ) => observer.next(result)
-        )
+            result: MutationObserverResult<TData, TError, TVariables, TContext>,
+          ) => observer.next(result),
+        ),
       );
 
       return () => disposeSubscription();
@@ -90,7 +90,7 @@ class Mutation {
       shareReplay({
         bufferSize: 1,
         refCount: true,
-      })
+      }),
     );
 
     const mutate = (variables: TVariables) => {

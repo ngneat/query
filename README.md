@@ -73,7 +73,7 @@ export class TodosService {
       queryKey: ['todos'] as const,
       queryFn: ({ signal }) => {
         const source = this.http.get<Todo[]>(
-          'https://jsonplaceholder.typicode.com/todos'
+          'https://jsonplaceholder.typicode.com/todos',
         );
 
         return toPromise({ source, signal });
@@ -95,13 +95,17 @@ To get an observable use the `result$` property:
 @Component({
   standalone: true,
   template: `
-    @if(todos.result$ | async; as result) { @if(result.isLoading) {
-    <p>Loading</p>
-    } @if(result.isSuccess) {
-    <p>{{ result.data[0].title }}</p>
-    } @if(result.isError) {
-    <p>Error</p>
-    } }
+    @if (todos.result$ | async; as result) {
+      @if (result.isLoading) {
+        <p>Loading</p>
+      }
+      @if (result.isSuccess) {
+        <p>{{ result.data[0].title }}</p>
+      }
+      @if (result.isError) {
+        <p>Error</p>
+      }
+    }
   `,
 })
 export class TodosPageComponent {
@@ -117,17 +121,21 @@ To get a signal use the `result` property:
 @Component({
   standalone: true,
   template: `
-    @if(todos(); as result) { @if(result.isLoading) {
-    <p>Loading</p>
-    } @if(result.isSuccess) {
-    <p>{{ result.data[0].title }}</p>
-    } @if(result.isError) {
-    <p>Error</p>
-    } }
+    @if (todos(); as result) {
+      @if (result.isLoading) {
+        <p>Loading</p>
+      }
+      @if (result.isSuccess) {
+        <p>{{ result.data[0].title }}</p>
+      }
+      @if (result.isError) {
+        <p>Error</p>
+      }
+    }
   `,
 })
 export class TodosPageComponent {
-  todos = inject(TodosService).getTodos().result
+  todos = inject(TodosService).getTodos().result;
 }
 ```
 
@@ -236,13 +244,17 @@ Now create your component in which you want to use your newly created service:
     <input #ref />
     <button (click)="onAddTodo({ title: ref.value })">Add todo</button>
 
-    @if(addTodo.result$ | async; as result) { @if(result.isLoading) {
-    <p>Mutation is loading</p>
-    } @if(result.isSuccess) {
-    <p>Mutation was successful</p>
-    } @if(result.isError) {
-    <p>Mutation encountered an Error</p>
-    } }
+    @if (addTodo.result$ | async; as result) {
+      @if (result.isLoading) {
+        <p>Mutation is loading</p>
+      }
+      @if (result.isSuccess) {
+        <p>Mutation was successful</p>
+      }
+      @if (result.isError) {
+        <p>Mutation encountered an Error</p>
+      }
+    }
   `,
 })
 export class TodosComponent {
@@ -262,13 +274,17 @@ If you prefer a signal based approach, then you can use the `result` getter func
     <input #ref />
     <button (click)="onAddTodo({ title: ref.value })">Add todo</button>
 
-    @if(addTodo.result(); as result) { @if(result.isLoading) {
-    <p>Mutation is loading</p>
-    } @if(result.isSuccess) {
-    <p>Mutation was successful</p>
-    } @if(result.isError) {
-    <p>Mutation encountered an Error</p>
-    } }
+    @if (addTodo.result(); as result) {
+      @if (result.isLoading) {
+        <p>Mutation is loading</p>
+      }
+      @if (result.isSuccess) {
+        <p>Mutation was successful</p>
+      }
+      @if (result.isError) {
+        <p>Mutation encountered an Error</p>
+      }
+    }
   `,
 })
 export class TodosComponent {
@@ -318,14 +334,17 @@ import { intersectResults } from '@ngneat/query';
   standalone: true,
   template: `
     <h1>Signals Intersection</h1>
-    @if(intersection(); as intersectionResult) {
-    @if(intersectionResult.isLoading) {
-    <p>Loading</p>
-    } @if(intersectionResult.isSuccess) {
-    <p>{{ intersectionResult.data }}</p>
-    } @if(intersectionResult.isError) {
-    <p>Error</p>
-    } }
+    @if (intersection(); as intersectionResult) {
+      @if (intersectionResult.isLoading) {
+        <p>Loading</p>
+      }
+      @if (intersectionResult.isSuccess) {
+        <p>{{ intersectionResult.data }}</p>
+      }
+      @if (intersectionResult.isError) {
+        <p>Error</p>
+      }
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -337,7 +356,7 @@ export class TodosPageComponent {
       this.#todosService.getTodo('1').result,
       this.#todosService.getTodo('2').result,
     ],
-    ([todoOne, todoTwo]) => todoOne.title + todoTwo.title
+    ([todoOne, todoTwo]) => todoOne.title + todoTwo.title,
   );
 
   intersectionAsObject = intersectResults(
@@ -345,7 +364,7 @@ export class TodosPageComponent {
       todoOne: this.#todosService.getTodo('1').result,
       todoTwo: this.#todosService.getTodo('2').result,
     },
-    ({ todoOne, todoTwo }) => todoOne.title + todoTwo.title
+    ({ todoOne, todoTwo }) => todoOne.title + todoTwo.title,
   );
 }
 ```
@@ -386,7 +405,7 @@ this.todosService.getTodos().result$.pipe(
     return {
       todos: data.todos.filter(predicate),
     };
-  })
+  }),
 );
 ```
 
@@ -419,7 +438,7 @@ Starts the observable stream with an standard query result that would also be re
 this.todosService.getTodos().result$.pipe(
   filterSuccess(),
   switchMap(() => someSource),
-  startWithQueryResult()
+  startWithQueryResult(),
 );
 ```
 
@@ -553,7 +572,7 @@ async function handleRequest(req, res) {
   const queryState = JSON.stringify(dehydrate(queryClient));
   html = html.replace(
     '</body>',
-    `<script>window.__QUERY_STATE__ = ${queryState}</script></body>`
+    `<script>window.__QUERY_STATE__ = ${queryState}</script></body>`,
   );
 
   res.send(html);
@@ -576,7 +595,7 @@ hydrate(queryClient, dehydratedState);
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(
-      BrowserModule.withServerTransition({ appId: 'server-app' })
+      BrowserModule.withServerTransition({ appId: 'server-app' }),
     ),
     provideQueryClient(queryClient),
   ],
@@ -597,7 +616,7 @@ export function getTodos() {
     queryKey: ['todos'] as const,
     queryFn: ({ signal }) => {
       const source = inject(HttpClient).get<Todo[]>(
-        'https://jsonplaceholder.typicode.com/todos'
+        'https://jsonplaceholder.typicode.com/todos',
       );
 
       return toPromise({ source, signal });
@@ -617,7 +636,7 @@ export function getTodos({ injector }: { injector: Injector }) {
     injector,
     queryFn: ({ signal }) => {
       const source = inject(HttpClient).get<Todo[]>(
-        'https://jsonplaceholder.typicode.com/todos'
+        'https://jsonplaceholder.typicode.com/todos',
       );
 
       return toPromise({ source, signal });

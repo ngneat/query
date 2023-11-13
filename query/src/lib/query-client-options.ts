@@ -8,7 +8,7 @@ export const QUERY_CLIENT_OPTIONS = new InjectionToken<QueryClientConfig>(
     factory() {
       return {};
     },
-  }
+  },
 );
 
 export function provideQueryClientOptions(options: QueryClientConfig) {

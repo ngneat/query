@@ -19,7 +19,7 @@ export class IsFetching {
       const disposeSubscription = this.#queryClient.getQueryCache().subscribe(
         notifyManager.batchCalls(() => {
           observer.next(this.#queryClient.isFetching(filters));
-        })
+        }),
       );
 
       return () => disposeSubscription();
