@@ -28,6 +28,12 @@ export class PaginationPageComponent {
     }),
   );
 
+  constructor() {
+    this.projects$.subscribe((v) => {
+      console.log(v);
+    });
+  }
+
   nextPage() {
     this.#page.next(this.#page.getValue() + 1);
   }

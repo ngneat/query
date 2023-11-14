@@ -3,9 +3,9 @@ import {
   injectQuery,
   injectQueryClient,
   keepPreviousData,
-  toPromise,
 } from '@ngneat/query';
 import { Injectable } from '@angular/core';
+import { toPromise } from 'query/src/lib/utils';
 
 @Injectable({ providedIn: 'root' })
 export class PaginationService {
@@ -15,10 +15,8 @@ export class PaginationService {
   getProjects(page: number) {
     return this.#query({
       queryKey: ['projects', page],
-      queryFn: ({ signal }) => {
-        const source = fetchProjects(page);
-
-        return toPromise({ source, signal });
+      queryFn: () => {
+        return fetchProjects(page);
       },
       placeholderData: keepPreviousData,
       staleTime: 5000,
@@ -29,9 +27,7 @@ export class PaginationService {
     return this.#client.prefetchQuery({
       queryKey: ['projects', page],
       queryFn: ({ signal }) => {
-        const source = fetchProjects(page);
-
-        return toPromise({ source, signal });
+        return toPromise({ source: fetchProjects(page), signal });
       },
     });
   }

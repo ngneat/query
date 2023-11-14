@@ -1,12 +1,13 @@
 import {
   DefaultError,
   QueryClient,
+  QueryFunctionContext,
   QueryKey,
   QueryObserver,
   QueryObserverOptions,
   WithRequired,
 } from '@tanstack/query-core';
-import { Observable, shareReplay } from 'rxjs';
+import { Observable, from, isObservable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   Injector,
@@ -14,12 +15,21 @@ import {
   assertInInjectionContext,
   runInInjectionContext,
 } from '@angular/core';
+import { toPromise } from './utils';
+
+export type QueryFunctionWithObservable<
+  T = unknown,
+  TQueryKey extends QueryKey = QueryKey,
+  TPageParam = never,
+> = (
+  context: QueryFunctionContext<TQueryKey, TPageParam>,
+) => T | Promise<T> | Observable<T>;
 
 export interface Options {
   injector?: Injector;
 }
 
-export interface CreateBaseQueryOptions<
+interface _CreateBaseQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
@@ -30,6 +40,19 @@ export interface CreateBaseQueryOptions<
       'queryKey'
     >,
     Options {}
+
+export type CreateBaseQueryOptions<
+  TQueryFnData = unknown,
+  TError = DefaultError,
+  TData = TQueryFnData,
+  TQueryData = TQueryFnData,
+  TQueryKey extends QueryKey = QueryKey,
+> = Omit<
+  _CreateBaseQueryOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
+  'queryFn'
+> & {
+  queryFn: QueryFunctionWithObservable<TQueryFnData, TQueryKey>;
+};
 
 export function createBaseQuery<
   TQueryFnData,
@@ -58,18 +81,26 @@ export function createBaseQuery<
     | QueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>
     | undefined;
 
-  const defaultedOptions = client.defaultQueryOptions(options);
+  const defaultedOptions = client.defaultQueryOptions(
+    options as unknown as QueryObserverOptions,
+  );
   defaultedOptions._optimisticResults = 'optimistic';
 
   const originalQueryFn = defaultedOptions.queryFn;
 
   if (originalQueryFn) {
-    defaultedOptions.queryFn = function (options: any) {
+    defaultedOptions.queryFn = function (ctx: QueryFunctionContext) {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const _this = this;
 
       return runInInjectionContext(injector, () => {
-        return originalQueryFn.call(_this, options);
+        const value = originalQueryFn.call(_this, ctx);
+
+        if (isObservable(value)) {
+          return toPromise({ source: value, signal: ctx.signal });
+        }
+
+        return value;
       });
     };
   }
@@ -83,10 +114,10 @@ export function createBaseQuery<
         TData,
         TQueryData,
         TQueryKey
-      >(client, defaultedOptions);
+      >(client, defaultedOptions as any);
     }
 
-    observer.next(queryObserver.getOptimisticResult(defaultedOptions));
+    observer.next(queryObserver.getOptimisticResult(defaultedOptions as any));
 
     const queryObserverDispose = queryObserver.subscribe((result) => {
       observer.next(
@@ -117,7 +148,7 @@ export function createBaseQuery<
         {
           ...defaultedOptions,
           ...options,
-        },
+        } as any,
         { listeners: false },
       );
     },
