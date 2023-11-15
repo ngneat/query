@@ -121,16 +121,14 @@ To get a signal use the `result` property:
 @Component({
   standalone: true,
   template: `
-    @if (todos(); as result) {
-      @if (result.isLoading) {
-        <p>Loading</p>
-      }
-      @if (result.isSuccess) {
-        <p>{{ result.data[0].title }}</p>
-      }
-      @if (result.isError) {
-        <p>Error</p>
-      }
+    @if (todos().isLoading) {
+      Loading
+    }
+    @if (todos().data; as data) {
+      <p>{{ data[0].title }}</p>
+    }
+    @if (todos().isError) {
+      <p>Error</p>
     }
   `,
 })
