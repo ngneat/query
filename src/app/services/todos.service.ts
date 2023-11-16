@@ -5,7 +5,6 @@ import {
   injectQuery,
   injectQueryClient,
   queryOptions,
-  toPromise,
 } from '@ngneat/query';
 
 interface Todo {
@@ -19,12 +18,10 @@ export function getTodos({ injector }: { injector: Injector }) {
   return query({
     queryKey: ['getTodos'] as const,
     injector,
-    queryFn: ({ signal }) => {
-      const source = inject(HttpClient).get<Todo[]>(
+    queryFn: () => {
+      return inject(HttpClient).get<Todo[]>(
         'https://jsonplaceholder.typicode.com/todos',
       );
-
-      return toPromise({ source, signal });
     },
   });
 }
@@ -38,12 +35,10 @@ export class TodosService {
 
   #getTodosOptions = queryOptions({
     queryKey: ['todos'] as const,
-    queryFn: ({ signal }) => {
-      const source = this.#http.get<Todo[]>(
+    queryFn: () => {
+      return this.#http.get<Todo[]>(
         'https://jsonplaceholder.typicode.com/todos',
       );
-
-      return toPromise({ source, signal });
     },
   });
 
@@ -70,12 +65,10 @@ export class TodosService {
   getTodo(id: string) {
     return this.#query({
       queryKey: ['todos', id] as const,
-      queryFn: ({ signal }) => {
-        const source = this.#http.get<Todo>(
+      queryFn: () => {
+        return this.#http.get<Todo>(
           `https://jsonplaceholder.typicode.com/todos/${id}`,
         );
-
-        return toPromise({ source, signal });
       },
     });
   }

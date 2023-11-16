@@ -17,10 +17,14 @@ import {
   InfiniteQueryObserverResult,
   WithRequired,
 } from '@tanstack/query-core';
-import { createBaseQuery, Options } from './base-query';
+import {
+  createBaseQuery,
+  Options,
+  QueryFunctionWithObservable,
+} from './base-query';
 import { Result } from './types';
 
-interface CreateInfiniteQueryOptions<
+interface _CreateInfiniteQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
@@ -39,6 +43,27 @@ interface CreateInfiniteQueryOptions<
       'queryKey'
     >,
     Options {}
+
+type CreateInfiniteQueryOptions<
+  TQueryFnData = unknown,
+  TError = DefaultError,
+  TData = TQueryFnData,
+  TQueryData = TQueryFnData,
+  TQueryKey extends QueryKey = QueryKey,
+  TPageParam = unknown,
+> = Omit<
+  _CreateInfiniteQueryOptions<
+    TQueryFnData,
+    TError,
+    TData,
+    TQueryData,
+    TQueryKey,
+    TPageParam
+  >,
+  'queryFn'
+> & {
+  queryFn: QueryFunctionWithObservable<TQueryFnData, TQueryKey, TPageParam>;
+};
 
 @Injectable({ providedIn: 'root' })
 class InfiniteQuery {
@@ -65,7 +90,7 @@ class InfiniteQuery {
       client: this.#instance,
       injector: options.injector ?? this.#injector,
       Observer: InfiniteQueryObserver as typeof QueryObserver,
-      options,
+      options: options as any,
     });
   }
 }

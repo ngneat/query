@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { injectInfiniteQuery, toPromise } from '@ngneat/query';
+import { injectInfiniteQuery } from '@ngneat/query';
 import { Observable } from 'rxjs';
 
 interface Post {
@@ -20,11 +20,8 @@ export class PostsService {
   getPosts() {
     return this.#query({
       queryKey: ['posts'],
-      queryFn: ({ pageParam, signal }) => {
-        return toPromise({
-          source: getProjects(pageParam),
-          signal,
-        });
+      queryFn: ({ pageParam }) => {
+        return getProjects(pageParam);
       },
       initialPageParam: 0,
       getPreviousPageParam: (firstPage) => firstPage.previousId,
