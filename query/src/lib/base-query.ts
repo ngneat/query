@@ -7,7 +7,7 @@ import {
   QueryObserverOptions,
   WithRequired,
 } from '@tanstack/query-core';
-import { Observable, from, isObservable, shareReplay } from 'rxjs';
+import { Observable, isObservable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   Injector,
