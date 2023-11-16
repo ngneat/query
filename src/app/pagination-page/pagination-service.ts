@@ -3,9 +3,9 @@ import {
   injectQuery,
   injectQueryClient,
   keepPreviousData,
+  toPromise,
 } from '@ngneat/query';
 import { Injectable } from '@angular/core';
-import { toPromise } from 'query/src/lib/utils';
 
 @Injectable({ providedIn: 'root' })
 export class PaginationService {

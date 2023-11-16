@@ -61,7 +61,7 @@ export class TodosService {
 Use the `injectQuery` function. Using this function is similar to the [official](https://tanstack.com/query/v5/docs/guides/queries) function.
 
 ```ts
-import { injectQuery, toPromise } from '@ngneat/query';
+import { injectQuery } from '@ngneat/query';
 
 @Injectable({ providedIn: 'root' })
 export class TodosService {
@@ -71,12 +71,10 @@ export class TodosService {
   getTodos() {
     return this.#query({
       queryKey: ['todos'] as const,
-      queryFn: ({ signal }) => {
-        const source = this.http.get<Todo[]>(
+      queryFn: () => {
+        return this.http.get<Todo[]>(
           'https://jsonplaceholder.typicode.com/todos',
         );
-
-        return toPromise({ source, signal });
       },
     });
   }
@@ -84,8 +82,6 @@ export class TodosService {
 ```
 
 > The function should run inside an injection context
-
-Utilize the `toPromise` helper function to transform the observable into a promise. You can also optionally pass a `signal` parameter if you need cancellation behavior.
 
 #### Component Usage - Observable
 
@@ -161,15 +157,11 @@ Further, the `queryKey` returned from `queryOptions` knows about the `queryFn` a
 @Injectable({ providedIn: 'root' })
 export class GroupsService {
   #client = injectQueryClient();
+  #http = inject(HttpClient);
 
   groupOptions = queryOptions({
     queryKey: ['groups'] as const,
-    queryFn: ({ signal }) => {
-      return toPromise({
-        source: this.http.get(url),
-        signal,
-      });
-    },
+    queryFn: () => this.http.get(url),
     staleTime: 5 * 1000,
   });
 
@@ -186,7 +178,7 @@ export class GroupsService {
 Use the `injectInfiniteQuery` function. Using this function is similar to the [official](https://tanstack.com/query/v5/docs/guides/infinite-queries) function.
 
 ```ts
-import { injectInfiniteQuery, toPromise } from '@ngneat/query';
+import { injectInfiniteQuery } from '@ngneat/query';
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {
@@ -195,12 +187,7 @@ export class PostsService {
   getPosts() {
     return this.#query({
       queryKey: ['posts'],
-      queryFn: ({ pageParam, signal }) => {
-        return toPromise({
-          source: getProjects(pageParam),
-          signal,
-        });
-      },
+      queryFn: ({ pageParam }) => getProjects(pageParam),
       initialPageParam: 0,
       getPreviousPageParam: (firstPage) => firstPage.previousId,
       getNextPageParam: (lastPage) => lastPage.nextId,
@@ -614,12 +601,10 @@ export function getTodos() {
 
   return query({
     queryKey: ['todos'] as const,
-    queryFn: ({ signal }) => {
-      const source = inject(HttpClient).get<Todo[]>(
+    queryFn: () => {
+      return inject(HttpClient).get<Todo[]>(
         'https://jsonplaceholder.typicode.com/todos',
       );
-
-      return toPromise({ source, signal });
     },
   });
 }
@@ -635,11 +620,9 @@ export function getTodos({ injector }: { injector: Injector }) {
     queryKey: ['todos'] as const,
     injector,
     queryFn: ({ signal }) => {
-      const source = inject(HttpClient).get<Todo[]>(
+      return inject(HttpClient).get<Todo[]>(
         'https://jsonplaceholder.typicode.com/todos',
       );
-
-      return toPromise({ source, signal });
     },
   });
 }

@@ -143,15 +143,6 @@ export function createBaseQuery<
 
   return {
     result$,
-    updateOptions(options: QueryObserver['setOptions']) {
-      queryObserver?.setOptions(
-        {
-          ...defaultedOptions,
-          ...options,
-        } as any,
-        { listeners: false },
-      );
-    },
     // @experimental signal support
     get result() {
       !isNodeInjector &&
