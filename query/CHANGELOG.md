@@ -1,5 +1,25 @@
 # Changelog
 
+This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+# [2.0.0-beta.1](https://github-personal/ngneat/query/compare/query-2.0.0-beta.0...query-2.0.0-beta.1) (2023-11-16)
+
+
+### Features
+
+* **query:** 🔥 add `injectIsFetching` ([711c853](https://github-personal/ngneat/query/commit/711c853b3628a80e2a519422a2c075b84d1ee336))
+* **query:** 🔥 add `injectIsMutating` ([05eb749](https://github-personal/ngneat/query/commit/05eb7497edd427b4777fee65eb967fdb915f7f06))
+* **query:** 🔥 add `injectMutation` to query ([a6bdce6](https://github-personal/ngneat/query/commit/a6bdce6c186218413b025524187ddc68c78abcb8))
+* **query:** 🔥 add experimental intersect signal support ([2dce8e0](https://github-personal/ngneat/query/commit/2dce8e0b2e1d9703ded751db9becd8a35d68813c))
+* **query:** 🔥 add experimental signal support ([093e053](https://github-personal/ngneat/query/commit/093e053f95a97d205fc0a73a2901dbca820b844e))
+* **query:** 🔥 add injector option ([f05c83b](https://github-personal/ngneat/query/commit/f05c83bb2f6e05d1e3d66683f9377712512eb659))
+* **query:** 🔥 add takeUntilFinalize operator ([59983b8](https://github-personal/ngneat/query/commit/59983b8360f98f8d519189fbd18a69a0e50c1b43))
+* **query:** 🔥 change set to update options ([1408655](https://github-personal/ngneat/query/commit/140865563a312e972e5988057a8d229e0dd5a761))
+* **query:** 🔥 improve query options ([b47471c](https://github-personal/ngneat/query/commit/b47471cba29253dece41fb83a13cf97534fcbfe6))
+* **query:** 🔥 support queryFn in query function ([caca282](https://github-personal/ngneat/query/commit/caca282d20c96630fa6f7fe03eac4c348344d8b3))
+
+
+
 # 2.0.0-beta.0
 
 ### Features
