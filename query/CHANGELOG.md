@@ -2,6 +2,10 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0-beta.2](https://github-personal/ngneat/query/compare/query-2.0.0-beta.1...query-2.0.0-beta.2) (2023-11-18)
+
+
+
 # [2.0.0-beta.1](https://github-personal/ngneat/query/compare/query-2.0.0-beta.0...query-2.0.0-beta.1) (2023-11-16)
 
 
