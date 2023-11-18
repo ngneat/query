@@ -10,4 +10,5 @@ export * from './lib/operators';
 export * from '@tanstack/query-core';
 export { ObservableQueryResult, SignalQueryResult } from './lib/types';
 export { queryOptions } from './lib/query-options';
+export { provideQueryClientOptions } from './lib/query-client-options';
 export { intersectResults } from './lib/signals';
