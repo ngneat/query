@@ -101,8 +101,11 @@ class Mutation {
       }),
     );
 
-    const mutate = (variables: TVariables) => {
-      mutationObserver.mutate(variables).catch(() => {
+    const mutate = (
+      variables: TVariables,
+      options?: MutateOptions<TData, TError, TVariables, TContext>,
+    ) => {
+      mutationObserver.mutate(variables, options).catch(() => {
         // noop
       });
     };
