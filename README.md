@@ -32,6 +32,10 @@ Get rid of granular state management, manual refetching, and async spaghetti cod
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e5079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
+## Motivation
+
+Discover the innovative approach TanStack Query takes to state management, setting it apart from traditional methods. Learn about the motivation behind this design and explore its unique features [here](https://tanstack.com/query/v5/docs/react/overview#motivation).
+
 ## Installation
 
 ```
