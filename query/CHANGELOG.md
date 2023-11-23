@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0-beta.4](https://github-personal/ngneat/query/compare/query-2.0.0-beta.3...query-2.0.0-beta.4) (2023-11-23)
+
+
+### Bug Fixes
+
+* **query:** 🐞 pass option to mutate function ([9732fa8](https://github-personal/ngneat/query/commit/9732fa82ef938842e26d1c9532f0575bdcd4341e))
+
+
+
 # [2.0.0-beta.3](https://github-personal/ngneat/query/compare/query-2.0.0-beta.2...query-2.0.0-beta.3) (2023-11-23)
 
 
