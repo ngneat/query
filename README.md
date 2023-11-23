@@ -251,6 +251,8 @@ export class TodosComponent {
 
   onAddTodo({ title }) {
     this.addTodo.mutate({ title });
+    // Or
+    this.addTodo.mutateAsync({ title });
   }
 }
 ```

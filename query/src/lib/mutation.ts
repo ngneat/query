@@ -2,6 +2,7 @@ import { inject, Injectable, InjectionToken, Signal } from '@angular/core';
 import { injectQueryClient } from './query-client';
 import {
   DefaultError,
+  MutateOptions,
   MutationObserver,
   MutationObserverOptions,
   MutationObserverResult,
@@ -29,7 +30,14 @@ type MutationResult<
   TVariables = void,
   TContext = unknown,
 > = {
-  mutate: (variables: TVariables) => void;
+  mutateAsync: (
+    variables: TVariables,
+    options?: MutateOptions<TData, TError, TVariables, TContext>,
+  ) => Promise<TData>;
+  mutate: (
+    variables: TVariables,
+    options?: MutateOptions<TData, TError, TVariables, TContext>,
+  ) => void;
   reset: MutationObserver<TData, TError, TVariables, TContext>['reset'];
   setOptions: MutationObserver<
     TData,
@@ -103,6 +111,7 @@ class Mutation {
 
     return {
       mutate,
+      mutateAsync: mutationObserver.mutate.bind(mutationObserver),
       reset: mutationObserver.reset.bind(mutationObserver),
       setOptions: mutationObserver.setOptions.bind(mutationObserver),
       result$,
