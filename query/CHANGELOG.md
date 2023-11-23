@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0-beta.3](https://github-personal/ngneat/query/compare/query-2.0.0-beta.2...query-2.0.0-beta.3) (2023-11-23)
+
+
+### Features
+
+* **query:** 🔥 add mutateAsync function ([d42789e](https://github-personal/ngneat/query/commit/d42789eabc37ef871ce992b6d2867c6d96bbd913))
+
+
+
 # [2.0.0-beta.2](https://github-personal/ngneat/query/compare/query-2.0.0-beta.1...query-2.0.0-beta.2) (2023-11-18)
 
 
