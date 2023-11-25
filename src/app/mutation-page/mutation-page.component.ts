@@ -11,7 +11,6 @@ import { TabComponent } from '../ui/query-tab/tab.component';
   standalone: true,
   imports: [CommonModule, FormsModule, TabsComponent, TabComponent],
   templateUrl: './mutation-page.component.html',
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MutationPageComponent {
@@ -25,7 +24,14 @@ export class MutationPageComponent {
   public newTodo = '';
 
   public onAddTodo(title: string) {
-    this.addTodo.mutate({ title, showError: false });
+    this.addTodo.mutate(
+      { title, showError: false },
+      {
+        onSuccess: () => {
+          console.log('onSuccess');
+        },
+      },
+    );
     this.newTodo = '';
   }
 
