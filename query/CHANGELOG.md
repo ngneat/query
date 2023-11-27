@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0-beta.6](https://github-personal/ngneat/query/compare/query-2.0.0-beta.5...query-2.0.0-beta.6) (2023-11-27)
+
+
+### Bug Fixes
+
+* **query:** 🐞 use QueryObserverBaseResult ([fd287b7](https://github-personal/ngneat/query/commit/fd287b71ffe6ee70fd1d27354b3f13c755f727b4))
+
+
+
 # [2.0.0-beta.5](https://github-personal/ngneat/query/compare/query-2.0.0-beta.4...query-2.0.0-beta.5) (2023-11-27)
 
 
