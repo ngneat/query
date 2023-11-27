@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0-beta.5](https://github-personal/ngneat/query/compare/query-2.0.0-beta.4...query-2.0.0-beta.5) (2023-11-27)
+
+
+### Features
+
+* **query:** 🔥 add createSyncObserverResult ([dadf325](https://github-personal/ngneat/query/commit/dadf325d5809108c0f628e06845b4f311ad317ab))
+
+
+
 # [2.0.0-beta.4](https://github-personal/ngneat/query/compare/query-2.0.0-beta.3...query-2.0.0-beta.4) (2023-11-23)
 
 
