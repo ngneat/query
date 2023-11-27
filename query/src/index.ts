@@ -5,7 +5,7 @@ export { injectIsFetching } from './lib/is-fetching';
 export { injectIsMutating } from './lib/is-mutating';
 export { injectInfiniteQuery } from './lib/infinite-query';
 
-export { toPromise } from './lib/utils';
+export { toPromise, createSyncObserverResult } from './lib/utils';
 export * from './lib/operators';
 export * from '@tanstack/query-core';
 export { ObservableQueryResult, SignalQueryResult } from './lib/types';

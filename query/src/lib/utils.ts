@@ -1,3 +1,4 @@
+import { QueryObserverResult } from '@tanstack/query-core';
 import { Observable, Subject, firstValueFrom, takeUntil } from 'rxjs';
 
 export function toPromise<T>({
@@ -17,4 +18,16 @@ export function toPromise<T>({
   }
 
   return firstValueFrom(source.pipe(signal ? takeUntil(cancel) : (s) => s));
+}
+
+export function createSyncObserverResult<T>(data: T): QueryObserverResult<T> {
+  return {
+    data,
+    isLoading: false,
+    isError: false,
+    isFetching: false,
+    isPending: false,
+    isSuccess: true,
+    status: 'success',
+  } as QueryObserverResult<T>;
 }

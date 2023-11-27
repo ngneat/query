@@ -453,6 +453,16 @@ const query = combineLatest([todos.result$, posts.result$]).pipe(
 )
 ```
 
+## Utils
+
+- `createSyncObserverResult` - Create sync observer result:
+
+```
+import { createSyncObserverResult } from '@ngneat/query';
+
+result = of(createSyncObserverResult(data))
+```
+
 ## Type Utils
 
 - `ObservableQueryResult` - Alias for `Observable<QueryObserverResult<Data, Error>>`
