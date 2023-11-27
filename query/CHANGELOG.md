@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0-beta.7](https://github-personal/ngneat/query/compare/query-2.0.0-beta.6...query-2.0.0-beta.7) (2023-11-27)
+
+
+### Bug Fixes
+
+* **query:** 🐞 fix operators types ([7f7c87d](https://github-personal/ngneat/query/commit/7f7c87df361c30f0984100fbabad0d6d6ea72ccd))
+
+
+
 # [2.0.0-beta.6](https://github-personal/ngneat/query/compare/query-2.0.0-beta.5...query-2.0.0-beta.6) (2023-11-27)
 
 
