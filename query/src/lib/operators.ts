@@ -6,7 +6,7 @@ import {
 } from '@tanstack/query-core';
 import { filter, map, OperatorFunction, startWith, takeWhile, tap } from 'rxjs';
 
-export function mapResultData<T extends QueryObserverResult, R>(
+export function mapResultData<T extends QueryObserverBaseResult, R>(
   mapFn: (data: NonNullable<T['data']>) => R,
 ): OperatorFunction<T, QueryObserverResult<R>> {
   return map((result) => {
@@ -20,7 +20,7 @@ export function mapResultData<T extends QueryObserverResult, R>(
 }
 
 export function filterSuccessResult<T>(): OperatorFunction<
-  QueryObserverResult<T>,
+  QueryObserverBaseResult<T>,
   QueryObserverSuccessResult<T>
 > {
   return filter(
@@ -29,7 +29,7 @@ export function filterSuccessResult<T>(): OperatorFunction<
 }
 
 export function filterErrorResult<T, E>(): OperatorFunction<
-  QueryObserverResult<T, E>,
+  QueryObserverBaseResult<T, E>,
   QueryObserverLoadingErrorResult<T, E>
 > {
   return filter(
@@ -38,7 +38,7 @@ export function filterErrorResult<T, E>(): OperatorFunction<
   );
 }
 
-export function tapSuccessResult<T extends QueryObserverResult>(
+export function tapSuccessResult<T extends QueryObserverBaseResult>(
   cb: (data: NonNullable<T['data']>) => void,
 ) {
   return tap<T>((result) => {
@@ -48,7 +48,7 @@ export function tapSuccessResult<T extends QueryObserverResult>(
   });
 }
 
-export function tapErrorResult<T extends QueryObserverResult>(
+export function tapErrorResult<T extends QueryObserverBaseResult>(
   cb: (error: NonNullable<T['error']>) => void,
 ) {
   return tap<T>((result) => {
@@ -64,7 +64,7 @@ export function tapErrorResult<T extends QueryObserverResult>(
  * It is intended to be used in scenarios where an observable stream should be listened to
  * until the result has finished fetching (e.g success or error).
  */
-export function takeUntilResultFinalize<T extends QueryObserverResult>() {
+export function takeUntilResultFinalize<T extends QueryObserverBaseResult>() {
   return takeWhile((res: T) => res.isFetching, true);
 }
 
@@ -74,7 +74,7 @@ export function takeUntilResultFinalize<T extends QueryObserverResult>() {
  * It is intended to be used in scenarios where an observable stream should be listened to
  * until a successful result is emitted.
  */
-export function takeUntilResultSuccess<T extends QueryObserverResult>() {
+export function takeUntilResultSuccess<T extends QueryObserverBaseResult>() {
   return takeWhile((res: T) => !res.isSuccess, true);
 }
 
@@ -84,7 +84,7 @@ export function takeUntilResultSuccess<T extends QueryObserverResult>() {
  * It is intended to be used in scenarios where an observable stream should be listened to
  * until an error result is emitted.
  */
-export function takeUntilResultError<T extends QueryObserverResult>() {
+export function takeUntilResultError<T extends QueryObserverBaseResult>() {
   return takeWhile((res: T) => !res.isError, true);
 }
 
@@ -142,8 +142,8 @@ type UnifiedTypes<T> = T extends Array<QueryObserverBaseResult<any>>
  */
 export function intersectResults$<
   T extends
-    | Array<QueryObserverResult<any>>
-    | Record<string, QueryObserverResult<any>>,
+    | Array<QueryObserverBaseResult<any>>
+    | Record<string, QueryObserverBaseResult<any>>,
   R,
 >(
   mapFn: (values: UnifiedTypes<T>) => R,
