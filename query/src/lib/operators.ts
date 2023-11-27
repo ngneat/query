@@ -1,12 +1,20 @@
 import {
-  QueryObserverBaseResult,
-  QueryObserverLoadingErrorResult,
   QueryObserverResult,
+  QueryObserverLoadingErrorResult,
   QueryObserverSuccessResult,
 } from '@tanstack/query-core';
-import { filter, map, OperatorFunction, startWith, takeWhile, tap } from 'rxjs';
+import {
+  filter,
+  map,
+  MonoTypeOperatorFunction,
+  OperatorFunction,
+  startWith,
+  takeWhile,
+  tap,
+} from 'rxjs';
+import { createPendingObserverResult } from './utils';
 
-export function mapResultData<T extends QueryObserverBaseResult, R>(
+export function mapResultData<T extends QueryObserverResult, R>(
   mapFn: (data: NonNullable<T['data']>) => R,
 ): OperatorFunction<T, QueryObserverResult<R>> {
   return map((result) => {
@@ -20,7 +28,7 @@ export function mapResultData<T extends QueryObserverBaseResult, R>(
 }
 
 export function filterSuccessResult<T>(): OperatorFunction<
-  QueryObserverBaseResult<T>,
+  QueryObserverResult<T>,
   QueryObserverSuccessResult<T>
 > {
   return filter(
@@ -29,7 +37,7 @@ export function filterSuccessResult<T>(): OperatorFunction<
 }
 
 export function filterErrorResult<T, E>(): OperatorFunction<
-  QueryObserverBaseResult<T, E>,
+  QueryObserverResult<T, E>,
   QueryObserverLoadingErrorResult<T, E>
 > {
   return filter(
@@ -38,7 +46,7 @@ export function filterErrorResult<T, E>(): OperatorFunction<
   );
 }
 
-export function tapSuccessResult<T extends QueryObserverBaseResult>(
+export function tapSuccessResult<T extends QueryObserverResult>(
   cb: (data: NonNullable<T['data']>) => void,
 ) {
   return tap<T>((result) => {
@@ -48,7 +56,7 @@ export function tapSuccessResult<T extends QueryObserverBaseResult>(
   });
 }
 
-export function tapErrorResult<T extends QueryObserverBaseResult>(
+export function tapErrorResult<T extends QueryObserverResult>(
   cb: (error: NonNullable<T['error']>) => void,
 ) {
   return tap<T>((result) => {
@@ -64,7 +72,7 @@ export function tapErrorResult<T extends QueryObserverBaseResult>(
  * It is intended to be used in scenarios where an observable stream should be listened to
  * until the result has finished fetching (e.g success or error).
  */
-export function takeUntilResultFinalize<T extends QueryObserverBaseResult>() {
+export function takeUntilResultFinalize<T extends QueryObserverResult>() {
   return takeWhile((res: T) => res.isFetching, true);
 }
 
@@ -74,7 +82,7 @@ export function takeUntilResultFinalize<T extends QueryObserverBaseResult>() {
  * It is intended to be used in scenarios where an observable stream should be listened to
  * until a successful result is emitted.
  */
-export function takeUntilResultSuccess<T extends QueryObserverBaseResult>() {
+export function takeUntilResultSuccess<T extends QueryObserverResult>() {
   return takeWhile((res: T) => !res.isSuccess, true);
 }
 
@@ -84,36 +92,25 @@ export function takeUntilResultSuccess<T extends QueryObserverBaseResult>() {
  * It is intended to be used in scenarios where an observable stream should be listened to
  * until an error result is emitted.
  */
-export function takeUntilResultError<T extends QueryObserverBaseResult>() {
+export function takeUntilResultError<T extends QueryObserverResult>() {
   return takeWhile((res: T) => !res.isError, true);
 }
 
-export function startWithQueryResult<T>(): OperatorFunction<
-  QueryObserverBaseResult<T>,
-  QueryObserverBaseResult<T>
-> {
-  return startWith({
-    isError: false,
-    isLoading: true,
-    isPending: true,
-    isFetching: true,
-    isSuccess: false,
-    fetchStatus: 'fetching',
-    status: 'pending',
-  } as QueryObserverBaseResult<T>);
+export function startWithPendingQueryResult<T>(): MonoTypeOperatorFunction<T> {
+  return startWith(
+    createPendingObserverResult(),
+  ) as MonoTypeOperatorFunction<T>;
 }
 
 type DataTypes<
-  T extends
-    | QueryObserverBaseResult[]
-    | Record<string, QueryObserverBaseResult<any>>,
+  T extends QueryObserverResult[] | Record<string, QueryObserverResult<any>>,
 > = {
-  [P in keyof T]: T[P] extends QueryObserverBaseResult<infer R> ? R : never;
+  [P in keyof T]: T[P] extends QueryObserverResult<infer R> ? R : never;
 };
 
-type UnifiedTypes<T> = T extends Array<QueryObserverBaseResult<any>>
+type UnifiedTypes<T> = T extends Array<QueryObserverResult<any>>
   ? DataTypes<T>
-  : T extends Record<string, QueryObserverBaseResult<any>>
+  : T extends Record<string, QueryObserverResult<any>>
     ? DataTypes<T>
     : never;
 
@@ -142,8 +139,8 @@ type UnifiedTypes<T> = T extends Array<QueryObserverBaseResult<any>>
  */
 export function intersectResults$<
   T extends
-    | Array<QueryObserverBaseResult<any>>
-    | Record<string, QueryObserverBaseResult<any>>,
+    | Array<QueryObserverResult<any>>
+    | Record<string, QueryObserverResult<any>>,
   R,
 >(
   mapFn: (values: UnifiedTypes<T>) => R,

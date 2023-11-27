@@ -421,15 +421,15 @@ It is intended to be used in scenarios where an observable stream should be list
 
 `todosService.getTodos().result$.pipe(takeUntilResultSuccess())`
 
-### startWithQueryResult
+### startWithPendingQueryResult
 
-Starts the observable stream with an standard query result that would also be returned upon creating a normal query:
+Starts the observable stream with a pending query result that would also be returned upon creating a normal query:
 
 ```ts
 this.todosService.getTodos().result$.pipe(
   filterSuccess(),
   switchMap(() => someSource),
-  startWithQueryResult(),
+  startWithPendingQueryResult(),
 );
 ```
 
@@ -455,13 +455,15 @@ const query = combineLatest([todos.result$, posts.result$]).pipe(
 
 ## Utils
 
-- `createSyncObserverResult` - Create sync observer result:
+- `createSuccessObserverResult` - Create success observer result:
 
 ```
 import { createSyncObserverResult } from '@ngneat/query';
 
-result = of(createSyncObserverResult(data))
+result = of(createSuccessObserverResult(data))
 ```
+
+- `createPendingObserverResult` - Create pending observer result
 
 ## Type Utils
 
