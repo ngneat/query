@@ -1,0 +1,23 @@
+<div class="content">
+  <h1>Dynamic Options</h1>
+
+  <div class="mb-3">
+    <a routerLink="." [queryParams]="{ id: 1 }" class="button is-primary-button"
+      >User 1</a
+    >
+    <a routerLink="." [queryParams]="{ id: 2 }" class="button is-primary-button"
+      >User 2</a
+    >
+    <a routerLink="." [queryParams]="{ id: 3 }" class="button is-primary-button"
+      >User 3</a
+    >
+  </div>
+
+  @if (user().isLoading) {
+    <span class="loader"></span>
+  }
+
+  @if (user().data; as user) {
+    {{ user.email }}
+  }
+</div>

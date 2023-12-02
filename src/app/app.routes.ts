@@ -4,6 +4,7 @@ import { PostsPageComponent } from './infinite-scroll-page/posts-page.component'
 import { PaginationPageComponent } from './pagination-page/pagination-page.component';
 import { MutationPageComponent } from './mutation-page/mutation-page.component';
 import { IntersectingPageComponent } from './intersecting-page/intersecting-page.component';
+import { DynamicPageComponent } from './dynamic-page/dynamic-page.component';
 
 export const appRoutes: Route[] = [
   {
@@ -14,6 +15,10 @@ export const appRoutes: Route[] = [
   {
     path: 'basic',
     component: TodosPageComponent,
+  },
+  {
+    path: 'dynamic',
+    component: DynamicPageComponent,
   },
   {
     path: 'infinite-scroll',

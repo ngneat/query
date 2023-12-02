@@ -31,6 +31,20 @@
             >
           </li>
           <li>
+            <a
+              routerLinkActive="is-active-example"
+              routerLink="dynamic"
+              [routerLinkActiveOptions]="{
+                queryParams: 'ignored',
+                matrixParams: 'exact',
+                paths: 'exact',
+                fragment: 'ignored'
+              }"
+              [queryParams]="{ id: 1 }"
+              >Dynamic</a
+            >
+          </li>
+          <li>
             <a routerLinkActive="is-active-example" routerLink="intersecting"
               >Parallel Queries</a
             >

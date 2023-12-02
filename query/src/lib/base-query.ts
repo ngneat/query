@@ -6,6 +6,7 @@ import {
   QueryObserver,
   QueryObserverOptions,
   WithRequired,
+  notifyManager,
 } from '@tanstack/query-core';
 import { Observable, isObservable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -81,6 +82,119 @@ export function createBaseQuery<
     | QueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>
     | undefined;
 
+  const defaultedOptions = normalizeOptions(
+    client,
+    options as QueryObserverOptions<
+      TQueryFnData,
+      TError,
+      TData,
+      TQueryData,
+      TQueryKey
+    >,
+    injector,
+  );
+
+  const result$ = new Observable((observer) => {
+    // Lazily create the observer when the first subscription is received
+    if (!queryObserver) {
+      queryObserver = new Observer<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryData,
+        TQueryKey
+      >(client, defaultedOptions as any);
+    }
+
+    observer.next(queryObserver.getOptimisticResult(defaultedOptions as any));
+
+    const queryObserverDispose = queryObserver.subscribe(
+      notifyManager.batchCalls((result) => {
+        observer.next(
+          defaultedOptions.notifyOnChangeProps
+            ? result
+            : queryObserver?.trackResult(result),
+        );
+      }),
+    );
+
+    return () => {
+      queryObserverDispose();
+      queryObserver = undefined;
+    };
+  }).pipe(
+    shareReplay({
+      bufferSize: 1,
+      refCount: true,
+    }),
+  );
+
+  let cachedSignal: undefined | Signal<any>;
+  const isNodeInjector = injector && (injector as any)['_tNode'];
+
+  return {
+    result$,
+    updateOptions: (newOptions: Partial<QueryObserverOptions>) => {
+      if (queryObserver) {
+        const normalized = normalizeOptions(
+          client,
+          {
+            ...(options as unknown as QueryObserverOptions),
+            ...newOptions,
+          },
+          injector,
+        ) as QueryObserverOptions<
+          TQueryFnData,
+          TError,
+          TData,
+          TQueryData,
+          TQueryKey
+        >;
+
+        queryObserver.setOptions(normalized, { listeners: false });
+      }
+    },
+    // @experimental signal support
+    get result() {
+      !isNodeInjector &&
+        assertInInjectionContext(function queryResultSignal() {
+          // noop
+        });
+
+      if (!cachedSignal) {
+        cachedSignal = toSignal(this.result$, {
+          requireSync: true,
+          // R3Injector isn't good here because it will cause a leak
+          // We only need the NodeInjector as we want the subscription to be destroyed when the component is destroyed
+          // We check that it's a NodeInjector by checking if it has a _tNode property
+          // Otherwise we just pass undefined and it'll use the current injector
+          // and not the R3Injector that we pass in the service
+          injector: isNodeInjector ? injector : undefined,
+        });
+      }
+
+      return cachedSignal;
+    },
+  };
+}
+
+function normalizeOptions<
+  TQueryFnData,
+  TError,
+  TData,
+  TQueryData,
+  TQueryKey extends QueryKey,
+>(
+  client: QueryClient,
+  options: QueryObserverOptions<
+    TQueryFnData,
+    TError,
+    TData,
+    TQueryData,
+    TQueryKey
+  >,
+  injector: Injector,
+) {
   const defaultedOptions = client.defaultQueryOptions(
     options as unknown as QueryObserverOptions,
   );
@@ -105,64 +219,5 @@ export function createBaseQuery<
     };
   }
 
-  const result$ = new Observable((observer) => {
-    // Lazily create the observer when the first subscription is received
-    if (!queryObserver) {
-      queryObserver = new Observer<
-        TQueryFnData,
-        TError,
-        TData,
-        TQueryData,
-        TQueryKey
-      >(client, defaultedOptions as any);
-    }
-
-    observer.next(queryObserver.getOptimisticResult(defaultedOptions as any));
-
-    const queryObserverDispose = queryObserver.subscribe((result) => {
-      observer.next(
-        defaultedOptions.notifyOnChangeProps
-          ? result
-          : queryObserver?.trackResult(result),
-      );
-    });
-
-    return () => {
-      queryObserverDispose();
-      queryObserver = undefined;
-    };
-  }).pipe(
-    shareReplay({
-      bufferSize: 1,
-      refCount: true,
-    }),
-  );
-
-  let cachedSignal: undefined | Signal<any>;
-  const isNodeInjector = injector && (injector as any)['_tNode'];
-
-  return {
-    result$,
-    // @experimental signal support
-    get result() {
-      !isNodeInjector &&
-        assertInInjectionContext(function queryResultSignal() {
-          // noop
-        });
-
-      if (!cachedSignal) {
-        cachedSignal = toSignal(this.result$, {
-          requireSync: true,
-          // R3Injector isn't good here because it will cause a leak
-          // We only need the NodeInjector as we want the subscription to be destroyed when the component is destroyed
-          // We check that it's a NodeInjector by checking if it has a _tNode property
-          // Otherwise we just pass undefined and it'll use the current injector
-          // and not the R3Injector that we pass in the service
-          injector: isNodeInjector ? injector : undefined,
-        });
-      }
-
-      return cachedSignal;
-    },
-  };
+  return defaultedOptions;
 }

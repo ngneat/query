@@ -465,6 +465,39 @@ result = of(createSuccessObserverResult(data))
 
 - `createPendingObserverResult` - Create pending observer result
 
+- `updateOptions` - In cases that you want to use the same observer result and update the options you can use the `updateOptions` method:
+
+```ts
+@Component({
+  standalone: true,
+  imports: [RouterModule],
+  template: `
+    <a [queryParams]="{ id: 2 }">User 2</a>
+
+    @if (user().isLoading) {
+      <span class="loader"></span>
+    }
+
+    @if (user().data; as user) {
+      {{ user.email }}
+    }
+  `,
+})
+export class UsersPageComponent {
+  usersService = inject(UsersService);
+  userResultDef = this.usersService.getUser(
+    +inject(ActivatedRoute).snapshot.queryParams['id'],
+  );
+
+  user = this.userResultDef.result;
+
+  @Input()
+  set id(userId: string) {
+    this.userResultDef.updateOptions(this.usersService.getUserOptions(+userId));
+  }
+}
+```
+
 ## Type Utils
 
 - `ObservableQueryResult` - Alias for `Observable<QueryObserverResult<Data, Error>>`

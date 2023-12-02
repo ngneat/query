@@ -14,7 +14,6 @@ import { TabComponent } from '../ui/query-tab/tab.component';
   standalone: true,
   imports: [CommonModule, TabsComponent, TabComponent],
   templateUrl: './todos-page.component.html',
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodosPageComponent {
