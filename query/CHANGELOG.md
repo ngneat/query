@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0-beta.8](https://github-personal/ngneat/query/compare/query-2.0.0-beta.7...query-2.0.0-beta.8) (2023-12-02)
+
+
+### Features
+
+* **query:** 🔥 add update options method ([7a4c656](https://github-personal/ngneat/query/commit/7a4c656d7fce99ef22594ae14e5bd7be8b3aafa0))
+
+
+
 # [2.0.0-beta.7](https://github-personal/ngneat/query/compare/query-2.0.0-beta.6...query-2.0.0-beta.7) (2023-11-27)
 
 
