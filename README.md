@@ -514,8 +514,9 @@ import { injectIsFetching } from '@ngneat/query';
 
 class TodoComponent {
   #isFetching = injectIsFetching();
+
   // How many queries overall are currently fetching data?
-  public isFetching$ = this.isFetching().result$;
+  public isFetching$ = this.#isFetching().result$;
 
   // How many queries matching the todos prefix are currently fetching?
   public isFetchingTodos$ = this.#isFetching({ queryKey: ['todos'] }).result$;
@@ -529,6 +530,7 @@ import { injectIsFetching } from '@ngneat/query';
 
 class TodoComponent {
   #isFetching = injectIsFetching();
+
   // How many queries overall are currently fetching data?
   public isFetching = this.#isFetching().result;
 
@@ -550,6 +552,7 @@ import { injectIsMutating } from '@ngneat/query';
 
 class TodoComponent {
   #isMutating = injectIsMutating();
+
   // How many queries overall are currently fetching data?
   public isFetching$ = this.#isMutating().result$;
 
@@ -565,6 +568,7 @@ import { injectIsMutating } from '@ngneat/query';
 
 class TodoComponent {
   #isMutating = injectIsMutating();
+
   // How many queries overall are currently fetching data?
   public isFetching = this.#isMutating().result;
 
