@@ -1,0 +1,22 @@
+<div class="content">
+  <h1>Resolver Example</h1>
+  <p>
+    In this example, the data is being prefetched on the route resolver and
+    being passed as input to the component. The results are then cached and
+    you'll see them instantaneously while they are also refetched invisibly in
+    the background on consequently navigations.
+  </p>
+
+  <p>
+    To see the result changing, open the <b>devtools</b> in the
+    <b>bottom-right</b> corner, from there you can trigger a refetch of the
+    query, invalidate it or even trigger the loading and error state. Feel free
+    to play around with it.
+  </p>
+
+  <blockquote>
+    @for (t of todos.slice(0, 10); track t.id) {
+      <p>{{ t.title }}</p>
+    }
+  </blockquote>
+</div>
