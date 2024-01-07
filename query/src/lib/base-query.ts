@@ -1,3 +1,5 @@
+import { Injector, Signal, assertInInjectionContext } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   DefaultError,
   QueryClient,
@@ -8,15 +10,8 @@ import {
   WithRequired,
   notifyManager,
 } from '@tanstack/query-core';
-import { Observable, isObservable, shareReplay } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  Injector,
-  Signal,
-  assertInInjectionContext,
-  runInInjectionContext,
-} from '@angular/core';
-import { toPromise } from './utils';
+import { Observable, shareReplay } from 'rxjs';
+import { normalizeOptions } from './query-options';
 
 export type QueryFunctionWithObservable<
   T = unknown,
@@ -36,8 +31,16 @@ interface _CreateBaseQueryOptions<
   TData = TQueryFnData,
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
+  TPageParam = never,
 > extends WithRequired<
-      QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
+      QueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryData,
+        TQueryKey,
+        TPageParam
+      >,
       'queryKey'
     >,
     Options {}
@@ -48,8 +51,16 @@ export type CreateBaseQueryOptions<
   TData = TQueryFnData,
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
+  TPageParam = never,
 > = Omit<
-  _CreateBaseQueryOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
+  _CreateBaseQueryOptions<
+    TQueryFnData,
+    TError,
+    TData,
+    TQueryData,
+    TQueryKey,
+    TPageParam
+  >,
   'queryFn'
 > & {
   queryFn: QueryFunctionWithObservable<TQueryFnData, TQueryKey>;
@@ -176,48 +187,4 @@ export function createBaseQuery<
       return cachedSignal;
     },
   };
-}
-
-function normalizeOptions<
-  TQueryFnData,
-  TError,
-  TData,
-  TQueryData,
-  TQueryKey extends QueryKey,
->(
-  client: QueryClient,
-  options: QueryObserverOptions<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryData,
-    TQueryKey
-  >,
-  injector: Injector,
-) {
-  const defaultedOptions = client.defaultQueryOptions(
-    options as unknown as QueryObserverOptions,
-  );
-  defaultedOptions._optimisticResults = 'optimistic';
-
-  const originalQueryFn = defaultedOptions.queryFn;
-
-  if (originalQueryFn) {
-    defaultedOptions.queryFn = function (ctx: QueryFunctionContext) {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const _this = this;
-
-      return runInInjectionContext(injector, () => {
-        const value = originalQueryFn.call(_this, ctx);
-
-        if (isObservable(value)) {
-          return toPromise({ source: value, signal: ctx.signal });
-        }
-
-        return value;
-      });
-    };
-  }
-
-  return defaultedOptions;
 }
