@@ -2,7 +2,7 @@ import { ResolveFn } from '@angular/router';
 import { injectQueryClient } from '@ngneat/query';
 import { Todo, getTodosQuery } from '../services/todos.service';
 
-export const resolveTodos: ResolveFn<Todo[]> = async () => {
+export const resolveTodos: ResolveFn<Todo[]> = async (): Promise<Todo[]> => {
   const client = injectQueryClient();
   const query = getTodosQuery();
 
