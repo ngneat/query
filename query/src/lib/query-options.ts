@@ -2,6 +2,7 @@ import { Injector, runInInjectionContext } from '@angular/core';
 import type {
   DataTag,
   DefaultError,
+  InfiniteQueryObserverOptions,
   QueryClient,
   QueryFunctionContext,
   QueryKey,
@@ -75,6 +76,58 @@ export function queryOptions<
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = never,
 >(
+  options: CreateInfiniteQueryOptions<
+    TQueryFnData,
+    TError,
+    TData,
+    TQueryFnData,
+    TQueryKey,
+    TPageParam
+  >,
+): CreateInfiniteQueryOptions<
+  TQueryFnData,
+  TError,
+  TQueryFnData,
+  TQueryFnData,
+  TQueryKey,
+  TPageParam
+> & {
+  queryKey: DataTag<TQueryKey, TData>;
+};
+export function queryOptions(options: unknown) {
+  return options;
+}
+
+export function queryObserverOptions<
+  TQueryFnData = unknown,
+  TError = DefaultError,
+  TData = TQueryFnData,
+  TQueryKey extends QueryKey = QueryKey,
+  TPageParam = never,
+>(
+  options: CreateInfiniteQueryOptions<
+    TQueryFnData,
+    TError,
+    TData,
+    TQueryFnData,
+    TQueryKey,
+    TPageParam
+  >,
+): InfiniteQueryObserverOptions<
+  TQueryFnData,
+  TError,
+  TQueryFnData,
+  TQueryFnData,
+  TQueryKey,
+  TPageParam
+>;
+export function queryObserverOptions<
+  TQueryFnData = unknown,
+  TError = DefaultError,
+  TData = TQueryFnData,
+  TQueryKey extends QueryKey = QueryKey,
+  TPageParam = never,
+>(
   options: CreateBaseQueryOptions<
     TQueryFnData,
     TError,
@@ -91,32 +144,7 @@ export function queryOptions<
   TQueryKey,
   TPageParam
 >;
-
-export function queryOptions<
-  TQueryFnData = unknown,
-  TError = DefaultError,
-  TData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey,
-  TPageParam = never,
->(
-  options: CreateInfiniteQueryOptions<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryFnData,
-    TQueryKey,
-    TPageParam
-  >,
-): QueryObserverOptions<
-  TQueryFnData,
-  TError,
-  TData,
-  TQueryFnData,
-  TQueryKey,
-  TPageParam
->;
-
-export function queryOptions(options: unknown) {
+export function queryObserverOptions(options: unknown) {
   return options;
 }
 

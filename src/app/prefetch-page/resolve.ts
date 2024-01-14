@@ -6,6 +6,5 @@ export const resolveTodos: ResolveFn<Todo[]> = async () => {
   const client = injectQueryClient();
   const query = getTodosQuery();
 
-  const data = await client.ensureQueryData(query);
-  return data;
+  return await client.ensureQueryData(query);
 };

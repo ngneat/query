@@ -19,7 +19,7 @@ import {
 import { CreateBaseQueryOptions } from './base-query';
 import { CreateInfiniteQueryOptions } from './infinite-query';
 import { QUERY_CLIENT_OPTIONS } from './query-client-options';
-import { normalizeOptions, queryOptions } from './query-options';
+import { normalizeOptions, queryObserverOptions } from './query-options';
 
 const QueryClientToken = new InjectionToken<QueryClient>('QueryClient', {
   providedIn: 'root',
@@ -70,7 +70,8 @@ export function injectQueryClient() {
   return inject(QueryClientService);
 }
 
-class QueryClient extends _QueryClient {
+/** should be exported for @test */
+export class QueryClient extends _QueryClient {
   #injector = inject(Injector);
 
   /**
@@ -122,7 +123,7 @@ class QueryClient extends _QueryClient {
       TQueryKey
     >,
   ): Promise<TData> {
-    const baseOptions = queryOptions(options);
+    const baseOptions = queryObserverOptions(options);
     const defaultedOptions = normalizeOptions(
       this,
       baseOptions,
@@ -201,7 +202,7 @@ class QueryClient extends _QueryClient {
       TPageParam
     >,
   ): Promise<TData> {
-    const baseOptions = queryOptions(options);
+    const baseOptions = queryObserverOptions(options);
     const defaultedOptions = normalizeOptions(
       this,
       baseOptions,
@@ -266,7 +267,7 @@ class QueryClient extends _QueryClient {
       TQueryKey
     >,
   ): Promise<void> {
-    const baseOptions = queryOptions(options);
+    const baseOptions = queryObserverOptions(options);
     const defaultedOptions = normalizeOptions(
       this,
       baseOptions,
@@ -339,7 +340,7 @@ class QueryClient extends _QueryClient {
       TPageParam
     >,
   ): Promise<InfiniteData<TData, TPageParam>> {
-    const baseOptions = queryOptions(options);
+    const baseOptions = queryObserverOptions(options);
     const defaultedOptions = normalizeOptions(
       this,
       baseOptions,
@@ -412,7 +413,7 @@ class QueryClient extends _QueryClient {
       TPageParam
     >,
   ): Promise<void> {
-    const baseOptions = queryOptions(options);
+    const baseOptions = queryObserverOptions(options);
     const defaultedOptions = normalizeOptions(
       this,
       baseOptions,
