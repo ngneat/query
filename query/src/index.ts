@@ -4,9 +4,8 @@ export { injectIsMutating } from './lib/is-mutating';
 export { injectMutation } from './lib/mutation';
 export { injectQuery } from './lib/query';
 export {
-  QueryClient,
   injectQueryClient,
-  provideQueryClient,
+  provideQueryClient
 } from './lib/query-client';
 
 export * from '@tanstack/query-core';
@@ -18,5 +17,6 @@ export { ObservableQueryResult, SignalQueryResult } from './lib/types';
 export {
   createPendingObserverResult,
   createSuccessObserverResult,
-  toPromise,
+  toPromise
 } from './lib/utils';
+
