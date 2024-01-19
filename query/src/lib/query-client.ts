@@ -14,12 +14,14 @@ import {
   FetchInfiniteQueryOptions,
   FetchQueryOptions,
   InfiniteData,
+  InfiniteQueryObserverOptions,
   QueryKey,
+  QueryObserverOptions,
 } from '@tanstack/query-core';
 import { CreateBaseQueryOptions } from './base-query';
 import { CreateInfiniteQueryOptions } from './infinite-query';
 import { QUERY_CLIENT_OPTIONS } from './query-client-options';
-import { normalizeOptions, queryObserverOptions } from './query-options';
+import { normalizeOptions } from './query-options';
 
 const QueryClientToken = new InjectionToken<QueryClient>('QueryClient', {
   providedIn: 'root',
@@ -123,10 +125,15 @@ export class QueryClient extends _QueryClient {
       TQueryKey
     >,
   ): Promise<TData> {
-    const baseOptions = queryObserverOptions(options);
     const defaultedOptions = normalizeOptions(
       this,
-      baseOptions,
+      options as QueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryFnData,
+        TQueryKey
+      >,
       this.#injector,
     ) as unknown as FetchQueryOptions<
       TQueryFnData,
@@ -202,10 +209,16 @@ export class QueryClient extends _QueryClient {
       TPageParam
     >,
   ): Promise<TData> {
-    const baseOptions = queryObserverOptions(options);
     const defaultedOptions = normalizeOptions(
       this,
-      baseOptions,
+      options as QueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryFnData,
+        TQueryKey,
+        TPageParam
+      >,
       this.#injector,
     ) as unknown as FetchQueryOptions<
       TQueryFnData,
@@ -267,10 +280,15 @@ export class QueryClient extends _QueryClient {
       TQueryKey
     >,
   ): Promise<void> {
-    const baseOptions = queryObserverOptions(options);
     const defaultedOptions = normalizeOptions(
       this,
-      baseOptions,
+      options as QueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryFnData,
+        TQueryKey
+      >,
       this.#injector,
     ) as unknown as FetchQueryOptions<
       TQueryFnData,
@@ -290,7 +308,7 @@ export class QueryClient extends _QueryClient {
    *
    * queryClient = injectQueryClient();
    *
-   * const data = await queryClient.fetchInfiniteQuery({ queryKey, queryFn })
+   * const data = await queryClient.fetchInfiniteQuery({ queryKey, queryFn, initialPageParam, getPreviousPageParam, getNextPageParam }) })
    *
    */
   override fetchInfiniteQuery<
@@ -340,10 +358,16 @@ export class QueryClient extends _QueryClient {
       TPageParam
     >,
   ): Promise<InfiniteData<TData, TPageParam>> {
-    const baseOptions = queryObserverOptions(options);
     const defaultedOptions = normalizeOptions(
       this,
-      baseOptions,
+      options as InfiniteQueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TQueryFnData,
+        TQueryFnData,
+        TQueryKey,
+        TPageParam
+      >,
       this.#injector,
     ) as unknown as FetchInfiniteQueryOptions<
       TQueryFnData,
@@ -363,7 +387,7 @@ export class QueryClient extends _QueryClient {
    *
    * queryClient = injectQueryClient();
    *
-   * await queryClient.prefetchInfiniteQuery({ queryKey, queryFn })
+   * await queryClient.prefetchInfiniteQuery({ queryKey, queryFn, initialPageParam, getPreviousPageParam, getNextPageParam })
    *
    */
   override prefetchInfiniteQuery<
@@ -413,10 +437,16 @@ export class QueryClient extends _QueryClient {
       TPageParam
     >,
   ): Promise<void> {
-    const baseOptions = queryObserverOptions(options);
     const defaultedOptions = normalizeOptions(
       this,
-      baseOptions,
+      options as InfiniteQueryObserverOptions<
+        TQueryFnData,
+        TError,
+        TQueryFnData,
+        TQueryFnData,
+        TQueryKey,
+        TPageParam
+      >,
       this.#injector,
     ) as unknown as FetchInfiniteQueryOptions<
       TQueryFnData,
