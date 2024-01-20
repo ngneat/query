@@ -58,49 +58,6 @@ export class TodosService {
 }
 ```
 
-For methods that require a `queryFn` parameter like
-[ensureQueryData](https://tanstack.com/query/latest/docs/react/reference/QueryClient#queryclientensurequerydata), [fetchQuery](https://tanstack.com/query/latest/docs/react/reference/QueryClient#queryclientfetchquery), [prefetchQuery](), [fetchInfiniteQuery]() and [prefetchInfiniteQuery]() it's possible to use both Promises and Observables.
-
-```ts
-import { injectQueryClient } from '@ngneat/query';
-
-@Injectable({ providedIn: 'root' })
-export class TodosService {
-  #queryClient = injectQueryClient();
-
-  getQueryObservable() {
-    return {
-      queryKey: ['todos'] as const,
-      queryFn: () => {
-        return this.http.get<Todo[]>(
-          'https://jsonplaceholder.typicode.com/todos',
-        );
-      }
-    };
-  }
-
-  getQueryPromise() {
-    return {
-      queryKey: ['todos'] as const,
-      queryFn: () => {
-        return lastValueFrom(this.http.get<Todo[]>(
-          'https://jsonplaceholder.typicode.com/todos',
-        ));
-      }
-    };
-  }
-
-  ensureQueryDataFromPromise(): Promise<Todo[]> {
-    return this.#queryClient.ensureQueryData(this.getQueryFromPromise());
-  }
-
-  ensureQueryDataFromObservable(): Promise<Todo[]> {
-    return this.#queryClient.ensureQueryData(this.getQueryFromObservable());
-  }
-}
-```
-
-
 > The function should run inside an injection context
 
 ### Query
@@ -129,6 +86,9 @@ export class TodosService {
 ```
 
 > The function should run inside an injection context
+
+For methods that require a `queryFn` parameter like
+`ensureQueryData`, `fetchQuery`, `prefetchQuery`, `fetchInfiniteQuery` and `prefetchInfiniteQuery` it's possible to use both Promises and Observables. See an example [here](https://github.com/ngneat/query/blob/main/src/app/prefetch-page/resolve.ts#L9).
 
 #### Component Usage - Observable
 
