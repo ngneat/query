@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0-beta.9](https://github-personal/ngneat/query/compare/query-2.0.0-beta.8...query-2.0.0-beta.9) (2024-01-20)
+
+
+### Features
+
+* **query:** support observables in each client method ([7c82603](https://github-personal/ngneat/query/commit/7c826035ecabd1bf230d7e3025d8617bca614dcf))
+
+
+
 # [2.0.0-beta.8](https://github-personal/ngneat/query/compare/query-2.0.0-beta.7...query-2.0.0-beta.8) (2023-12-02)
 
 
