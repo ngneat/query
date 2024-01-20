@@ -1,49 +1,7 @@
-import {
-  Injectable,
-  Injector,
-  effect,
-  runInInjectionContext,
-} from '@angular/core';
-import { injectQuery } from '../lib/query';
-import { injectQueryClient } from '../lib/query-client';
-import { queryOptions } from '../lib/query-options';
+import { Injector, effect, runInInjectionContext } from '@angular/core';
+import { TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { expectTypeOf } from 'expect-type';
-import { map, timer } from 'rxjs';
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-
-interface Todo {
-  id: number;
-}
-
-@Injectable({ providedIn: 'root' })
-class TodosService {
-  #client = injectQueryClient();
-  #query = injectQuery();
-
-  #getTodosOptions = queryOptions({
-    queryKey: ['todos'] as const,
-    queryFn: () => {
-      return timer(1000).pipe(
-        map(() => {
-          return [
-            {
-              id: 1,
-            },
-            { id: 2 },
-          ] as Todo[];
-        }),
-      );
-    },
-  });
-
-  getTodos() {
-    return this.#query(this.#getTodosOptions);
-  }
-
-  getCachedTodos() {
-    return this.#client.getQueryData(this.#getTodosOptions.queryKey);
-  }
-}
+import { Todo, TodosService } from './test-helper';
 
 describe('query', () => {
   let service: TodosService;
@@ -97,8 +55,4 @@ describe('query', () => {
     expect(spy).toHaveBeenCalledTimes(2);
     expect(spy).toHaveBeenCalledWith('success');
   }));
-
-  it('should be typed', () => {
-    expectTypeOf(service.getCachedTodos()).toEqualTypeOf<Todo[] | undefined>();
-  });
 });

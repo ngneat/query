@@ -10,11 +10,11 @@ import { injectQueryClient } from './query-client';
 import {
   DefaultError,
   InfiniteData,
-  QueryKey,
-  QueryObserver,
   InfiniteQueryObserver,
   InfiniteQueryObserverOptions,
   InfiniteQueryObserverResult,
+  QueryKey,
+  QueryObserver,
   WithRequired,
 } from '@tanstack/query-core';
 import {
@@ -44,7 +44,7 @@ interface _CreateInfiniteQueryOptions<
     >,
     Options {}
 
-type CreateInfiniteQueryOptions<
+export type CreateInfiniteQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
