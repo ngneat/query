@@ -15,4 +15,19 @@ bootstrapApplication(AppComponent, {
 });
 ```
 
-See all the avilable options [here](https://tanstack.com/query/v5/docs/react/devtools#options).
+See all the available options [here](https://tanstack.com/query/v5/docs/react/devtools#options).
+
+If you would like to lazy-load it in production - use `provideLazyQueryDevTools()`.
+
+```ts
+export const appConfig: ApplicationConfig = {
+  providers: [
+    environment.production
+      ? provideLazyQueryDevTools(options)
+      : provideQueryDevTools(options),
+  ],
+};
+```
+
+This will define a global window function `toggleDevtools()` which will lazy-load and mount the devtools.
+See also [Devtools in production](https://tanstack.com/query/v4/docs/react/devtools#devtools-in-production).

@@ -1,4 +1,5 @@
 import {
+  APP_INITIALIZER,
   DestroyRef,
   ENVIRONMENT_INITIALIZER,
   inject,
@@ -21,6 +22,29 @@ export function provideQueryDevTools(
         import('./lib/devtools/devtools').then((m) => {
           m.queryDevtools({ queryClient, destroyRef, ...devToolOptions });
         });
+      },
+    },
+  ]);
+}
+
+export function provideLazyQueryDevTools(
+  devToolOptions: Partial<Omit<TanstackQueryDevtoolsConfig, 'client'>> = {},
+  triggerFunction: string = 'toggleDevtools',
+) {
+  return makeEnvironmentProviders([
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      useFactory() {
+        const queryClient = injectQueryClient();
+        const destroyRef = inject(DestroyRef);
+        return () => {
+          (window as any)[triggerFunction] = () => {
+            import('./lib/devtools/devtools').then((m) => {
+              m.queryDevtools({ queryClient, destroyRef, ...devToolOptions });
+            });
+          };
+        };
       },
     },
   ]);
