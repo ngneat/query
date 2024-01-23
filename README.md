@@ -321,21 +321,19 @@ const withFunctionalFactory: QueryClientConfigFn = () => {
   const notificationService = inject(NotificationService);
 
   return {
-      queryCache: new QueryCache({
+    queryCache: new QueryCache({
       onError: (error: Error) => notificationService.notifyError(error),
     }),
-      defaultOptions: {
-        queries: {
-          staleTime: 3000,
-        },
+    defaultOptions: {
+      queries: {
+        staleTime: 3000,
       },
-    };
-}
+    },
+  };
+};
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideQueryClientOptions(withFunctionalQuery),
-  ],
+  providers: [provideQueryClientOptions(withFunctionalFactory)],
 });
 ```
 

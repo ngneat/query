@@ -27,14 +27,9 @@ export function provideQueryClientOptions(
   options: QueryClientConfig | QueryClientConfigFn,
 ) {
   return makeEnvironmentProviders([
-    typeof options === 'function'
-      ? {
-          provide: QUERY_CLIENT_OPTIONS,
-          useFactory: options,
-        }
-      : {
-          provide: QUERY_CLIENT_OPTIONS,
-          useValue: options,
-        },
+    {
+      provide: QUERY_CLIENT_OPTIONS,
+      [typeof options === 'function' ? 'useFactory' : 'useValue']: options,
+    } as any,
   ]);
 }
