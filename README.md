@@ -312,6 +312,31 @@ bootstrapApplication(AppComponent, {
 });
 ```
 
+It accept also a function factory if you need an injection context while creating the configuration.
+
+```ts
+import { provideQueryClientOptions } from '@ngneat/query';
+
+const withFunctionalFactory: QueryClientConfigFn = () => {
+  const notificationService = inject(NotificationService);
+
+  return {
+    queryCache: new QueryCache({
+      onError: (error: Error) => notificationService.notifyError(error),
+    }),
+    defaultOptions: {
+      queries: {
+        staleTime: 3000,
+      },
+    },
+  };
+};
+
+bootstrapApplication(AppComponent, {
+  providers: [provideQueryClientOptions(withFunctionalFactory)],
+});
+```
+
 ## Signal Utils
 
 ### intersectResults
