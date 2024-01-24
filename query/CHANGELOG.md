@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0-beta.10](https://github-personal/ngneat/query/compare/query-2.0.0-beta.9...query-2.0.0-beta.10) (2024-01-24)
+
+
+### Features
+
+* **query:** implement functional queryClientOptions factory ([3473671](https://github-personal/ngneat/query/commit/34736719003540daa0d62cf1a2c52ee9d98e8904))
+
+
+
 # [2.0.0-beta.9](https://github-personal/ngneat/query/compare/query-2.0.0-beta.8...query-2.0.0-beta.9) (2024-01-20)
 
 
