@@ -2,6 +2,7 @@ import { Injector, runInInjectionContext } from '@angular/core';
 import type {
   DataTag,
   DefaultError,
+  DefaultedQueryObserverOptions,
   QueryClient,
   QueryFunctionContext,
   QueryKey,
@@ -113,7 +114,7 @@ export function normalizeOptions<
     TPageParam
   >,
   injector: Injector,
-) {
+): DefaultedQueryObserverOptions<unknown, Error, unknown, unknown, QueryKey> {
   const defaultedOptions = client.defaultQueryOptions(
     options as unknown as QueryObserverOptions,
   );
