@@ -12,7 +12,7 @@ import { isObservable, Observable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { toPromise } from './utils';
 
-type CreateMutationOptions<
+export type CreateMutationOptions<
   TData = unknown,
   TError = DefaultError,
   TVariables = void,
@@ -24,7 +24,7 @@ type CreateMutationOptions<
   mutationFn: (variables: TVariables) => Promise<TData> | Observable<TData>;
 };
 
-type MutationResult<
+export type MutationResult<
   TData = unknown,
   TError = DefaultError,
   TVariables = void,

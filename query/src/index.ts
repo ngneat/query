@@ -1,6 +1,7 @@
 export { injectInfiniteQuery } from './lib/infinite-query';
 export { injectIsFetching } from './lib/is-fetching';
 export { injectIsMutating } from './lib/is-mutating';
+export type { MutationResult, CreateMutationOptions } from './lib/mutation';
 export { injectMutation } from './lib/mutation';
 export { injectQuery } from './lib/query';
 export { injectQueryClient, provideQueryClient } from './lib/query-client';
