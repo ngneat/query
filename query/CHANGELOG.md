@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0-beta.11](https://github-personal/ngneat/query/compare/query-2.0.0-beta.10...query-2.0.0-beta.11) (2024-01-29)
+
+
+### Bug Fixes
+
+* **query:** 🐞 fix return type ([98ca3e8](https://github-personal/ngneat/query/commit/98ca3e80f2207d61973ee3df6ceb8b9713afb0fc)), closes [#151](https://github-personal/ngneat/query/issues/151)
+
+
+### Features
+
+* **query:** 🔥 export MutationResult and CreateMutationOptions ([28a55d1](https://github-personal/ngneat/query/commit/28a55d16b797af7bdf79e00f1008fab5b5fbb66d)), closes [#152](https://github-personal/ngneat/query/issues/152)
+
+
+
 # [2.0.0-beta.10](https://github-personal/ngneat/query/compare/query-2.0.0-beta.9...query-2.0.0-beta.10) (2024-01-24)
 
 
