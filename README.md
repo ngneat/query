@@ -44,6 +44,8 @@ npm i @ngneat/query
 
 [Stackblitz Example](https://stackblitz.com/edit/stackblitz-starters-bsrgez?file=src%2Fmain.ts)
 
+>Please be aware that the `@tanstack/query-core` package must also be installed for the functionality to operate correctly.
+
 ## Query Client
 
 Inject the `QueryClient` [instance](https://tanstack.com/query/v5/docs/reference/QueryClient) through the `injectQueryClient()`
@@ -76,7 +78,7 @@ export class TodosService {
     return this.#query({
       queryKey: ['todos'] as const,
       queryFn: () => {
-        return this.http.get<Todo[]>(
+        return this.#http.get<Todo[]>(
           'https://jsonplaceholder.typicode.com/todos',
         );
       },
@@ -166,7 +168,7 @@ export class GroupsService {
 
   groupOptions = queryOptions({
     queryKey: ['groups'] as const,
-    queryFn: () => this.http.get(url),
+    queryFn: () => this.#http.get(url),
     staleTime: 5 * 1000,
   });
 
@@ -213,12 +215,12 @@ import { injectMutation } from '@ngneat/query';
 @Injectable({ providedIn: 'root' })
 export class TodosService {
   #mutation = injectMutation();
-  #httpClient = inject(HttpClient);
+  #http = inject(HttpClient);
 
   addTodo() {
     return this.#mutation({
       mutationFn: ({ title }) =>
-        this.http.post<Todo>(`https://jsonplaceholder.typicode.com/todos`, {
+        this.#http.post<Todo>(`https://jsonplaceholder.typicode.com/todos`, {
           title,
         }),
     });
