@@ -25,7 +25,7 @@ export interface Options {
   injector?: Injector;
 }
 
-interface _CreateBaseQueryOptions<
+export interface _CreateBaseQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
