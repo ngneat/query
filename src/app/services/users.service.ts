@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { injectQuery, queryOptions } from '@ngneat/query';
 
-interface User {
+export interface User {
   id: number;
   email: string;
 }
