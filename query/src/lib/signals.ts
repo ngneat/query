@@ -72,6 +72,7 @@ export function intersectResults<
       isFetching: toArray.some((v) => v().isFetching),
       error: toArray.find((v) => v().isError)?.error,
       data: undefined,
+      refetch: () => Promise.all(toArray.map(v => v().refetch())),
     } as unknown as QueryObserverResult<R> & { all: T };
 
     if (mappedResult.isSuccess) {
