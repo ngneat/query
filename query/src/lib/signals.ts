@@ -59,10 +59,11 @@ export function intersectResults<
   signals: T,
   mapFn: (values: UnifiedTypes<T>) => R,
 ): Signal<QueryObserverResult<R> & { all: T }> {
-  return computed(() => {
-    const isArray = Array.isArray(signals);
-    const toArray = isArray ? signals : Object.values(signals);
+  const isArray = Array.isArray(signals);
+  const toArray = isArray ? signals : Object.values(signals);
+  const refetch = () => Promise.all(toArray.map(v => v().refetch()));
 
+  return computed(() => {
     const mappedResult = {
       all: signals,
       isSuccess: toArray.every((v) => v().isSuccess),
@@ -72,7 +73,7 @@ export function intersectResults<
       isFetching: toArray.some((v) => v().isFetching),
       error: toArray.find((v) => v().isError)?.error,
       data: undefined,
-      refetch: () => Promise.all(toArray.map(v => v().refetch())),
+      refetch,
     } as unknown as QueryObserverResult<R> & { all: T };
 
     if (mappedResult.isSuccess) {
