@@ -27,7 +27,7 @@ type UnifiedTypes<T> = T extends Array<Signal<QueryObserverBaseResult<any>>>
  *  This function is used to merge multiple signal queries into one.
  *  It will return a new base query result that will merge the results of all the queries.
  *  Note that it should be used inside injection context.
- *  If you pass the 'intersectStaleData' flag, it will also intersect unsuccessful result if data for all queries is present.
+ *  If you pass the 'intersectStaleData' flag, it will also intersect unsuccessful result in case data for all queries is present.
  *
  * @example
  *
@@ -37,7 +37,6 @@ type UnifiedTypes<T> = T extends Array<Signal<QueryObserverBaseResult<any>>>
  * }, ({ todos, posts }) => {
  *   return todos + posts;
  * });
- *
  *
  * @example
  *
@@ -50,7 +49,6 @@ type UnifiedTypes<T> = T extends Array<Signal<QueryObserverBaseResult<any>>>
  *    return todoOne.title + todoTwo.title;
  *  }
  * );
- *
  *
  * @example
  *
@@ -79,7 +77,7 @@ export function intersectResults<
     : () => Object.entries(signals).reduce((acc, [key, value]) => {
         acc[key as keyof UnifiedTypes<T>] = value().data;
         return acc;
-      }, {} as UnifiedTypes<T>)
+      }, {} as UnifiedTypes<T>);
 
   return computed(() => {
     const mappedResult = {
