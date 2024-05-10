@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0](/compare/query-2.0.0-beta.11...query-2.0.0) (2024-05-10)
+
+
+### Bug Fixes
+
+* **query:** Add export to _CreateBaseQueryOptions type (#157) b699664, closes #157
+
+
+### Features
+
+* **signals:** Add refetch functionality to intersected results (#163) 5a910cc, closes #163
+
+
+
 # [2.0.0-beta.11](https://github-personal/ngneat/query/compare/query-2.0.0-beta.10...query-2.0.0-beta.11) (2024-01-29)
 
 
