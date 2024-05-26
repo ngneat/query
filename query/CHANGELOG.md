@@ -2,6 +2,16 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [2.0.1](/compare/query-2.0.0...query-2.0.1) (2024-05-26)
+
+
+### Bug Fixes
+
+* **query:** 🐞 support throwOnError c232b47, closes #180
+* **query:** update for signatures of  createSuccessObserverResult and createPendingObserverResult (#175) 39bc985, closes #175
+
+
+
 # [2.0.0](/compare/query-2.0.0-beta.11...query-2.0.0) (2024-05-10)
 
 
