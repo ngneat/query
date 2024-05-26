@@ -12,6 +12,7 @@ import {
 } from '@tanstack/query-core';
 import { Observable, shareReplay } from 'rxjs';
 import { normalizeOptions } from './query-options';
+import { shouldThrowError } from './utils';
 
 export type QueryFunctionWithObservable<
   T = unknown,
@@ -121,11 +122,22 @@ export function createBaseQuery<
 
     const queryObserverDispose = queryObserver.subscribe(
       notifyManager.batchCalls((result) => {
-        observer.next(
-          defaultedOptions.notifyOnChangeProps
-            ? result
-            : queryObserver?.trackResult(result),
-        );
+        if (
+          !result.isFetching &&
+          result.isError &&
+          shouldThrowError(queryObserver!.options.throwOnError, [
+            result.error,
+            queryObserver!.getCurrentQuery(),
+          ])
+        ) {
+          observer.error(result.error);
+        } else {
+          observer.next(
+            defaultedOptions.notifyOnChangeProps
+              ? result
+              : queryObserver?.trackResult(result),
+          );
+        }
       }),
     );
 

@@ -1,7 +1,7 @@
 import {
   DefaultError,
   QueryObserverResult,
-  QueryObserverSuccessResult
+  QueryObserverSuccessResult,
 } from '@tanstack/query-core';
 import { Observable, Subject, firstValueFrom, takeUntil } from 'rxjs';
 
@@ -38,7 +38,10 @@ export function createSuccessObserverResult<T, Error = DefaultError>(
   } as QueryObserverSuccessResult<T, Error>;
 }
 
-export function createPendingObserverResult<T = unknown, Error = DefaultError>(): QueryObserverResult<T, Error> {
+export function createPendingObserverResult<
+  T = unknown,
+  Error = DefaultError,
+>(): QueryObserverResult<T, Error> {
   return {
     isError: false,
     isLoading: true,
@@ -48,4 +51,15 @@ export function createPendingObserverResult<T = unknown, Error = DefaultError>()
     fetchStatus: 'fetching',
     status: 'pending',
   } as QueryObserverResult<T, Error>;
+}
+
+export function shouldThrowError<T extends (...args: Array<any>) => boolean>(
+  throwError: boolean | T | undefined,
+  params: Parameters<T>,
+): boolean {
+  if (typeof throwError === 'function') {
+    return throwError(...params);
+  }
+
+  return !!throwError;
 }
