@@ -394,27 +394,27 @@ export class TodosPageComponent {
 
 ### filterSuccessResult
 
-The `filterSuccess` operator is useful when you want to filter only successful results:
+The `filterSuccessResult` operator is useful when you want to filter only successful results:
 
-`todosService.getTodos().result$.pipe(filterSuccess())`
+`todosService.getTodos().result$.pipe(filterSuccessResult())`
 
 ### filterErrorResult
 
-The `filterError` operator is useful when you want to filter only error results:
+The `filterErrorResult` operator is useful when you want to filter only error results:
 
-`todosService.getTodos().result$.pipe(filterError())`
+`todosService.getTodos().result$.pipe(filterErrorResult())`
 
 ### tapSuccessResult
 
-The `tapSuccess` operator is useful when you want to run a side effect only when the result is successful:
+The `tapSuccessResult` operator is useful when you want to run a side effect only when the result is successful:
 
-`todosService.getTodos().result$.pipe(tapSuccess(console.log))`
+`todosService.getTodos().result$.pipe(tapSuccessResult(console.log))`
 
 ### tapErrorResult
 
-The `tapErrorResult` operator is useful when you want to run a side effect only when the result is successful:
+The `tapErrorResult` operator is useful when you want to run a side effect only when the result is erroring:
 
-`todosService.getTodos().result$.pipe(tapError(console.log))`
+`todosService.getTodos().result$.pipe(tapErrorResult(console.log))`
 
 ### mapResultData
 
