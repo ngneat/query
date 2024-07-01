@@ -89,6 +89,11 @@
     "ts-node": "10.9.1",
     "typescript": "5.4.5"
   },
+  "overrides": {
+    "@jscutlery/semver": {
+      "@nx/devkit": "19.1.1"
+    }
+  },
   "workspaces": [
     "query/**",
     "devtools/**"
