@@ -2,6 +2,44 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [3.0.0](/compare/query-2.0.1...query-3.0.0) (2024-07-03)
+
+
+### Features
+
+* adds angular 18 support (#181) 518af07, closes #181
+
+
+### BREAKING CHANGES
+
+* Bumps required angular version to 18
+
+
+
+## [2.0.1](/compare/query-2.0.0...query-2.0.1) (2024-05-26)
+
+
+### Bug Fixes
+
+* **query:** 🐞 support throwOnError c232b47, closes #180
+* **query:** update for signatures of  createSuccessObserverResult and createPendingObserverResult (#175) 39bc985, closes #175
+
+
+
+# [2.0.0](/compare/query-2.0.0-beta.11...query-2.0.0) (2024-05-10)
+
+
+### Bug Fixes
+
+* **query:** Add export to _CreateBaseQueryOptions type (#157) b699664, closes #157
+
+
+### Features
+
+* **signals:** Add refetch functionality to intersected results (#163) 5a910cc, closes #163
+
+
+
 # [2.0.0-beta.11](https://github-personal/ngneat/query/compare/query-2.0.0-beta.10...query-2.0.0-beta.11) (2024-01-29)
 
 

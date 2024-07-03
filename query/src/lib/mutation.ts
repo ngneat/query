@@ -10,7 +10,7 @@ import {
 } from '@tanstack/query-core';
 import { isObservable, Observable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { toPromise } from './utils';
+import { shouldThrowError, toPromise } from './utils';
 
 export type CreateMutationOptions<
   TData = unknown,
@@ -89,7 +89,18 @@ class Mutation {
         notifyManager.batchCalls(
           (
             result: MutationObserverResult<TData, TError, TVariables, TContext>,
-          ) => observer.next(result),
+          ) => {
+            if (
+              result.isError &&
+              shouldThrowError(mutationObserver!.options.throwOnError, [
+                result.error,
+              ])
+            ) {
+              observer.error(result.error);
+            } else {
+              observer.next(result);
+            }
+          },
         ),
       );
 

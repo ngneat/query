@@ -148,6 +148,7 @@ export function intersectResults$<
   return map((values) => {
     const isArray = Array.isArray(values);
     const toArray = isArray ? values : Object.values(values);
+    const refetch = () => Promise.all(toArray.map(v => v.refetch()));
 
     const mappedResult = {
       all: values,
@@ -158,6 +159,7 @@ export function intersectResults$<
       isFetching: toArray.some((v) => v.isFetching),
       error: toArray.find((v) => v.isError)?.error,
       data: undefined,
+      refetch,
     } as unknown as QueryObserverResult<R> & { all: T };
 
     if (mappedResult.isSuccess) {

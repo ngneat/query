@@ -1,25 +1,32 @@
-import { Component, Input, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { UsersService } from '../services/users.service';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Component, inject, input } from '@angular/core';
+import { User, UsersService } from '../services/users.service';
+import { RouterModule } from '@angular/router';
+import { computedAsync } from 'ngxtension/computed-async';
+import { createPendingObserverResult } from '@ngneat/query';
 
 @Component({
   selector: 'query-dynamic-page',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './dynamic-page.component.html',
   styleUrls: ['./dynamic-page.component.scss'],
 })
 export class DynamicPageComponent {
+  id = input.required<string>();
   usersService = inject(UsersService);
-  userResultDef = this.usersService.getUser(
-    +inject(ActivatedRoute).snapshot.queryParams['id'],
-  );
 
-  user = this.userResultDef.result;
+  user = computedAsync(() => this.usersService.getUser(+this.id()).result$, {
+    initialValue: createPendingObserverResult<User>(),
+  });
 
-  @Input()
-  set id(userId: string) {
-    this.userResultDef.updateOptions(this.usersService.getUserOptions(+userId));
-  }
+  // userResultDef = this.usersService.getUser(
+  //   +inject(ActivatedRoute).snapshot.queryParams['id'],
+  // );
+
+  // user = this.userResultDef.result;
+
+  // @Input()
+  // set id(userId: string) {
+  // this.userResultDef.updateOptions(this.usersService.getUserOptions(+userId));
+  // }
 }

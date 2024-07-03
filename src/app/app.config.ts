@@ -1,5 +1,5 @@
 import { provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig, inject } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, inject } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import {
@@ -22,8 +22,15 @@ const withFunctionaFactory: QueryClientConfigFn = () => {
   };
 };
 
+class MyErrorHandler extends ErrorHandler {
+  override handleError(error: any) {
+    return super.handleError(error);
+  }
+}
+
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: ErrorHandler, useClass: MyErrorHandler },
     provideRouter(appRoutes, withComponentInputBinding()),
     provideHttpClient(),
     provideQueryClientOptions(withFunctionaFactory),

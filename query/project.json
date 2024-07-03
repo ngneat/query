@@ -31,14 +31,7 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": [
-          "query/**/*.ts",
-          "query/**/*.html",
-          "query/package.json"
-        ]
-      }
+      "outputs": ["{options.outputFile}"]
     },
     "version": {
       "executor": "@jscutlery/semver:version",

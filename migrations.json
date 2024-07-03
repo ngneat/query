@@ -1,94 +1,82 @@
 {
   "migrations": [
     {
-      "version": "17.1.0-beta.2",
-      "description": "Move jest executor options to nx.json targetDefaults",
-      "implementation": "./src/migrations/update-17-1-0/move-options-to-target-defaults",
-      "package": "@nx/jest",
-      "name": "move-options-to-target-defaults"
-    },
-    {
-      "version": "17.1.0-beta.1",
-      "description": "Updates for @typescript-utils/utils v6.9.1+",
-      "implementation": "./src/migrations/update-17-1-0/update-typescript-eslint",
-      "package": "@nx/eslint",
-      "name": "update-typescript-eslint"
+      "version": "18.1.0-beta.3",
+      "description": "Moves affected.defaultBase to defaultBase in `nx.json`",
+      "implementation": "./src/migrations/update-17-2-0/move-default-base",
+      "package": "nx",
+      "name": "move-default-base-to-nx-json-root"
     },
     {
       "cli": "nx",
-      "version": "17.1.0-beta.5",
-      "requires": {
-        "@angular/core": ">=17.0.0"
-      },
-      "description": "Update the @angular/cli package version to ~17.0.0.",
-      "factory": "./src/migrations/update-17-1-0/update-angular-cli",
-      "package": "@nx/angular",
-      "name": "update-angular-cli-version-17-0-0"
+      "version": "19.1.0-beta.6",
+      "description": "Migrate no-extra-semi rules into user config, out of nx extendable configs",
+      "implementation": "./src/migrations/update-19-1-0-migrate-no-extra-semi/migrate-no-extra-semi",
+      "package": "@nx/eslint-plugin",
+      "name": "update-19-1-0-rename-no-extra-semi"
     },
     {
       "cli": "nx",
-      "version": "17.1.0-beta.5",
+      "version": "18.1.0-beta.1",
       "requires": {
-        "@angular/core": ">=17.0.0"
+        "@angular/core": ">=17.2.0"
       },
-      "description": "Rename 'browserTarget' to 'buildTarget'.",
-      "factory": "./src/migrations/update-17-1-0/browser-target-to-build-target",
+      "description": "Update the @angular/cli package version to ~17.2.0.",
+      "factory": "./src/migrations/update-18-1-0/update-angular-cli",
       "package": "@nx/angular",
-      "name": "rename-browser-target-to-build-target"
+      "name": "update-angular-cli-version-17-2-0"
     },
     {
       "cli": "nx",
-      "version": "17.1.0-beta.5",
-      "requires": {
-        "@angular/core": ">=17.0.0"
-      },
-      "description": "Replace usages of '@nguniversal/builders' with '@angular-devkit/build-angular'.",
-      "factory": "./src/migrations/update-17-1-0/replace-nguniversal-builders",
+      "version": "18.1.1-beta.0",
+      "description": "Ensure targetDefaults inputs for task hashing when '@nx/angular:webpack-browser' is used are correct for Module Federation.",
+      "factory": "./src/migrations/update-18-1-1/fix-target-defaults-inputs",
       "package": "@nx/angular",
-      "name": "replace-nguniversal-builders"
+      "name": "fix-target-defaults-for-webpack-browser"
     },
     {
       "cli": "nx",
-      "version": "17.1.0-beta.5",
+      "version": "18.2.0-beta.0",
       "requires": {
-        "@angular/core": ">=17.0.0"
+        "@angular/core": ">=17.3.0"
       },
-      "description": "Replace usages of '@nguniversal/' packages with '@angular/ssr'.",
-      "factory": "./src/migrations/update-17-1-0/replace-nguniversal-engines",
+      "description": "Update the @angular/cli package version to ~17.3.0.",
+      "factory": "./src/migrations/update-18-2-0/update-angular-cli",
       "package": "@nx/angular",
-      "name": "replace-nguniversal-engines"
+      "name": "update-angular-cli-version-17-3-0"
     },
     {
       "cli": "nx",
-      "version": "17.1.0-beta.5",
+      "version": "19.1.0-beta.2",
       "requires": {
-        "@angular/core": ">=17.0.0"
+        "@angular/core": ">=18.0.0"
       },
-      "description": "Replace the deep imports from 'zone.js/dist/zone' and 'zone.js/dist/zone-testing' with 'zone.js' and 'zone.js/testing'.",
-      "factory": "./src/migrations/update-17-1-0/update-zone-js-deep-import",
+      "description": "Update the @angular/cli package version to ~18.0.0.",
+      "factory": "./src/migrations/update-19-1-0/update-angular-cli",
       "package": "@nx/angular",
-      "name": "update-zone-js-deep-import"
+      "name": "update-angular-cli-version-18-0-0"
     },
     {
-      "version": "17.0.0",
-      "description": "Angular v17 introduces a new control flow syntax that uses the @ and } characters. This migration replaces the existing usages with their corresponding HTML entities.",
-      "factory": "./migrations/block-template-entities/bundle",
+      "cli": "nx",
+      "version": "18.1.0-beta.3",
+      "description": "Remove invalid baseUrl option from @nx/playwright:playwright targets in project.json.",
+      "implementation": "./src/migrations/update-18-1-0/remove-baseUrl-from-project-json",
+      "package": "@nx/playwright",
+      "name": "18-1-0-remove-baseUrl-from-project-json"
+    },
+    {
+      "version": "18.0.0",
+      "description": "Updates two-way bindings that have an invalid expression to use the longform expression instead.",
+      "factory": "./migrations/invalid-two-way-bindings/bundle",
       "package": "@angular/core",
-      "name": "block-template-entities"
+      "name": "invalid-two-way-bindings"
     },
     {
-      "version": "17.0.0",
-      "description": "CompilerOption.useJit and CompilerOption.missingTranslation are unused under Ivy. This migration removes their usage",
-      "factory": "./migrations/compiler-options/bundle",
+      "version": "18.0.0",
+      "description": "Replace deprecated HTTP related modules with provider functions",
+      "factory": "./migrations/http-providers/bundle",
       "package": "@angular/core",
-      "name": "migration-v17-compiler-options"
-    },
-    {
-      "version": "17.0.0",
-      "description": "Updates `TransferState`, `makeStateKey`, `StateKey` imports from `@angular/platform-browser` to `@angular/core`.",
-      "factory": "./migrations/transfer-state/bundle",
-      "package": "@angular/core",
-      "name": "migration-transfer-state"
+      "name": "migration-http-providers"
     }
   ]
 }

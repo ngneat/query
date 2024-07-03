@@ -1,4 +1,5 @@
 import {
+  DefaultError,
   QueryObserverResult,
   QueryObserverSuccessResult,
 } from '@tanstack/query-core';
@@ -23,9 +24,9 @@ export function toPromise<T>({
   return firstValueFrom(source.pipe(signal ? takeUntil(cancel) : (s) => s));
 }
 
-export function createSuccessObserverResult<T>(
+export function createSuccessObserverResult<T, Error = DefaultError>(
   data: T,
-): QueryObserverResult<T> {
+): QueryObserverResult<T, Error> {
   return {
     data,
     isLoading: false,
@@ -34,10 +35,13 @@ export function createSuccessObserverResult<T>(
     isPending: false,
     isSuccess: true,
     status: 'success',
-  } as QueryObserverSuccessResult<T>;
+  } as QueryObserverSuccessResult<T, Error>;
 }
 
-export function createPendingObserverResult<T>(): QueryObserverResult<T> {
+export function createPendingObserverResult<
+  T = unknown,
+  Error = DefaultError,
+>(): QueryObserverResult<T, Error> {
   return {
     isError: false,
     isLoading: true,
@@ -46,5 +50,16 @@ export function createPendingObserverResult<T>(): QueryObserverResult<T> {
     isSuccess: false,
     fetchStatus: 'fetching',
     status: 'pending',
-  } as QueryObserverResult<T>;
+  } as QueryObserverResult<T, Error>;
+}
+
+export function shouldThrowError<T extends (...args: Array<any>) => boolean>(
+  throwError: boolean | T | undefined,
+  params: Parameters<T>,
+): boolean {
+  if (typeof throwError === 'function') {
+    return throwError(...params);
+  }
+
+  return !!throwError;
 }
