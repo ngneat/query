@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [3.0.0](/compare/query-2.0.1...query-3.0.0) (2024-07-03)
+
+
+### Features
+
+* adds angular 18 support (#181) 518af07, closes #181
+
+
+### BREAKING CHANGES
+
+* Bumps required angular version to 18
+
+
+
 ## [2.0.1](/compare/query-2.0.0...query-2.0.1) (2024-05-26)
 
 
