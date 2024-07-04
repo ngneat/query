@@ -449,7 +449,7 @@ It is intended to be used in scenarios where an observable stream should be list
 An operator that takes values emitted by the source observable until the `isError` property on the result is true.  
 It is intended to be used in scenarios where an observable stream should be listened to until an error result is emitted.
 
-`todosService.getTodos().result$.pipe(takeUntilResultSuccess())`
+`todosService.getTodos().result$.pipe(takeUntilResultError())`
 
 ### startWithPendingQueryResult
 
