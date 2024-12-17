@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [3.1.0](https://github.com/ngneat/query/compare/query-3.0.0...query-3.1.0) (2024-12-17)
+
+
+### Features
+
+* update to Angular 19 ([#200](https://github.com/ngneat/query/issues/200)) ([f6f79a1](https://github.com/ngneat/query/commit/f6f79a14c5c4579bd7d024440f7d285a7ec27ee4))
+
+
+
 # [3.0.0](/compare/query-2.0.1...query-3.0.0) (2024-07-03)
 
 
