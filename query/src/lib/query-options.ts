@@ -1,12 +1,13 @@
 import { Injector, runInInjectionContext } from '@angular/core';
-import type {
-  DataTag,
-  DefaultError,
-  DefaultedQueryObserverOptions,
-  QueryClient,
-  QueryFunctionContext,
-  QueryKey,
-  QueryObserverOptions,
+import {
+  skipToken,
+  type DataTag,
+  type DefaultError,
+  type DefaultedQueryObserverOptions,
+  type QueryClient,
+  type QueryFunctionContext,
+  type QueryKey,
+  type QueryObserverOptions,
 } from '@tanstack/query-core';
 import { isObservable } from 'rxjs';
 import { CreateBaseQueryOptions } from './base-query';
@@ -122,7 +123,8 @@ export function normalizeOptions<
 
   const originalQueryFn = defaultedOptions.queryFn;
 
-  if (originalQueryFn) {
+  // once the skipToken is encountered we just return the default options instead
+  if (originalQueryFn && originalQueryFn !== skipToken) {
     defaultedOptions.queryFn = function (ctx: QueryFunctionContext) {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const _this = this;

@@ -4,12 +4,11 @@ import { PostsService } from './posts.service';
 import { InViewDirective } from './in-view.directive';
 
 @Component({
-  selector: 'query-posts-page',
-  standalone: true,
-  imports: [CommonModule, InViewDirective],
-  templateUrl: './posts-page.component.html',
-  styles: [],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'query-posts-page',
+    imports: [CommonModule, InViewDirective],
+    templateUrl: './posts-page.component.html',
+    styles: [],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostsPageComponent {
   posts$ = inject(PostsService).getPosts().result$;

@@ -8,16 +8,15 @@ import { NgComponentOutlet, NgForOf } from '@angular/common';
 import { TabComponent } from '../query-tab/tab.component';
 
 @Component({
-  selector: 'query-tabs',
-  standalone: true,
-  imports: [NgForOf, NgComponentOutlet],
-  templateUrl: './tabs.component.html',
-  styles: `
+    selector: 'query-tabs',
+    imports: [NgForOf, NgComponentOutlet],
+    templateUrl: './tabs.component.html',
+    styles: `
     .is-active-tab a {
       color: #b93eff;
       border-bottom-color: #b93eff;
     }
-  `,
+  `
 })
 export class TabsComponent implements AfterContentInit {
   @ContentChildren(TabComponent, { read: TabComponent })

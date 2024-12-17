@@ -166,7 +166,7 @@ export function createBaseQuery<
             ...newOptions,
           },
           injector,
-        ) as QueryObserverOptions<
+        ) as unknown as QueryObserverOptions<
           TQueryFnData,
           TError,
           TData,

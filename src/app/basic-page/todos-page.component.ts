@@ -10,11 +10,10 @@ import { TabsComponent } from '../ui/query-tabs/tabs.component';
 import { TabComponent } from '../ui/query-tab/tab.component';
 
 @Component({
-  selector: 'query-todos-page',
-  standalone: true,
-  imports: [CommonModule, TabsComponent, TabComponent],
-  templateUrl: './todos-page.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'query-todos-page',
+    imports: [CommonModule, TabsComponent, TabComponent],
+    templateUrl: './todos-page.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodosPageComponent {
   #todosService = inject(TodosService);
