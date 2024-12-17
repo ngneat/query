@@ -5,11 +5,10 @@ import { computedAsync } from 'ngxtension/computed-async';
 import { createPendingObserverResult } from '@ngneat/query';
 
 @Component({
-  selector: 'query-dynamic-page',
-  standalone: true,
-  imports: [RouterModule],
-  templateUrl: './dynamic-page.component.html',
-  styleUrls: ['./dynamic-page.component.scss'],
+    selector: 'query-dynamic-page',
+    imports: [RouterModule],
+    templateUrl: './dynamic-page.component.html',
+    styleUrls: ['./dynamic-page.component.scss']
 })
 export class DynamicPageComponent {
   id = input.required<string>();

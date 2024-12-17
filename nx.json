@@ -62,5 +62,6 @@
       "style": "scss"
     }
   },
-  "defaultProject": "query-playground"
+  "defaultProject": "query-playground",
+  "useLegacyCache": true
 }

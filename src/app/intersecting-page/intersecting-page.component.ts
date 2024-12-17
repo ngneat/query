@@ -5,12 +5,11 @@ import { intersectResults, intersectResults$ } from '@ngneat/query';
 import { combineLatest } from 'rxjs';
 
 @Component({
-  selector: 'query-intersecting-page',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './intersecting-page.component.html',
-  styles: [],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'query-intersecting-page',
+    imports: [CommonModule],
+    templateUrl: './intersecting-page.component.html',
+    styles: [],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IntersectingPageComponent {
   #todosService = inject(TodosService);
