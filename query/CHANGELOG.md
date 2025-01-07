@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [3.1.1](https://github.com/ngneat/query/compare/query-3.1.0...query-3.1.1) (2025-01-07)
+
+
+### Bug Fixes
+
+* **query:** 🐞 fix version support ([9131e67](https://github.com/ngneat/query/commit/9131e67b073060a0a9920933c84db50f9012b87e))
+
+
+
 # [3.1.0](https://github.com/ngneat/query/compare/query-3.0.0...query-3.1.0) (2024-12-17)
 
 
