@@ -60,10 +60,13 @@ const QueryClientService = new InjectionToken<QueryClient>(
 );
 
 /** @public */
-export function provideQueryClient(queryClient: QueryClient): Provider {
+export function provideQueryClient(queryClientOrFactory: _QueryClient | (() => _QueryClient)): Provider {
   return {
     provide: QueryClientToken,
-    useValue: queryClient,
+    useFactory:
+      typeof queryClientOrFactory === 'function'
+        ? queryClientOrFactory
+        : () => queryClientOrFactory,
   };
 }
 
