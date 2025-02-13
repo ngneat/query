@@ -59,8 +59,25 @@ export class TodosService {
   #queryClient = injectQueryClient();
 }
 ```
+or provide `QueryClient` [instance](https://tanstack.com/query/v5/docs/reference/QueryClient) manually
 
-> The function should run inside an injection context
+```ts
+import { provideQueryClient } from '@ngneat/query';
+import { QueryClient } from '@tanstack/query-core';
+
+provideQueryClient(() =>  new QueryClient())
+```
+
+and then use with
+
+```ts
+import { injectQueryClient } from '@ngneat/query';
+
+  ...
+  #queryClient = injectQueryClient();
+```
+
+> Functions should run inside an injection context
 
 ### Query
 

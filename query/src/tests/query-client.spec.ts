@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
-import { InfiniteData } from '@tanstack/query-core';
+import { InfiniteData, QueryClient as _QueryClient } from '@tanstack/query-core';
 import { expectTypeOf } from 'expect-type';
-import { QueryClient, injectQueryClient } from '../lib/query-client';
+import { QueryClient, injectQueryClient, provideQueryClient } from '../lib/query-client';
 import {
   Posts,
   PostsService,
@@ -135,3 +135,39 @@ describe('QueryClient', () => {
     >();
   });
 });
+
+
+describe('Custom QueryClient', () => {
+  let queryClient: QueryClient;
+  let customQueryClientInstance: _QueryClient;
+
+  it('should use custom query client', fakeAsync(() => {
+    customQueryClientInstance = new _QueryClient();
+    TestBed.configureTestingModule({
+      providers: [provideQueryClient(customQueryClientInstance)],
+    });
+    TestBed.runInInjectionContext(() => {
+      queryClient = injectQueryClient();
+    });
+
+    expect(queryClient).toBe(customQueryClientInstance);
+  }));
+
+  it('should use custom query client provided from function', fakeAsync(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideQueryClient(() => {
+          customQueryClientInstance = new _QueryClient();
+          return customQueryClientInstance;
+        }),
+      ],
+    });
+    TestBed.runInInjectionContext(() => {
+      queryClient = injectQueryClient();
+    });
+
+    expect(queryClient).toBe(customQueryClientInstance);
+  }));
+
+});
+
