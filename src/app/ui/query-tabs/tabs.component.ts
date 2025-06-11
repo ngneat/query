@@ -4,12 +4,12 @@ import {
   ContentChildren,
   QueryList,
 } from '@angular/core';
-import { NgComponentOutlet, NgForOf } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 import { TabComponent } from '../query-tab/tab.component';
 
 @Component({
     selector: 'query-tabs',
-    imports: [NgForOf, NgComponentOutlet],
+    imports: [NgComponentOutlet],
     templateUrl: './tabs.component.html',
     styles: `
     .is-active-tab a {
