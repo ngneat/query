@@ -28,7 +28,6 @@ interface _CreateInfiniteQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = unknown,
 > extends WithRequired<
@@ -36,7 +35,6 @@ interface _CreateInfiniteQueryOptions<
         TQueryFnData,
         TError,
         TData,
-        TQueryData,
         TQueryKey,
         TPageParam
       >,
@@ -48,7 +46,6 @@ export type CreateInfiniteQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = unknown,
 > = Omit<
@@ -56,7 +53,6 @@ export type CreateInfiniteQueryOptions<
     TQueryFnData,
     TError,
     TData,
-    TQueryData,
     TQueryKey,
     TPageParam
   >,
@@ -81,7 +77,6 @@ class InfiniteQuery {
       TQueryFnData,
       TError,
       TData,
-      TQueryFnData,
       TQueryKey,
       TPageParam
     >,

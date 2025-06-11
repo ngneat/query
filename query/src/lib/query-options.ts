@@ -79,14 +79,12 @@ export function queryOptions<
     TQueryFnData,
     TError,
     TData,
-    TQueryFnData,
     TQueryKey,
     TPageParam
   >,
 ): CreateInfiniteQueryOptions<
   TQueryFnData,
   TError,
-  TQueryFnData,
   TQueryFnData,
   TQueryKey,
   TPageParam
