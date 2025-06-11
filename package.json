@@ -43,7 +43,7 @@
     "@angular-eslint/eslint-plugin": "20.0.0",
     "@angular-eslint/eslint-plugin-template": "20.0.0",
     "@angular-eslint/template-parser": "20.0.0",
-    "@angular/cli": "20.0.1",
+    "@angular/cli": "~19.1.0",
     "@angular/compiler-cli": "20.0.2",
     "@angular/language-service": "20.0.2",
     "@commitlint/cli": "19.3.0",
