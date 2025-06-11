@@ -10,7 +10,7 @@
     "url": "https://github.com/sponsors/ngneat"
   },
   "peerDependencies": {
-    "@tanstack/query-core": "^5.62.7",
+    "@tanstack/query-core": "^5.80.6",
     "@angular/core": ">=16.0.0 <=20.x.x"
   },
   "dependencies": {

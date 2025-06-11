@@ -11,7 +11,7 @@
   },
   "peerDependencies": {
     "@angular/core": ">=16.0.0 <=20.x.x",
-    "@tanstack/query-devtools": "5.61.4"
+    "@tanstack/query-devtools": "5.80.0"
   },
   "dependencies": {
     "tslib": "^2.4.0"
