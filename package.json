@@ -28,7 +28,7 @@
     "@angular/platform-browser-dynamic": "20.0.2",
     "@angular/router": "20.0.2",
     "@ngneat/until-destroy": "^10.0.0",
-    "@nx/angular": "21.2.0-beta.5",
+    "@nx/angular": "21.2.0",
     "@tanstack/query-core": "^5.80.6",
     "@tanstack/query-devtools": "^5.80.0",
     "bulma": "^0.9.4",
@@ -51,13 +51,13 @@
     "@commitlint/config-angular": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
     "@jscutlery/semver": "^5.6.0",
-    "@nx/devkit": "21.2.0-beta.5",
-    "@nx/eslint": "21.2.0-beta.5",
-    "@nx/eslint-plugin": "21.2.0-beta.5",
-    "@nx/jest": "21.2.0-beta.5",
-    "@nx/js": "21.2.0-beta.5",
-    "@nx/playwright": "21.2.0-beta.5",
-    "@nx/workspace": "21.2.0-beta.5",
+    "@nx/devkit": "21.2.0",
+    "@nx/eslint": "21.2.0",
+    "@nx/eslint-plugin": "21.2.0",
+    "@nx/jest": "21.2.0",
+    "@nx/js": "21.2.0",
+    "@nx/playwright": "21.2.0",
+    "@nx/workspace": "21.2.0",
     "@playwright/test": "^1.36.0",
     "@schematics/angular": "20.0.1",
     "@swc-node/register": "1.9.2",
@@ -81,7 +81,7 @@
     "jest-preset-angular": "14.6.0",
     "jsonc-eslint-parser": "^2.1.0",
     "ng-packagr": "20.0.0",
-    "nx": "21.2.0-beta.5",
+    "nx": "21.2.0",
     "postcss": "^8.4.5",
     "postcss-import": "~14.1.0",
     "postcss-preset-env": "~7.5.0",
@@ -93,7 +93,7 @@
   },
   "overrides": {
     "@jscutlery/semver": {
-      "@nx/devkit": "21.2.0-beta.5"
+      "@nx/devkit": "21.2.0"
     }
   },
   "workspaces": [
