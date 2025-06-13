@@ -2,15 +2,13 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, switchMap, tap } from 'rxjs';
 import { PaginationService } from './pagination-service';
-import { TabsComponent } from '../ui/query-tabs/tabs.component';
-import { TabComponent } from '../ui/query-tab/tab.component';
 
 @Component({
-    selector: 'query-pagination-page',
-    imports: [CommonModule, TabsComponent, TabComponent],
-    templateUrl: './pagination-page.component.html',
-    styleUrls: ['./pagination-page.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'query-pagination-page',
+  imports: [CommonModule],
+  templateUrl: './pagination-page.component.html',
+  styleUrls: ['./pagination-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginationPageComponent {
   #page = new BehaviorSubject(0);

@@ -174,7 +174,7 @@ export function createBaseQuery<
           TQueryKey
         >;
 
-        queryObserver.setOptions(normalized, { listeners: false });
+        queryObserver.setOptions(normalized);
       }
     },
     // @experimental signal support

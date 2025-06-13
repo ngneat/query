@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/query-devtools",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Developer tools to interact with and visualize the ngneat/query cache",
   "license": "MIT",
   "repository": "ngneat/query",
@@ -10,8 +10,8 @@
     "url": "https://github.com/sponsors/ngneat"
   },
   "peerDependencies": {
-    "@angular/core": ">=16.0.0 <20.0.0",
-    "@tanstack/query-devtools": "5.61.4"
+    "@angular/core": ">=16.0.0 <=20.x.x",
+    "@tanstack/query-devtools": "5.80.0"
   },
   "dependencies": {
     "tslib": "^2.4.0"

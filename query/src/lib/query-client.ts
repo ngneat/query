@@ -60,7 +60,9 @@ const QueryClientService = new InjectionToken<QueryClient>(
 );
 
 /** @public */
-export function provideQueryClient(queryClientOrFactory: _QueryClient | (() => _QueryClient)): Provider {
+export function provideQueryClient(
+  queryClientOrFactory: _QueryClient | (() => _QueryClient),
+): Provider {
   return {
     provide: QueryClientToken,
     useFactory:
@@ -325,7 +327,6 @@ export class QueryClient extends _QueryClient {
       TQueryFnData,
       TError,
       TData,
-      TQueryFnData,
       TQueryKey,
       TPageParam
     >,
@@ -356,7 +357,6 @@ export class QueryClient extends _QueryClient {
       TQueryFnData,
       TError,
       TData,
-      TQueryFnData,
       TQueryKey,
       TPageParam
     >,
@@ -366,7 +366,6 @@ export class QueryClient extends _QueryClient {
       options as InfiniteQueryObserverOptions<
         TQueryFnData,
         TError,
-        TQueryFnData,
         TQueryFnData,
         TQueryKey,
         TPageParam
@@ -404,7 +403,6 @@ export class QueryClient extends _QueryClient {
       TQueryFnData,
       TError,
       TData,
-      TQueryFnData,
       TQueryKey,
       TPageParam
     >,
@@ -435,7 +433,6 @@ export class QueryClient extends _QueryClient {
       TQueryFnData,
       TError,
       TData,
-      TQueryFnData,
       TQueryKey,
       TPageParam
     >,
@@ -445,7 +442,6 @@ export class QueryClient extends _QueryClient {
       options as InfiniteQueryObserverOptions<
         TQueryFnData,
         TError,
-        TQueryFnData,
         TQueryFnData,
         TQueryKey,
         TPageParam
