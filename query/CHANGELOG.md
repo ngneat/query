@@ -2,6 +2,16 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [3.2.0](https://github.com/ngneat/query/compare/query-3.1.1...query-3.2.0) (2025-06-13)
+
+
+### Features
+
+* **deps:** update `peerDependencies` to `20.x.x` ([#211](https://github.com/ngneat/query/issues/211)) ([c080581](https://github.com/ngneat/query/commit/c080581523604dd12de565bac4f2b986f7ba1107))
+* **query-client:** support for passing custom  QueryClient instance via function ([#208](https://github.com/ngneat/query/issues/208)) ([59eca0d](https://github.com/ngneat/query/commit/59eca0d98e33dcf020a6f8f860e24093e5229066))
+
+
+
 ## [3.1.1](https://github.com/ngneat/query/compare/query-3.1.0...query-3.1.1) (2025-01-07)
 
 
