@@ -1,12 +1,11 @@
 import {
   assertInInjectionContext,
   inject,
-  Injectable,
+  InjectionToken,
   Injector,
   runInInjectionContext,
 } from '@angular/core';
 import { injectQueryClient } from './query-client';
-
 import {
   DefaultError,
   InfiniteData,
@@ -23,6 +22,17 @@ import {
   QueryFunctionWithObservable,
 } from './base-query';
 import { Result } from './types';
+
+/** @internal */
+export const InfiniteQueryToken = new InjectionToken<InfiniteQuery>(
+  'InfiniteQuery',
+  {
+    providedIn: 'root',
+    factory() {
+      return new InfiniteQuery();
+    },
+  },
+);
 
 interface _CreateInfiniteQueryOptions<
   TQueryFnData = unknown,
@@ -61,8 +71,28 @@ export type CreateInfiniteQueryOptions<
   queryFn: QueryFunctionWithObservable<TQueryFnData, TQueryKey, TPageParam>;
 };
 
-@Injectable({ providedIn: 'root' })
-class InfiniteQuery {
+export interface InfiniteQueryObject {
+  use: <
+    TQueryFnData,
+    TError = DefaultError,
+    TData = InfiniteData<TQueryFnData>,
+    TQueryKey extends QueryKey = QueryKey,
+    TPageParam = unknown,
+  >(
+    options: CreateInfiniteQueryOptions<
+      TQueryFnData,
+      TError,
+      TData,
+      TQueryKey,
+      TPageParam
+    >,
+  ) => Result<InfiniteQueryObserverResult<TData, TError>>;
+}
+
+/** @internal
+ * only exported for @test
+ */
+class InfiniteQuery implements InfiniteQueryObject {
   #instance = injectQueryClient();
   #injector = inject(Injector);
 
@@ -90,18 +120,33 @@ class InfiniteQuery {
   }
 }
 
+function infiniteQueryUseFnFromToken() {
+  const infiniteQuery = inject(InfiniteQueryToken);
+  return infiniteQuery.use.bind(infiniteQuery);
+}
+
+/**
+ *
+ * Optionally pass an injector that will be used than the current one.
+ * Can be useful if you want to use it in ngOnInit hook for example.
+ *
+ * @example
+ *
+ * injector = inject(Injector);
+ *
+ * ngOnInit() {
+ *  const infiniteQuery = injectInfiniteQuery({ injector: this.injector });
+ * }
+ *
+ */
 export function injectInfiniteQuery(options?: { injector?: Injector }) {
   if (options?.injector) {
-    return runInInjectionContext(options.injector, () => {
-      const query = inject(InfiniteQuery);
-
-      return query.use.bind(query);
-    });
+    return runInInjectionContext(options.injector, () =>
+      infiniteQueryUseFnFromToken(),
+    );
   }
 
   assertInInjectionContext(injectInfiniteQuery);
 
-  const query = inject(InfiniteQuery);
-
-  return query.use.bind(query);
+  return infiniteQueryUseFnFromToken();
 }
