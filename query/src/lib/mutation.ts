@@ -1,4 +1,11 @@
-import { inject, Injectable, InjectionToken, Signal } from '@angular/core';
+import {
+  assertInInjectionContext,
+  inject,
+  InjectionToken,
+  Injector,
+  runInInjectionContext,
+  Signal,
+} from '@angular/core';
 import { injectQueryClient } from './query-client';
 import {
   DefaultError,
@@ -11,6 +18,14 @@ import {
 import { isObservable, Observable, shareReplay } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { shouldThrowError, toPromise } from './utils';
+
+/** @internal */
+export const MutationToken = new InjectionToken<Mutation>('Mutation', {
+  providedIn: 'root',
+  factory() {
+    return new Mutation();
+  },
+});
 
 export type CreateMutationOptions<
   TData = unknown,
@@ -51,8 +66,21 @@ export type MutationResult<
   result: Signal<MutationObserverResult<TData, TError, TVariables, TContext>>;
 };
 
-@Injectable({ providedIn: 'root' })
-class Mutation {
+export interface MutationObject {
+  use: <
+    TData = unknown,
+    TError = DefaultError,
+    TVariables = unknown,
+    TContext = unknown,
+  >(
+    options: CreateMutationOptions<TData, TError, TVariables, TContext>,
+  ) => MutationResult<TData, TError, TVariables, TContext>;
+}
+
+/** @internal
+ * only exported for @test
+ */
+class Mutation implements MutationObject {
   #instance = injectQueryClient();
 
   use<
@@ -141,14 +169,33 @@ class Mutation {
   }
 }
 
-const UseMutation = new InjectionToken('UseMutation', {
-  providedIn: 'root',
-  factory() {
-    const mutation = new Mutation();
-    return mutation.use.bind(mutation);
-  },
-});
+function mutationUseFnFromToken() {
+  const mutation = inject(MutationToken);
+  return mutation.use.bind(mutation);
+}
 
-export function injectMutation() {
-  return inject(UseMutation);
+/**
+ *
+ * Optionally pass an injector that will be used than the current one.
+ * Can be useful if you want to use it in ngOnInit hook for example.
+ *
+ * @example
+ *
+ * injector = inject(Injector);
+ *
+ * ngOnInit() {
+ *  const mutation = injectMutation({ injector: this.injector });
+ * }
+ *
+ */
+export function injectMutation(options?: { injector?: Injector }) {
+  if (options?.injector) {
+    return runInInjectionContext(options.injector, () =>
+      mutationUseFnFromToken(),
+    );
+  }
+
+  assertInInjectionContext(injectMutation);
+
+  return mutationUseFnFromToken();
 }

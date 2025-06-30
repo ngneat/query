@@ -20,3 +20,4 @@ export {
   createSuccessObserverResult,
   toPromise,
 } from './lib/utils';
+export { provideQueryConfig } from './lib/provide-query-config';
