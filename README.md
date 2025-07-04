@@ -109,6 +109,7 @@ export class TodosService {
 For methods that require a `queryFn` parameter like
 `ensureQueryData`, `fetchQuery`, `prefetchQuery`, `fetchInfiniteQuery` and `prefetchInfiniteQuery` it's possible to use both Promises and Observables. See an example [here](https://github.com/ngneat/query/blob/main/src/app/prefetch-page/resolve.ts#L9).
 
+
 #### Component Usage - Observable
 
 To get an observable use the `result$` property:
@@ -625,6 +626,50 @@ class TodoComponent {
   }).result;
 }
 ```
+
+## Custom Queries objects
+
+All injected queries objects got from the following inject functions could be overwritten by using `provideQueryConfig` function:
+- `injectQuery()`
+- `injectMutation()`
+- `injectIsMutating()`
+- `injectIsFetching()`
+- `injectInfiniteQuery()`
+
+All `provideQueryConfig` parameter's properties are optional, and you can use raw object or object factory.
+
+```ts
+export function provideQueryConfig(
+  config: {
+    query?: QueryObject | (() => QueryObject);
+    mutation?: MutationObject | (() => MutationObject);
+    isMutating?: IsMutatingObject | (() => IsMutatingObject);
+    isFetching?: IsFetchingObject | (() => IsFetchingObject);
+    infiniteQuery?: InfiniteQueryObject | (() => InfiniteQueryObject);
+  },
+): Provider
+```
+
+### Mock Example
+```ts
+import { provideQueryConfig } from '@ngneat/query';
+
+const queryMock = {
+  use: () => ({
+    result$: of({ ... }),
+    result: computed(() => ({ ... })),
+  })
+};
+
+provideQueryConfig({
+  query: queryMock, // or query: () => queryMock if you need a factory
+});
+
+const query = injectQuery();
+query({ ... }).result() // you can call query from your custom query mock
+```
+
+
 
 ## Devtools
 

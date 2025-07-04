@@ -1,12 +1,10 @@
 import {
   assertInInjectionContext,
   inject,
-  Injectable,
+  InjectionToken,
   Injector,
   runInInjectionContext,
 } from '@angular/core';
-import { injectQueryClient } from './query-client';
-
 import {
   DefaultError,
   DefinedQueryObserverResult,
@@ -14,17 +12,73 @@ import {
   QueryObserver,
   QueryObserverResult,
 } from '@tanstack/query-core';
+
 import { createBaseQuery, CreateBaseQueryOptions } from './base-query';
-import { Result } from './types';
+import { injectQueryClient } from './query-client';
 import {
   DefinedInitialDataOptions,
   UndefinedInitialDataOptions,
 } from './query-options';
+import { Result } from './types';
 
-@Injectable({ providedIn: 'root' })
-class Query {
-  #instance = injectQueryClient();
-  #injector = inject(Injector);
+/** @internal */
+export const QueryToken = new InjectionToken<Query>('Query', {
+  providedIn: 'root',
+  factory() {
+    return new Query();
+  },
+});
+
+export interface QueryObject {
+  use:
+    | (<
+        TQueryFnData = unknown,
+        TError = DefaultError,
+        TData = TQueryFnData,
+        TQueryKey extends QueryKey = QueryKey,
+      >(
+        options: UndefinedInitialDataOptions<
+          TQueryFnData,
+          TError,
+          TData,
+          TQueryKey
+        >,
+      ) => Result<QueryObserverResult<TData, TError>>)
+    | (<
+        TQueryFnData = unknown,
+        TError = DefaultError,
+        TData = TQueryFnData,
+        TQueryKey extends QueryKey = QueryKey,
+      >(
+        options: DefinedInitialDataOptions<
+          TQueryFnData,
+          TError,
+          TData,
+          TQueryKey
+        >,
+      ) => Result<DefinedQueryObserverResult<TData, TError>>)
+    | (<
+        TQueryFnData,
+        TError = DefaultError,
+        TData = TQueryFnData,
+        TQueryKey extends QueryKey = QueryKey,
+      >(
+        options: CreateBaseQueryOptions<
+          TQueryFnData,
+          TError,
+          TData,
+          TQueryFnData,
+          TQueryKey
+        >,
+      ) => any);
+}
+
+/** @internal
+ * only exported for @test
+ */
+export class Query implements QueryObject {
+  readonly #instance = injectQueryClient();
+  readonly #injector = inject(Injector);
 
   use<
     TQueryFnData = unknown,
@@ -72,6 +126,11 @@ class Query {
   }
 }
 
+function queryUseFnFromToken() {
+  const query = inject(QueryToken);
+  return query.use.bind(query);
+}
+
 /**
  *
  * Optionally pass an injector that will be used than the current one.
@@ -88,16 +147,10 @@ class Query {
  */
 export function injectQuery(options?: { injector?: Injector }) {
   if (options?.injector) {
-    return runInInjectionContext(options.injector, () => {
-      const query = inject(Query);
-
-      return query.use.bind(query);
-    });
+    return runInInjectionContext(options.injector, () => queryUseFnFromToken());
   }
 
   assertInInjectionContext(injectQuery);
 
-  const query = inject(Query);
-
-  return query.use.bind(query);
+  return queryUseFnFromToken();
 }
