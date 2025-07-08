@@ -3,14 +3,33 @@ import { injectQueryClient } from './query-client';
 import {
   assertInInjectionContext,
   inject,
-  Injectable,
   InjectionToken,
+  Injector,
+  runInInjectionContext,
+  Signal,
 } from '@angular/core';
 import { distinctUntilChanged, Observable } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 
-@Injectable({ providedIn: 'root' })
-export class IsFetching {
+/** @internal */
+export const IsFetchingToken = new InjectionToken<IsFetching>('IsFetching', {
+  providedIn: 'root',
+  factory() {
+    return new IsFetching();
+  },
+});
+
+export interface IsFetchingObject {
+  use: (filters?: QueryFilters) => {
+    result$: Observable<number>;
+    toSignal: () => Signal<number | undefined>;
+  };
+}
+
+/** @internal
+ * only exported for @test
+ */
+export class IsFetching implements IsFetchingObject {
   #queryClient = injectQueryClient();
 
   use(filters?: QueryFilters) {
@@ -32,15 +51,33 @@ export class IsFetching {
   }
 }
 
-const UseIsFetching = new InjectionToken<IsFetching['use']>('UseIsFetching', {
-  providedIn: 'root',
-  factory() {
-    const isFetching = new IsFetching();
-    return isFetching.use.bind(isFetching);
-  },
-});
+function isFetchingUseFnFromToken() {
+  const isFetching = inject(IsFetchingToken);
+  return isFetching.use.bind(isFetching);
+}
 
-export function injectIsFetching() {
+/**
+ *
+ * Optionally pass an injector that will be used than the current one.
+ * Can be useful if you want to use it in ngOnInit hook for example.
+ *
+ * @example
+ *
+ * injector = inject(Injector);
+ *
+ * ngOnInit() {
+ *  const isFetching = injectIsFetching({ injector: this.injector });
+ * }
+ *
+ */
+export function injectIsFetching(options?: { injector?: Injector }) {
+  if (options?.injector) {
+    return runInInjectionContext(options.injector, () =>
+      isFetchingUseFnFromToken(),
+    );
+  }
+
   assertInInjectionContext(injectIsFetching);
-  return inject(UseIsFetching);
+
+  return isFetchingUseFnFromToken();
 }
