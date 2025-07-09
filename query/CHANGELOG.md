@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [3.3.0](https://github.com/ngneat/query/compare/query-3.2.0...query-3.3.0) (2025-07-09)
+
+
+### Features
+
+* **query:** add provideQueryConfig to provide custom queries objects ([#213](https://github.com/ngneat/query/issues/213)) ([fabfdf8](https://github.com/ngneat/query/commit/fabfdf89ac2b205796e22e2bb2198552f8c7a48d))
+
+
+
 # [3.2.0](https://github.com/ngneat/query/compare/query-3.1.1...query-3.2.0) (2025-06-13)
 
 
