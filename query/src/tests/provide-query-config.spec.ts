@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideQueryConfig } from '@ngneat/query';
+import { provideQueryConfig } from '../lib/provide-query-config';
 import { injectQuery, QueryObject } from '../lib/query';
 import { injectMutation, MutationObject } from '../lib/mutation';
 import { of } from 'rxjs';

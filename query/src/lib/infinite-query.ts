@@ -40,7 +40,9 @@ interface _CreateInfiniteQueryOptions<
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = unknown,
-> extends WithRequired<
+>
+  extends
+    WithRequired<
       InfiniteQueryObserverOptions<
         TQueryFnData,
         TError,

@@ -11,7 +11,7 @@ import { Todo, TodosService } from './test-helper';
 import { injectQuery } from '../lib/query';
 import { UndefinedInitialDataOptions } from '../lib/query-options';
 import { Result } from '../lib/types';
-import { provideQueryConfig } from '@ngneat/query';
+import { provideQueryConfig } from '../lib/provide-query-config';
 
 describe('query', () => {
   let service: TodosService;

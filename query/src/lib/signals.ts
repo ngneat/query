@@ -14,11 +14,12 @@ type DataTypes<
     : never;
 };
 
-type UnifiedTypes<T> = T extends Array<Signal<QueryObserverBaseResult<any>>>
-  ? DataTypes<T>
-  : T extends Record<string, Signal<QueryObserverBaseResult<any>>>
+type UnifiedTypes<T> =
+  T extends Array<Signal<QueryObserverBaseResult<any>>>
     ? DataTypes<T>
-    : never;
+    : T extends Record<string, Signal<QueryObserverBaseResult<any>>>
+      ? DataTypes<T>
+      : never;
 
 /**
  *
@@ -61,7 +62,7 @@ export function intersectResults<
 ): Signal<QueryObserverResult<R> & { all: T }> {
   const isArray = Array.isArray(signals);
   const toArray = isArray ? signals : Object.values(signals);
-  const refetch = () => Promise.all(toArray.map(v => v().refetch()));
+  const refetch = () => Promise.all(toArray.map((v) => v().refetch()));
 
   return computed(() => {
     const mappedResult = {

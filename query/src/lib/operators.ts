@@ -108,11 +108,12 @@ type DataTypes<
   [P in keyof T]: T[P] extends QueryObserverResult<infer R> ? R : never;
 };
 
-type UnifiedTypes<T> = T extends Array<QueryObserverResult<any>>
-  ? DataTypes<T>
-  : T extends Record<string, QueryObserverResult<any>>
+type UnifiedTypes<T> =
+  T extends Array<QueryObserverResult<any>>
     ? DataTypes<T>
-    : never;
+    : T extends Record<string, QueryObserverResult<any>>
+      ? DataTypes<T>
+      : never;
 
 /**
  *
@@ -148,7 +149,7 @@ export function intersectResults$<
   return map((values) => {
     const isArray = Array.isArray(values);
     const toArray = isArray ? values : Object.values(values);
-    const refetch = () => Promise.all(toArray.map(v => v.refetch()));
+    const refetch = () => Promise.all(toArray.map((v) => v.refetch()));
 
     const mappedResult = {
       all: values,

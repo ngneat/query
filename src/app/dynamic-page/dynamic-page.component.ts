@@ -5,10 +5,10 @@ import { createPendingObserverResult } from '@ngneat/query';
 import { derivedAsync } from 'ngxtension/derived-async';
 
 @Component({
-    selector: 'query-dynamic-page',
-    imports: [RouterModule],
-    templateUrl: './dynamic-page.component.html',
-    styleUrls: ['./dynamic-page.component.scss']
+  selector: 'query-dynamic-page',
+  imports: [RouterModule],
+  templateUrl: './dynamic-page.component.html',
+  styleUrls: ['./dynamic-page.component.scss'],
 })
 export class DynamicPageComponent {
   id = input.required<string>();

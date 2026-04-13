@@ -4,7 +4,6 @@ import {
   ContentChildren,
   QueryList,
 } from '@angular/core';
-import { NgComponentOutlet } from '@angular/common';
 import { TabComponent } from '../query-tab/tab.component';
 
 @Component({
