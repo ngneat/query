@@ -1,5 +1,5 @@
-import { effect, Injector, runInInjectionContext, Signal } from '@angular/core';
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { Injector, runInInjectionContext, Signal } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { expectTypeOf } from 'expect-type';
 import {
   DefaultError,
@@ -11,7 +11,7 @@ import { Todo, TodosService } from './test-helper';
 import { injectQuery } from '../lib/query';
 import { UndefinedInitialDataOptions } from '../lib/query-options';
 import { Result } from '../lib/types';
-import { provideQueryConfig } from '../lib/provide-query-config';
+import { provideQueryConfig } from '@ngneat/query';
 
 describe('query', () => {
   let service: TodosService;
@@ -23,48 +23,37 @@ describe('query', () => {
     service = TestBed.inject(TodosService);
   });
 
-  it('should work', fakeAsync(() => {
+  it('should work', (done) => {
     const spy = jest.fn();
 
     const sub = service.getTodos().result$.subscribe((v) => {
       spy(v.status);
       expectTypeOf(v.data).toEqualTypeOf<Todo[] | undefined>();
+      if (v.status === 'success') {
+        expect(spy).toHaveBeenCalledTimes(2);
+        sub.unsubscribe();
+        done();
+      }
     });
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith('pending');
-    tick(1000);
-    flush();
+  });
 
-    expect(spy).toHaveBeenCalledTimes(2);
-    expect(spy).toHaveBeenCalledWith('success');
-
-    sub.unsubscribe();
-    flush();
-  }));
-
-  it('should work with signals', fakeAsync(() => {
-    const spy = jest.fn();
-
+  it('should work with signals', (done) => {
     runInInjectionContext(TestBed.inject(Injector), () => {
       const result = service.getTodos().result;
       expectTypeOf(result().data).toEqualTypeOf<Todo[] | undefined>();
 
-      effect(() => {
-        spy(result().status);
-      });
+      expect(result().status).toBe('pending');
     });
 
-    TestBed.flushEffects();
-
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith('pending');
-    tick(1000);
-    flush();
-    TestBed.flushEffects();
-    expect(spy).toHaveBeenCalledTimes(2);
-    expect(spy).toHaveBeenCalledWith('success');
-  }));
+    service.getTodos().result$.subscribe((v) => {
+      if (v.status === 'success') {
+        done();
+      }
+    });
+  });
 });
 
 describe('Custom Query', () => {

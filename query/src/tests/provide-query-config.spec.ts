@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideQueryConfig } from '../lib/provide-query-config';
+import { provideQueryConfig } from '@ngneat/query';
 import { injectQuery, QueryObject } from '../lib/query';
 import { injectMutation, MutationObject } from '../lib/mutation';
 import { of } from 'rxjs';
@@ -27,7 +27,7 @@ describe('Provide Query Config', () => {
       };
       query(queryOptions);
 
-      expect(queryMock.use).lastCalledWith(queryOptions);
+      expect(queryMock.use).toHaveBeenLastCalledWith(queryOptions);
     });
 
     it('should use custom query provided from function', () => {
@@ -41,7 +41,7 @@ describe('Provide Query Config', () => {
       };
       query(queryOptions);
 
-      expect(queryMock.use).lastCalledWith(queryOptions);
+      expect(queryMock.use).toHaveBeenLastCalledWith(queryOptions);
     });
   });
 
@@ -61,7 +61,7 @@ describe('Provide Query Config', () => {
       };
       mutation(mutationOptions);
 
-      expect(mutationMock.use).lastCalledWith(mutationOptions);
+      expect(mutationMock.use).toHaveBeenLastCalledWith(mutationOptions);
     });
 
     it('should use custom mutation provided from function', () => {
@@ -75,7 +75,7 @@ describe('Provide Query Config', () => {
       };
       mutation(mutationOptions);
 
-      expect(mutationMock.use).lastCalledWith(mutationOptions);
+      expect(mutationMock.use).toHaveBeenLastCalledWith(mutationOptions);
     });
   });
 
@@ -97,7 +97,7 @@ describe('Provide Query Config', () => {
       };
       isMutating(isMutatingOptions);
 
-      expect(isMutatingMock.use).lastCalledWith(isMutatingOptions);
+      expect(isMutatingMock.use).toHaveBeenLastCalledWith(isMutatingOptions);
     });
 
     it('should use custom isMutating provided from function', () => {
@@ -113,7 +113,7 @@ describe('Provide Query Config', () => {
       };
       isMutating(isMutatingOptions);
 
-      expect(isMutatingMock.use).lastCalledWith(isMutatingOptions);
+      expect(isMutatingMock.use).toHaveBeenLastCalledWith(isMutatingOptions);
     });
   });
 
@@ -135,7 +135,7 @@ describe('Provide Query Config', () => {
       };
       isFetching(isFetchingOptions);
 
-      expect(isFetchingMock.use).lastCalledWith(isFetchingOptions);
+      expect(isFetchingMock.use).toHaveBeenLastCalledWith(isFetchingOptions);
     });
 
     it('should use custom isFetching provided from function', () => {
@@ -151,7 +151,7 @@ describe('Provide Query Config', () => {
       };
       isFetching(isFetchingOptions);
 
-      expect(isFetchingMock.use).lastCalledWith(isFetchingOptions);
+      expect(isFetchingMock.use).toHaveBeenLastCalledWith(isFetchingOptions);
     });
   });
 
@@ -175,7 +175,9 @@ describe('Provide Query Config', () => {
       };
       infiniteQuery(infiniteQueryOptions);
 
-      expect(infiniteQueryMock.use).lastCalledWith(infiniteQueryOptions);
+      expect(infiniteQueryMock.use).toHaveBeenLastCalledWith(
+        infiniteQueryOptions,
+      );
     });
 
     it('should use custom infiniteQuery provided from function', () => {
@@ -195,7 +197,9 @@ describe('Provide Query Config', () => {
       };
       infiniteQuery(infiniteQueryOptions);
 
-      expect(infiniteQueryMock.use).lastCalledWith(infiniteQueryOptions);
+      expect(infiniteQueryMock.use).toHaveBeenLastCalledWith(
+        infiniteQueryOptions,
+      );
     });
   });
 });

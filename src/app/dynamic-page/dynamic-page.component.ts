@@ -1,8 +1,8 @@
 import { Component, inject, input } from '@angular/core';
 import { User, UsersService } from '../services/users.service';
 import { RouterModule } from '@angular/router';
-import { computedAsync } from 'ngxtension/computed-async';
 import { createPendingObserverResult } from '@ngneat/query';
+import { derivedAsync } from 'ngxtension/derived-async';
 
 @Component({
     selector: 'query-dynamic-page',
@@ -14,7 +14,7 @@ export class DynamicPageComponent {
   id = input.required<string>();
   usersService = inject(UsersService);
 
-  user = computedAsync(() => this.usersService.getUser(+this.id()).result$, {
+  user = derivedAsync(() => this.usersService.getUser(+this.id()).result$, {
     initialValue: createPendingObserverResult<User>(),
   });
 

@@ -114,5 +114,6 @@
       "typeSeparator": "."
     }
   },
-  "defaultProject": "query-playground"
+  "defaultProject": "query-playground",
+  "analytics": false
 }

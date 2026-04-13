@@ -70,7 +70,8 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectName}"],
       "options": {
-        "jestConfig": "jest.config.app.ts"
+        "jestConfig": "jest.config.app.ts",
+        "tsConfig": "tsconfig.spec.json"
       }
     }
   }
