@@ -19,7 +19,9 @@ export class PaginationPageComponent {
     switchMap((page) => {
       return this.projectsService.getProjects(page).result$.pipe(
         tap((result) => {
-          result.data?.hasMore && this.projectsService.prefetch(page + 1);
+          if (result.data?.hasMore) {
+            this.projectsService.prefetch(page + 1);
+          }
         }),
       );
     }),

@@ -33,7 +33,9 @@ export interface _CreateBaseQueryOptions<
   TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = never,
-> extends WithRequired<
+>
+  extends
+    WithRequired<
       QueryObserverOptions<
         TQueryFnData,
         TError,
@@ -179,10 +181,11 @@ export function createBaseQuery<
     },
     // @experimental signal support
     get result() {
-      !isNodeInjector &&
+      if (!isNodeInjector) {
         assertInInjectionContext(function queryResultSignal() {
           // noop
         });
+      }
 
       if (!cachedSignal) {
         cachedSignal = toSignal(this.result$, {

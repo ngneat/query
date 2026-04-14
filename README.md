@@ -44,7 +44,7 @@ npm i @ngneat/query
 
 [Stackblitz Example](https://stackblitz.com/edit/stackblitz-starters-bsrgez?file=src%2Fmain.ts)
 
->Please be aware that the `@tanstack/query-core` package must also be installed for the functionality to operate correctly.
+> Please be aware that the `@tanstack/query-core` package must also be installed for the functionality to operate correctly.
 
 ## Query Client
 
@@ -59,13 +59,14 @@ export class TodosService {
   #queryClient = injectQueryClient();
 }
 ```
+
 or provide `QueryClient` [instance](https://tanstack.com/query/v5/docs/reference/QueryClient) manually
 
 ```ts
 import { provideQueryClient } from '@ngneat/query';
 import { QueryClient } from '@tanstack/query-core';
 
-provideQueryClient(() =>  new QueryClient())
+provideQueryClient(() => new QueryClient());
 ```
 
 and then use with
@@ -108,7 +109,6 @@ export class TodosService {
 
 For methods that require a `queryFn` parameter like
 `ensureQueryData`, `fetchQuery`, `prefetchQuery`, `fetchInfiniteQuery` and `prefetchInfiniteQuery` it's possible to use both Promises and Observables. See an example [here](https://github.com/ngneat/query/blob/main/src/app/prefetch-page/resolve.ts#L9).
-
 
 #### Component Usage - Observable
 
@@ -630,6 +630,7 @@ class TodoComponent {
 ## Custom Queries objects
 
 All injected queries objects got from the following inject functions could be overwritten by using `provideQueryConfig` function:
+
 - `injectQuery()`
 - `injectMutation()`
 - `injectIsMutating()`
@@ -639,18 +640,17 @@ All injected queries objects got from the following inject functions could be ov
 All `provideQueryConfig` parameter's properties are optional, and you can use raw object or object factory.
 
 ```ts
-export function provideQueryConfig(
-  config: {
-    query?: QueryObject | (() => QueryObject);
-    mutation?: MutationObject | (() => MutationObject);
-    isMutating?: IsMutatingObject | (() => IsMutatingObject);
-    isFetching?: IsFetchingObject | (() => IsFetchingObject);
-    infiniteQuery?: InfiniteQueryObject | (() => InfiniteQueryObject);
-  },
-): Provider
+export function provideQueryConfig(config: {
+  query?: QueryObject | (() => QueryObject);
+  mutation?: MutationObject | (() => MutationObject);
+  isMutating?: IsMutatingObject | (() => IsMutatingObject);
+  isFetching?: IsFetchingObject | (() => IsFetchingObject);
+  infiniteQuery?: InfiniteQueryObject | (() => InfiniteQueryObject);
+}): Provider;
 ```
 
 ### Mock Example
+
 ```ts
 import { provideQueryConfig } from '@ngneat/query';
 
@@ -668,8 +668,6 @@ provideQueryConfig({
 const query = injectQuery();
 query({ ... }).result() // you can call query from your custom query mock
 ```
-
-
 
 ## Devtools
 

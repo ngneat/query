@@ -10,8 +10,8 @@
     "url": "https://github.com/sponsors/ngneat"
   },
   "peerDependencies": {
-    "@tanstack/query-core": "^5.80.6",
-    "@angular/core": ">=16.0.0 <=20.x.x"
+    "@tanstack/query-core": "^5.99.0",
+    "@angular/core": ">=16.0.0 <=21.x.x"
   },
   "dependencies": {
     "tslib": "^2.4.0"

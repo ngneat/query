@@ -120,7 +120,7 @@ class Mutation implements MutationObject {
           ) => {
             if (
               result.isError &&
-              shouldThrowError(mutationObserver!.options.throwOnError, [
+              shouldThrowError(mutationObserver?.options.throwOnError, [
                 result.error,
               ])
             ) {

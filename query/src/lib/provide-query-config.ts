@@ -20,15 +20,13 @@ function providerBuilder<Kind>(
 }
 
 /** @public */
-export function provideQueryConfig(
-  config: {
-    query?: QueryObject | (() => QueryObject);
-    mutation?: MutationObject | (() => MutationObject);
-    isMutating?: IsMutatingObject | (() => IsMutatingObject);
-    isFetching?: IsFetchingObject | (() => IsFetchingObject);
-    infiniteQuery?: InfiniteQueryObject | (() => InfiniteQueryObject);
-  },
-): Provider {
+export function provideQueryConfig(config: {
+  query?: QueryObject | (() => QueryObject);
+  mutation?: MutationObject | (() => MutationObject);
+  isMutating?: IsMutatingObject | (() => IsMutatingObject);
+  isFetching?: IsFetchingObject | (() => IsFetchingObject);
+  infiniteQuery?: InfiniteQueryObject | (() => InfiniteQueryObject);
+}): Provider {
   const providers: Provider = [];
   if (config.query) {
     providers.push(providerBuilder(QueryToken, config.query));
