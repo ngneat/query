@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [3.4.0](https://github.com/ngneat/query/compare/query-3.3.0...query-3.4.0) (2026-04-15)
+
+
+### Features
+
+* adds angular 21 support ([#221](https://github.com/ngneat/query/issues/221)) ([660825b](https://github.com/ngneat/query/commit/660825b273dc7abdd5cdcebae10fe8664750561b))
+
+
+
 # [3.3.0](https://github.com/ngneat/query/compare/query-3.2.0...query-3.3.0) (2025-07-09)
 
 ### Features
